@@ -13,5 +13,45 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="MathClasses">
+      <UniqueIdentifier>{f3ec5983-87fb-4ac6-89aa-e64183b8ae2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AdditionalUtils">
+      <UniqueIdentifier>{f4afd9c5-9a53-45b6-94cf-b8941c8a1a8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Context">
+      <UniqueIdentifier>{936ce97a-ca5e-4158-bfb1-6460ba60af5f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Файлы ресурсов</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MathNode.hpp">
+      <Filter>MathClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="ValueNode.hpp">
+      <Filter>MathClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="MathStringConverter.hpp">
+      <Filter>AdditionalUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="SymbolNode.hpp">
+      <Filter>MathClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="MathDefines.hpp">
+      <Filter>AdditionalUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="VariableContext.hpp">
+      <Filter>Context</Filter>
+    </ClInclude>
+    <ClInclude Include="FunctionContext.hpp">
+      <Filter>Context</Filter>
+    </ClInclude>
+    <ClInclude Include="SignatureNode.hpp">
+      <Filter>MathClasses</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
