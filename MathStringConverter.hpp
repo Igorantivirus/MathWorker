@@ -25,7 +25,7 @@ namespace mathWorker
 		std::string toString(const RealType& value) const override
 		{
 			std::stringstream out;
-			out << std::setprecision(16) << value;
+			out << std::setprecision(15) << round(value, 15);
 			std::string result = out.str();
 			if (result.find('.') == std::string::npos)
 				return result;
@@ -44,6 +44,17 @@ namespace mathWorker
 			if (real.size() == 1 && real[0] == '0')
 				return imag + 'i';
 			return real + (imag[0] == '-' ? "" : "+") + imag + 'i';
+		}
+
+	private:
+
+		long double round(RealType value, unsigned int n) const
+		{
+			if (n > 28)
+				return value;
+			RealType multiplier = std::pow(10.0L, n);
+			RealType rounded_value = std::round(value * multiplier);
+			return rounded_value / multiplier;
 		}
 
 	};

@@ -28,6 +28,14 @@ SignatureContext makeBaseContext()
 			return std::make_unique<ValueNode>(res);
 		},0, SignatureType::operation
 	};
+	context["@"] =
+	{
+		[](const std::vector<MathNodeP>& params)->MathNodeP
+		{
+			ComplexType res = params[0]->getNumberForced() - params[1]->getNumberForced() * ComplexType(10);
+			return std::make_unique<ValueNode>(res);
+		},0, SignatureType::operation
+	};
 	context["*"] =
 	{
 		[](const std::vector<MathNodeP>& params)->MathNodeP
@@ -60,6 +68,30 @@ SignatureContext makeBaseContext()
 			return std::make_unique<ValueNode>(res);
 		},3, SignatureType::function
 	};
+	context["sin"] =
+	{
+		[](const std::vector<MathNodeP>& params)->MathNodeP
+		{
+			ComplexType res = std::sin(params[0]->getNumberForced());
+			return std::make_unique<ValueNode>(res);
+		},3, SignatureType::function
+	};
+	context["log"] =
+	{
+		[](const std::vector<MathNodeP>& params)->MathNodeP
+		{
+			ComplexType res = std::log(params[1]->getNumberForced()) / std::log(params[0]->getNumberForced());
+			return std::make_unique<ValueNode>(res);
+		},3, SignatureType::specialFunction
+	};
+	context["root"] =
+	{
+		[](const std::vector<MathNodeP>& params)->MathNodeP
+		{
+			ComplexType res = pow(params[1]->getNumberForced(), ComplexType(1) / params[0]->getNumberForced());
+			return std::make_unique<ValueNode>(res);
+		},3, SignatureType::specialFunction
+	};
 	context["d"] =
 	{
 		[](const std::vector<MathNodeP>& params)->MathNodeP
@@ -75,6 +107,53 @@ SignatureContext makeBaseContext()
 			ComplexType res = params[0]->getNumberForced() * ComplexType(std::acos(-1) / 180);
 			return std::make_unique<ValueNode>(res);
 		},4, SignatureType::unare
+	};
+	return context;
+}
+
+SignatureContext makeBoolCOntext()
+{
+	SignatureContext context;
+
+	context["!"] =
+	{
+		[](const std::vector<MathNodeP>& params)->MathNodeP
+		{
+			ComplexType res = not(params[0]->getNumberForced().real());
+			return std::make_unique<ValueNode>(res);
+		},3, SignatureType::unare
+	};
+	context["&"] =
+	{
+		[](const std::vector<MathNodeP>& params)->MathNodeP
+		{
+			ComplexType res = params[0]->getNumberForced().real() && params[1]->getNumberForced().real();
+			return std::make_unique<ValueNode>(res);
+		},2, SignatureType::operation
+	};
+	context["|"] =
+	{
+		[](const std::vector<MathNodeP>& params)->MathNodeP
+		{
+			ComplexType res = params[0]->getNumberForced().real() || params[1]->getNumberForced().real();
+			return std::make_unique<ValueNode>(res);
+		},1, SignatureType::operation
+	};
+	context["->"] =
+	{
+		[](const std::vector<MathNodeP>& params)->MathNodeP
+		{
+			ComplexType res = not(params[0]->getNumberForced().real()) || params[1]->getNumberForced().real();
+			return std::make_unique<ValueNode>(res);
+		},1, SignatureType::operation
+	};
+	context["<->"] =
+	{
+		[](const std::vector<MathNodeP>& params)->MathNodeP
+		{
+			ComplexType res = params[0]->getNumberForced() == params[1]->getNumberForced();
+			return std::make_unique<ValueNode>(res);
+		},0, SignatureType::operation
 	};
 	return context;
 }
@@ -95,6 +174,24 @@ MathNodeP makeMyFoo()
 	return result;
 }
 
+void addFunction(SignatureContext& context, const std::string& name, const std::vector<std::string>& paramNames, const std::string realization, const unsigned char priority = 3, const SignatureType type = SignatureType::function)
+{
+	MathParser parser;
+	parser.setContext(&context);
+
+	MathNodeP node = parser.parse(realization);
+	//std::cout << node->toString() << '\n';
+
+	MatherRealization pair;
+	pair.first = std::move(node);
+	pair.second = paramNames;
+
+
+	context[name].realization = std::move(pair);
+	context[name].priority = priority;
+	context[name].type = type;
+}
+
 template<typename T>
 std::ostream& operator<<(std::ostream& out, const std::vector<T>& v)
 {
@@ -108,18 +205,45 @@ std::ostream& operator<<(std::ostream& out, const std::vector<T>& v)
 
 int main()
 {
-	SignatureContext context = makeBaseContext();
+	SignatureContext context = makeBoolCOntext();
 	MathParser parse;
 	parse.setContext(&context);
 
-
-	std::string s = "3.1415926535d";
-
+	std::string s = "(1&0)&(1|1!)<->1!";
 
 	MathNodeP ptr = parse.parse(s);
 
 	std::cout << ptr->toString() << '\n';
 	std::cout << ptr->calculate(context)->toString() << '\n';
+
+	//SignatureContext context = makeBaseContext();
+
+
+	//addFunction(context, "size", { "x", "y", "z" }, "sqrt(x^2+y^2+z^2)");
+	//addFunction(context, "squareRoot", { "a", "b", "c"}, "0-(b+sqrt(b^2-4*c*c))/(2*a)");
+
+
+
+
+
+	//MathParser parse;
+	//parse.setContext(&context);
+
+
+	////std::string s = "squareRoot(1,2,1)";
+	//std::string s = "2@3";
+
+
+	/*MathNodeP ptr = parse.parse(s);
+
+	std::cout << ptr->toString() << '\n';
+	std::cout << ptr->calculate(context)->toString() << '\n';*/
+
+
+
+
+
+
 
 	//std::string s = "1 + 2";
 	//std::string s = "a-9.9999999+sin(3*pi-2*e/9)-(2+2)*2.98+2i-17sin(cos(5.5))+pi-e";

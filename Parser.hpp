@@ -34,7 +34,8 @@ namespace mathWorker
 		}
 
 
-		MathNodeP parse(const std::string& str)
+
+		MathNodeP parse(const std::string_view& str)
 		{
 			TokenArray tkns = tokenize(str);
 
@@ -47,7 +48,7 @@ namespace mathWorker
 
 		const std::string& error = exceptionError_;
 	
-	//private:
+	private:
 
 		//return index of this token
 		size_t findTokenWithMinPriority(const std::span<Token> tkns)
@@ -69,7 +70,7 @@ namespace mathWorker
 			return ind;
 		}
 
-		MathNodeP lastPars(const Token& tkn) const
+		MathNodeP lastPars(const Token& tkn)
 		{
 			if (isNumber(tkn[0]))
 				return std::make_unique<ValueNode>(RealType(std::stold(std::string(tkn))));
@@ -77,16 +78,22 @@ namespace mathWorker
 				return std::make_unique<SymbolNode>(std::string(tkn));
 			if (isOpenBracket(tkn[0]))
 			{
-
-
-
-
+				TokenArray tkns = tokenize(tkn.substr(1, tkn.size() - 2));
+				return parsing(tkns);
 			}
 			return nullptr;
 		}
-		MathVector parseParams(const Token& tkn) const
+		MathVector parseParams(const Token& tkn)
 		{
-			return {};
+			MathVector result;
+
+			TokenArray tkns = tonenizeByComma(tkn.substr(1, tkn.size() - 2));
+
+			for (const auto& i : tkns)
+				if (!(i.size() == 1 && isComma(i[0])))
+					result.push_back(parse(i));
+
+			return std::move(result);
 		}
 
 		MathNodeP parsing(const std::span<Token> tkns)
@@ -122,7 +129,9 @@ namespace mathWorker
 			}
 			else if (type == SignatureType::specialFunction)
 			{
-
+				MathNodeP left = parsing(tkns.subspan(minInd + 1, 1));
+				MathNodeP right = parsing(tkns.subspan(minInd + 2, 1));
+				node->setParams(MathRowVector{ left.get(), right.get() });
 			}
 			return std::move(node);
 		}
@@ -145,6 +154,10 @@ namespace mathWorker
 		bool isCloseBracket(const char c) const
 		{
 			return c == ')';
+		}
+		bool isComma(const char c) const
+		{
+			return c == ',';
 		}
 		bool isNone(const char c) const
 		{
@@ -191,6 +204,25 @@ namespace mathWorker
 			}
 			return tkns;
 		}
+		TokenArray tonenizeByComma(const Token& str)
+		{
+			TokenArray tkns;
+			size_t last = 0;
+			for (size_t i = 0; i < str.size(); ++i)
+			{
+				if (isOpenBracket(str[i]))
+					i = getEndOfBracket(str, i) - 1;
+				else if (isComma(str[i]))
+				{
+					tkns.push_back(str.substr(last, i - last));
+					last = i + 1;
+				}
+			}
+			if(last < str.size())
+				tkns.push_back(str.substr(last));
+			return tkns;
+		}
+		
 	};
 
 }
