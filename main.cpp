@@ -40,29 +40,16 @@ FunctionContext makeBaseContext()
 
 MathNodeP makeMyFoo()
 {
-	SymbolNode a("a");
-	SymbolNode b("b");
-	ValueNode two(ComplexType(2));
+	SymbolNode x("x");
+	SymbolNode y("y");
+	ValueNode t(2);
 
-	std::vector<MathNodeP> params;
+	SignatureNode s1("^", { &x, &t });
+	SignatureNode s2("^", { &y, &t });
 
-	params.push_back(a.clone());
-	params.push_back(two.clone());
-	SignatureNode s1("^", params);
+	MathNodeP result(new SignatureNode{ "+", MathRowVector{&s1, &s2} });
 
-	params.clear();
-
-	params.push_back(b.clone());
-	params.push_back(two.clone());
-	SignatureNode s2("^", params);
-
-	params.clear();
-
-	params.push_back(s1.clone());
-	params.push_back(s2.clone());
-
-	SignatureNode res("+", params);
-	return res.clone();
+	return result;
 }
 
 int main()
@@ -72,7 +59,7 @@ int main()
 
 	MatherRealization pair;
 	pair.first = realization->clone();
-	pair.second = std::vector<std::string>{ "a", "b" };
+	pair.second = std::vector<std::string>{ "x", "y" };
 
 	funCont["foo"] = std::move(pair);
 
@@ -81,11 +68,7 @@ int main()
 	ValueNode v1(ComplexType(3));
 	ValueNode v2(ComplexType(4));
 
-	std::vector<MathNodeP> params;
-	params.push_back(v1.clone());
-	params.push_back(v2.clone());
-
-	SignatureNode sign("foo", params);
+	SignatureNode sign("foo", MathRowVector{&v1, &v2});
 
 	std::cout << sign.toString() << '\n';
 	std::cout << sign.calculate(funCont)->toString() << '\n';

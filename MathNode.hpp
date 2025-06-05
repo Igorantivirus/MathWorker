@@ -45,8 +45,10 @@ namespace mathWorker
 
 	using NativeRealization = std::function<MathNodeP(const std::vector<MathNodeP>&)>;
 	using MatherRealization = std::pair<MathNodeP, std::vector<std::string>>;
-	//using MatherRealization = MathNodeP;
 
 	using FunctionContext = std::map<std::string, std::variant<NativeRealization, MatherRealization>>;
+
+	using MathVector = std::vector<MathNodeP>;
+	using MathRowVector = std::vector<MathNode*>;
 
 }

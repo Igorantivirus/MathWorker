@@ -1,7 +1,6 @@
 #pragma once
 
-#include<vector>
-#include<iostream>
+#include <vector>
 
 #include "MathNode.hpp"
 
@@ -19,12 +18,51 @@ namespace mathWorker
 	class SignatureNode : public MathNode
 	{
 	public:
+
+		#pragma region Initializing
+
 		SignatureNode() = default;
-		SignatureNode(const std::string& name, const std::vector<MathNodeP>& params, const SignatureType type = SignatureType::function) :
-			name_{ name }, type_{type}
+		SignatureNode(const std::string& name, const MathVector& params, const SignatureType type = SignatureType::function) :
+			name_{ name }, type_{ type }
 		{
 			setParams(params);
 		}
+		SignatureNode(const std::string& name, const MathRowVector& params, const SignatureType type = SignatureType::function) :
+			name_{ name }, type_{ type }
+		{
+			setParams(params);
+		}
+		SignatureNode(const SignatureNode& other) :
+			name_{ other.name_ }, type_{other.type_}
+		{
+			setParams(other.params_);
+		}
+		SignatureNode(SignatureNode&& other) noexcept :
+			name_{ std::move(other.name_) }, type_{ std::move(other.type_) }, params_{std::move(other.params_)}
+		{}
+
+		SignatureNode& operator=(const SignatureNode& other)
+		{
+			if(this == &other)
+				return *this;
+			name_ = other.name_;
+			type_ = other.type_;
+			setParams(other.params_);
+			return *this;
+		}
+		SignatureNode& operator=(SignatureNode&& other) noexcept
+		{
+			if (this == &other)
+				return *this;
+			name_ = std::move(other.name_);
+			type_ = std::move(other.type_);
+			params_ = std::move(other.params_);
+			return *this;
+		}
+
+		#pragma endregion
+
+		#pragma region Overrided
 
 		std::string toString() const override
 		{
@@ -51,7 +89,7 @@ namespace mathWorker
 
 		MathNodeP replace(const VariableContext& variabls) const override
 		{
-			std::unique_ptr<SignatureNode> result(new SignatureNode(name_, {}, type_));
+			std::unique_ptr<SignatureNode> result(new SignatureNode(name_, MathRowVector{}, type_));
 			result->params_.reserve(params_.size());
 			for (const auto& i : params_)
 				result->params_.push_back(i->replace(variabls));
@@ -59,7 +97,7 @@ namespace mathWorker
 		}
 		MathNodeP calculate(const FunctionContext& context) const override
 		{
-			std::vector<MathNodeP> params;
+			MathVector params;
 			params.reserve(params_.size());
 
 			for (const auto& i : params_)
@@ -83,13 +121,7 @@ namespace mathWorker
 					varContext[mather_node_ptr->second[i]] = params[i]->clone();
 
 				MathNodeP newRes = mather_node_ptr->first->replace(varContext);
-				std::cout << "NewRes: " << newRes->toString() << '\n';
-				/*return 
-
-				MathNodeP newRes = replace(varContext);
-
-				*/
-
+				
 				return std::move(newRes->calculate(context));
 			}
 			return nullptr;
@@ -99,7 +131,18 @@ namespace mathWorker
 			return ComplexType(std::nanl(""), std::nanl(""));
 		}
 
-		void setParams(const std::vector<MathNodeP>& params)
+		#pragma endregion
+
+		#pragma region Methods
+
+		void setParams(const MathVector& params)
+		{
+			params_.clear();
+			params_.reserve(params.size());
+			for (const auto& i : params)
+				params_.push_back(std::move(i->clone()));
+		}
+		void setParams(const MathRowVector& params)
 		{
 			params_.clear();
 			params_.reserve(params.size());
@@ -112,6 +155,17 @@ namespace mathWorker
 			return type_;
 		}
 		
+		void addParam(const MathNodeP& param)
+		{
+			if (param != nullptr)
+				params_.push_back(std::move(param->clone()));
+		}
+		void addParam(const MathNode& param)
+		{
+			params_.push_back(std::move(param.clone()));
+		}
+
+		#pragma endregion
 
 	private:
 
@@ -119,7 +173,7 @@ namespace mathWorker
 
 		std::string name_;
 
-		std::vector<MathNodeP> params_;
+		MathVector params_;
 
 	};
 

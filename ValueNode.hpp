@@ -9,6 +9,9 @@ namespace mathWorker
 	class ValueNode : public MathNode
 	{
 	public:
+
+		#pragma region Initializing
+
 		ValueNode() = default;
 		ValueNode(const ComplexType& value) :
 			value_{ value }
@@ -16,6 +19,27 @@ namespace mathWorker
 		ValueNode(const RealType& value) :
 			value_{ value, 0 }
 		{}
+		ValueNode(const ValueNode& other) :
+			value_{other.value_}
+		{}
+		ValueNode(ValueNode&& other) noexcept :
+			value_{ std::move(other.value_) }
+		{}
+
+		ValueNode& operator=(const ValueNode& other)
+		{
+			value_ = other.value_;
+			return *this;
+		}
+		ValueNode& operator=(ValueNode&& other) noexcept
+		{
+			value_ = std::move(other.value_);
+			return *this;
+		}
+
+		#pragma endregion
+
+		#pragma region Overrided
 
 		std::string toString() const override
 		{
@@ -28,22 +52,24 @@ namespace mathWorker
 		}
 		MathNodeP clone() const override
 		{
-			return std::make_unique<ValueNode>(value_);
+			return std::make_unique<ValueNode>(*this);
 		}
 		MathNodeP replace(const VariableContext& variabls) const override
 		{
-			//Заменять нечего - так и осталось число
-			return std::make_unique<ValueNode>(value_);
+			return std::make_unique<ValueNode>(*this);
 		}
 		MathNodeP calculate(const FunctionContext& context) const override
 		{
-			//Заменять нечего - так и осталось число
-			return std::make_unique<ValueNode>(value_);
+			return std::make_unique<ValueNode>(*this);
 		}
 		ComplexType getNumberForced() const override
 		{
 			return value_;
 		}
+
+		#pragma endregion
+
+		#pragma region Methods
 
 		const ComplexType& getValue() const
 		{
@@ -53,6 +79,8 @@ namespace mathWorker
 		{
 			value_ = value;
 		}
+
+		#pragma endregion
 
 	private:
 
