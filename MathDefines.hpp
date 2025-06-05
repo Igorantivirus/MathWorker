@@ -37,7 +37,7 @@ namespace mathWorker
 		SignatureType type = SignatureType::operation;
 	};
 
-	using SignatureContext = std::map<std::string, SignatureRealization>;
+	using SignatureContext = std::map<std::string, SignatureRealization, std::less<>>;
 
 	using MathVector = std::vector<MathNodeP>;
 	using MathRowVector = std::vector<MathNode*>;

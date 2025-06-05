@@ -60,6 +60,22 @@ SignatureContext makeBaseContext()
 			return std::make_unique<ValueNode>(res);
 		},3, SignatureType::function
 	};
+	context["d"] =
+	{
+		[](const std::vector<MathNodeP>& params)->MathNodeP
+		{
+			ComplexType res = params[0]->getNumberForced() * ComplexType(180.l / std::acos(-1));
+			return std::make_unique<ValueNode>(res);
+		},4, SignatureType::unare
+	};
+	context["r"] =
+	{
+		[](const std::vector<MathNodeP>& params)->MathNodeP
+		{
+			ComplexType res = params[0]->getNumberForced() * ComplexType(std::acos(-1) / 180);
+			return std::make_unique<ValueNode>(res);
+		},4, SignatureType::unare
+	};
 	return context;
 }
 
@@ -94,7 +110,7 @@ int main()
 {
 	MathParser parse;
 
-	std::string s = "2+2^9+3*2+1+9*2+8";
+	std::string s = "3.1415926535d";
 
 	SignatureContext context = makeBaseContext();
 

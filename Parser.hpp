@@ -22,8 +22,8 @@ namespace mathWorker
 
 	public:
 
-		using SpecContext = std::vector<const SignatureContext::value_type*>;
-		using Token = std::string;
+		//using SpecContext = std::vector<const SignatureContext::value_type*>;
+		using Token = std::string_view;
 		using TokenArray = std::vector<Token>;
 
 		
@@ -67,9 +67,16 @@ namespace mathWorker
 		MathNodeP lastPars(const Token& tkn) const
 		{
 			if (isNumber(tkn[0]))
-				return std::make_unique<ValueNode>(RealType(std::stold(tkn)));
+				return std::make_unique<ValueNode>(RealType(std::stold(std::string(tkn))));
 			if (isLetter(tkn[0]))
-				return std::make_unique<SymbolNode>(tkn);
+				return std::make_unique<SymbolNode>(std::string(tkn));
+			if (isOpenBracket(tkn[0]))
+			{
+
+
+
+
+			}
 			return nullptr;
 		}
 		MathVector parseParams(const Token& tkn, const SignatureContext& context) const
@@ -88,7 +95,7 @@ namespace mathWorker
 
 
 			std::unique_ptr<SignatureNode> node(new SignatureNode{});
-			node->setName(tkns[minInd]);
+			node->setName(std::string(tkns[minInd]));
 
 			SignatureType type = context.find(tkns[minInd])->second.type;
 
@@ -105,7 +112,8 @@ namespace mathWorker
 			}
 			else if (type == SignatureType::unare)
 			{
-
+				MathNodeP param = parsing(tkns.subspan(minInd - 1, 1), context);
+				node->setParams(MathRowVector{ param.get() });
 			}
 			else if (type == SignatureType::specialFunction)
 			{
@@ -115,7 +123,7 @@ namespace mathWorker
 		}
 
 
-
+	private:
 
 		bool isLetter(const char c) const
 		{
