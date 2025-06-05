@@ -108,13 +108,15 @@ std::ostream& operator<<(std::ostream& out, const std::vector<T>& v)
 
 int main()
 {
+	SignatureContext context = makeBaseContext();
 	MathParser parse;
+	parse.setContext(&context);
+
 
 	std::string s = "3.1415926535d";
 
-	SignatureContext context = makeBaseContext();
 
-	MathNodeP ptr = parse.parse(s, context);
+	MathNodeP ptr = parse.parse(s);
 
 	std::cout << ptr->toString() << '\n';
 	std::cout << ptr->calculate(context)->toString() << '\n';

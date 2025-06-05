@@ -20,20 +20,25 @@ namespace mathWorker
 
 		std::string exceptionError_;
 
+		SignatureContext* context_ = nullptr;
+
 	public:
 
 		//using SpecContext = std::vector<const SignatureContext::value_type*>;
 		using Token = std::string_view;
 		using TokenArray = std::vector<Token>;
 
-		
+		void setContext(SignatureContext* context)
+		{
+			context_ = context;
+		}
 
 
-		MathNodeP parse(const std::string& str, const SignatureContext& context)
+		MathNodeP parse(const std::string& str)
 		{
 			TokenArray tkns = tokenize(str);
 
-			return parsing(tkns, context);
+			return parsing(tkns);
 
 		}
 
@@ -45,15 +50,15 @@ namespace mathWorker
 	//private:
 
 		//return index of this token
-		size_t findTokenWithMinPriority(const std::span<Token> tkns, const SignatureContext& context)
+		size_t findTokenWithMinPriority(const std::span<Token> tkns)
 		{
 			size_t ind = std::string::npos;
 			unsigned char priority = 255;
 			
 			for (size_t i = 0; i < tkns.size(); ++i)
 			{
-				auto found = context.find(tkns[i]);
-				if (found == context.end())
+				auto found = context_->find(tkns[i]);
+				if (found == context_->end())
 					continue;
 				if (found->second.priority < priority)
 				{
@@ -79,16 +84,16 @@ namespace mathWorker
 			}
 			return nullptr;
 		}
-		MathVector parseParams(const Token& tkn, const SignatureContext& context) const
+		MathVector parseParams(const Token& tkn) const
 		{
 			return {};
 		}
 
-		MathNodeP parsing(const std::span<Token> tkns, const SignatureContext& context)
+		MathNodeP parsing(const std::span<Token> tkns)
 		{
 			if (tkns.empty())
 				return nullptr;
-			size_t minInd = findTokenWithMinPriority(tkns, context);
+			size_t minInd = findTokenWithMinPriority(tkns);
 
 			if (minInd == std::string::npos)
 				return lastPars(tkns[0]);
@@ -97,22 +102,22 @@ namespace mathWorker
 			std::unique_ptr<SignatureNode> node(new SignatureNode{});
 			node->setName(std::string(tkns[minInd]));
 
-			SignatureType type = context.find(tkns[minInd])->second.type;
+			SignatureType type = context_->find(tkns[minInd])->second.type;
 
 			if (type == SignatureType::operation)
 			{
-				MathNodeP left = parsing(tkns.first(minInd), context);
-				MathNodeP right = parsing(tkns.subspan(minInd + 1), context);
+				MathNodeP left = parsing(tkns.first(minInd));
+				MathNodeP right = parsing(tkns.subspan(minInd + 1));
 				node->setParams(MathRowVector{left.get(), right.get()});
 			}
 			else if (type == SignatureType::function)
 			{
-				MathVector params = std::move(parseParams(tkns[minInd + 1], context));
+				MathVector params = std::move(parseParams(tkns[minInd + 1]));
 				node->setParams(params);
 			}
 			else if (type == SignatureType::unare)
 			{
-				MathNodeP param = parsing(tkns.subspan(minInd - 1, 1), context);
+				MathNodeP param = parsing(tkns.subspan(minInd - 1, 1));
 				node->setParams(MathRowVector{ param.get() });
 			}
 			else if (type == SignatureType::specialFunction)
