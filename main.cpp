@@ -4,6 +4,8 @@
 #include "SymbolNode.hpp"
 #include "SignatureNode.hpp"
 
+#include "Parser.hpp"
+
 using namespace mathWorker;
 
 FunctionContext makeBaseContext()
@@ -54,7 +56,21 @@ MathNodeP makeMyFoo()
 
 int main()
 {
-	FunctionContext funCont = makeBaseContext();
+	MathParser parse;
+
+	/*auto vec = parse.tokenizer("a+sin(3*pi-2*e/9)");
+
+	for (const auto& i : vec)
+		std::cout << i << ' ';*/
+
+	auto vec = parse.tokenizer("3*pi-2*e/9");
+
+	for (const auto& i : vec)
+		std::cout << i << ' ';
+
+	
+
+	/*FunctionContext funCont = makeBaseContext();
 	MathNodeP realization = makeMyFoo();
 
 	MatherRealization pair;
@@ -71,7 +87,7 @@ int main()
 	SignatureNode sign("foo", MathRowVector{&v1, &v2});
 
 	std::cout << sign.toString() << '\n';
-	std::cout << sign.calculate(funCont)->toString() << '\n';
+	std::cout << sign.calculate(funCont)->toString() << '\n';*/
 
 
 

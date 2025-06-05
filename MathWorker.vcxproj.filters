@@ -22,6 +22,9 @@
     <Filter Include="Context">
       <UniqueIdentifier>{936ce97a-ca5e-4158-bfb1-6460ba60af5f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Parse">
+      <UniqueIdentifier>{4e530cb2-b73d-43c1-8e1a-2043d967a543}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -52,6 +55,9 @@
     </ClInclude>
     <ClInclude Include="SignatureNode.hpp">
       <Filter>MathClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Parser.hpp">
+      <Filter>Parse</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
