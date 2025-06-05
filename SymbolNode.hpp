@@ -57,7 +57,7 @@ namespace mathWorker
 				return std::make_unique<SymbolNode>(*this);
 			return found->second->clone();
 		}
-		MathNodeP calculate(const FunctionContext& context) const override
+		MathNodeP calculate(const SignatureContext& context) const override
 		{
 			return std::make_unique<SymbolNode>(*this);
 		}

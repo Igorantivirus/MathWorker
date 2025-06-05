@@ -8,35 +8,58 @@
 
 using namespace mathWorker;
 
-FunctionContext makeBaseContext()
+SignatureContext makeBaseContext()
 {
-	FunctionContext context;
+	SignatureContext context;
 
-	context["+"] = [](const std::vector<MathNodeP>& params)->MathNodeP
+	context["+"] =
+	{
+		[](const std::vector<MathNodeP>& params)->MathNodeP
 		{
 			ComplexType res = params[0]->getNumberForced() + params[1]->getNumberForced();
 			return std::make_unique<ValueNode>(res);
-		};
-	context["-"] = [](const std::vector<MathNodeP>& params)->MathNodeP
+		},0
+	};
+	context["-"] =
+	{
+		[](const std::vector<MathNodeP>& params)->MathNodeP
 		{
 			ComplexType res = params[0]->getNumberForced() - params[1]->getNumberForced();
 			return std::make_unique<ValueNode>(res);
-		};
-	context["*"] = [](const std::vector<MathNodeP>& params)->MathNodeP
+		},0
+	};
+	context["*"] =
+	{
+		[](const std::vector<MathNodeP>& params)->MathNodeP
 		{
 			ComplexType res = params[0]->getNumberForced() * params[1]->getNumberForced();
 			return std::make_unique<ValueNode>(res);
-		};
-	context["/"] = [](const std::vector<MathNodeP>& params)->MathNodeP
+		},1
+	};
+	context["/"] =
+	{
+		[](const std::vector<MathNodeP>& params)->MathNodeP
 		{
 			ComplexType res = params[0]->getNumberForced() / params[1]->getNumberForced();
 			return std::make_unique<ValueNode>(res);
-		};
-	context["^"] = [](const std::vector<MathNodeP>& params)->MathNodeP
+		},1
+	};
+	context["^"] =
+	{
+		[](const std::vector<MathNodeP>& params)->MathNodeP
 		{
 			ComplexType res = std::pow(params[0]->getNumberForced(), params[1]->getNumberForced());
 			return std::make_unique<ValueNode>(res);
-		};
+		},2
+	};
+	context["sqrt"] =
+	{
+		[](const std::vector<MathNodeP>& params)->MathNodeP
+		{
+			ComplexType res = std::sqrt(params[0]->getNumberForced());
+			return std::make_unique<ValueNode>(res);
+		},3
+	};
 	return context;
 }
 
@@ -49,7 +72,9 @@ MathNodeP makeMyFoo()
 	SignatureNode s1("^", { &x, &t });
 	SignatureNode s2("^", { &y, &t });
 
-	MathNodeP result(new SignatureNode{ "+", MathRowVector{&s1, &s2} });
+	SignatureNode sum("+", MathRowVector{ &s1, &s2 });
+
+	MathNodeP result(new SignatureNode{ "sqrt", MathRowVector{&sum} });
 
 	return result;
 }
@@ -63,31 +88,31 @@ int main()
 	for (const auto& i : vec)
 		std::cout << i << ' ';*/
 
-	auto vec = parse.tokenizer("3*pi-2*e/9");
+	/*auto vec = parse.tokenizer("3*pi-2*e/9");
 
 	for (const auto& i : vec)
-		std::cout << i << ' ';
+		std::cout << i << ' ';*/
 
 	
 
-	/*FunctionContext funCont = makeBaseContext();
+	SignatureContext funCont = makeBaseContext();
 	MathNodeP realization = makeMyFoo();
 
 	MatherRealization pair;
 	pair.first = realization->clone();
 	pair.second = std::vector<std::string>{ "x", "y" };
 
-	funCont["foo"] = std::move(pair);
+	funCont["abs"].realization = std::move(pair);
 
 
 
 	ValueNode v1(ComplexType(3));
 	ValueNode v2(ComplexType(4));
 
-	SignatureNode sign("foo", MathRowVector{&v1, &v2});
+	SignatureNode sign("abs", MathRowVector{&v1, &v2});
 
 	std::cout << sign.toString() << '\n';
-	std::cout << sign.calculate(funCont)->toString() << '\n';*/
+	std::cout << sign.calculate(funCont)->toString() << '\n';
 
 
 
