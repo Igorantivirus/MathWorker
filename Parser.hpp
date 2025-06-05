@@ -1,6 +1,8 @@
 #pragma once
 
 #include <stack>
+#include <span>
+#include <algorithm>
 
 #include "MathDefines.hpp"
 #include "MathNode.hpp"
@@ -20,12 +22,100 @@ namespace mathWorker
 
 	public:
 
+		using SpecContext = std::vector<const SignatureContext::value_type*>;
+		using Token = std::string;
+		using TokenArray = std::vector<Token>;
+
+		
+
+
+		MathNodeP parse(const std::string& str, const SignatureContext& context)
+		{
+			TokenArray tkns = tokenize(str);
+
+			return parsing(tkns, context);
+
+		}
+
+
 
 
 		const std::string& error = exceptionError_;
-
-
+	
 	//private:
+
+		//return index of this token
+		size_t findTokenWithMinPriority(const std::span<Token> tkns, const SignatureContext& context)
+		{
+			size_t ind = std::string::npos;
+			unsigned char priority = 255;
+			
+			for (size_t i = 0; i < tkns.size(); ++i)
+			{
+				auto found = context.find(tkns[i]);
+				if (found == context.end())
+					continue;
+				if (found->second.priority < priority)
+				{
+					priority = found->second.priority;
+					ind = i;
+				}
+			}
+			return ind;
+		}
+
+		MathNodeP lastPars(const Token& tkn) const
+		{
+			if (isNumber(tkn[0]))
+				return std::make_unique<ValueNode>(RealType(std::stold(tkn)));
+			if (isLetter(tkn[0]))
+				return std::make_unique<SymbolNode>(tkn);
+			return nullptr;
+		}
+		MathVector parseParams(const Token& tkn, const SignatureContext& context) const
+		{
+			return {};
+		}
+
+		MathNodeP parsing(const std::span<Token> tkns, const SignatureContext& context)
+		{
+			if (tkns.empty())
+				return nullptr;
+			size_t minInd = findTokenWithMinPriority(tkns, context);
+
+			if (minInd == std::string::npos)
+				return lastPars(tkns[0]);
+
+
+			std::unique_ptr<SignatureNode> node(new SignatureNode{});
+			node->setName(tkns[minInd]);
+
+			SignatureType type = context.find(tkns[minInd])->second.type;
+
+			if (type == SignatureType::operation)
+			{
+				MathNodeP left = parsing(tkns.first(minInd), context);
+				MathNodeP right = parsing(tkns.subspan(minInd + 1), context);
+				node->setParams(MathRowVector{left.get(), right.get()});
+			}
+			else if (type == SignatureType::function)
+			{
+				MathVector params = std::move(parseParams(tkns[minInd + 1], context));
+				node->setParams(params);
+			}
+			else if (type == SignatureType::unare)
+			{
+
+			}
+			else if (type == SignatureType::specialFunction)
+			{
+
+			}
+			return std::move(node);
+		}
+
+
+
 
 		bool isLetter(const char c) const
 		{
@@ -41,53 +131,53 @@ namespace mathWorker
 		}
 		bool isCloseBracket(const char c) const
 		{
-			return c == '(';
+			return c == ')';
+		}
+		bool isNone(const char c) const
+		{
+			return !isNumber(c) && !isLetter(c) && !isOpenBracket(c);
 		}
 
-		std::vector<std::string> tokenizer(const std::string& str)
+		using CheckMethod = bool(MathParser::*)(const char c) const;
+
+		size_t getEndOf(const Token& str, size_t i, CheckMethod check)
 		{
-			std::vector<std::string> result;
-			size_t j;
+			while (i < str.size() && (this->*check)(str[i]))
+				++i;
+			return i;
+		}
+		size_t getEndOfBracket(const Token& str, size_t i)
+		{
+			int lavel = 1;
+			size_t j = i + 1;
+			for (; j < str.size() && lavel > 0; ++j)
+				if (str[j] == '(')
+					++lavel;
+				else if (str[j] == ')')
+					--lavel;
+			if (lavel != 0)
+				exceptionError_ = "Error of brackets. opened in " + std::to_string(i) + '.';
+			return j;
+		}
+
+		TokenArray tokenize(const Token& str)
+		{
+			TokenArray tkns;
+			size_t j = 0;
 			for (size_t i = 0; i < str.size(); ++i)
 			{
-				if (isLetter(str[i]))
-				{
-					for (j = i + 1; j < str.size() && isLetter(str[j]); ++j);
-					result.push_back(str.substr(i, j - i));
-					i = j - 1;
-				}
+				if (isOpenBracket(str[i]))
+					tkns.push_back(str.substr(i, (j = getEndOfBracket(str, i)) - i));
+				else if (isLetter(str[i]))
+					tkns.push_back(str.substr(i, (j = getEndOf(str, i, &MathParser::isLetter)) - i));
 				else if (isNumber(str[i]))
-				{
-					for (j = i + 1; j < str.size() && isNumber(str[j]); ++j);
-					result.push_back(str.substr(i, j - i));
-					i = j - 1;
-				}
-				else if (isOpenBracket(str[i]))
-				{
-					std::stack<char> stack;
-					stack.push(str[i]);
-					for (j = i + 1; j < str.size() && !stack.empty(); ++j)
-					{
-						if (isOpenBracket(str[j]))
-							stack.push(str[j]);
-						else if (isCloseBracket(str[j]))
-							stack.pop();
-					}
-					result.push_back(str.substr(i, j - i));
-					i = j - 1;
-				}
-				else if (isCloseBracket(str[i]))
-				{
-					exceptionError_ = "Error of bracket in index: " + std::to_string(i) + '.';
-					return {};
-				}
+					tkns.push_back(str.substr(i, (j = getEndOf(str, i, &MathParser::isNumber)) - i));
 				else
-					result.push_back(std::string(1, str[i]));
+					tkns.push_back(str.substr(i, (j = getEndOf(str, i, &MathParser::isNone)) - i));
+				i = j - 1;
 			}
-			return result;
+			return tkns;
 		}
-
-
 	};
 
 }

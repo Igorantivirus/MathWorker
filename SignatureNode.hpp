@@ -7,14 +7,6 @@
 namespace mathWorker
 {
 
-	enum class SignatureType : unsigned char
-	{
-		operation = 0,
-		function,
-		unare,
-		nameFunction
-	};
-
 	class SignatureNode : public MathNode
 	{
 	public:
@@ -133,6 +125,11 @@ namespace mathWorker
 		#pragma endregion
 
 		#pragma region Methods
+
+		void setName(const std::string& str)
+		{
+			name_ = str;
+		}
 
 		void setParams(const MathVector& params)
 		{

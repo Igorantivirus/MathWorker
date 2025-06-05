@@ -16,6 +16,14 @@ namespace mathWorker
 
 	class MathNode;
 
+	enum class SignatureType : unsigned char
+	{
+		operation = 0,
+		function,
+		unare,
+		specialFunction
+	};
+
 	using MathNodeP = std::unique_ptr<MathNode>;
 	using VariableContext = std::map<std::string, MathNodeP>;
 
@@ -26,6 +34,7 @@ namespace mathWorker
 	{
 		std::variant<NativeRealization, MatherRealization> realization;
 		unsigned char priority = 0;
+		SignatureType type = SignatureType::operation;
 	};
 
 	using SignatureContext = std::map<std::string, SignatureRealization>;
