@@ -207,6 +207,31 @@ namespace mathWorker
 			return !isNumber(c) && !isLetter(c) && !isOpenBracket(c);
 		}
 
+		bool isTerm(const Token& tkn) const
+		{
+			return context_->find(tkn) != context_->end();
+		}
+
+		bool meansDefaultOperator(const Token& a, const Token& b) const
+		{
+			bool bracket1 = isCloseBracket(a.back());
+			bool bracket2 = isOpenBracket(b[0]);
+
+			bool isNumber1 = isNumber(a[0]);
+			bool isNumber2 = isNumber(b[0]);
+
+			bool isWord1 = isLetter(a[0]);
+			bool isWord2 = isLetter(b[0]);
+
+			if (bracket1 && (isNumber2 || isWord2 || bracket2))
+				return true;
+			if (isNumber1 && (isNumber2 || isWord2 || bracket2))
+				return true;
+			if (!isTerm(a) && isWord1 && (isNumber2 || isWord2 || bracket2))
+				return true;
+			return false;
+		}
+
 		using CheckMethod = bool(MathParser::*)(const char) const;
 
 		size_t getEndOf(const Token& str, size_t i, CheckMethod check) const
@@ -233,18 +258,24 @@ namespace mathWorker
 		{
 			TokenArray tkns;
 			size_t j = 0;
+			Token pr;
 			for (size_t i = 0; i < str.size(); ++i)
 			{
+				if (std::isspace(str[i]))
+					continue;
 				if (isOpenBracket(str[i]))
-					tkns.push_back(str.substr(i, (j = getEndOfBracket(str, i)) - i));
+					pr = str.substr(i, (j = getEndOfBracket(str, i)) - i);
 				else if (isCloseBracket(str[i]))
 					throw ParseException("Not opened bracket in index: " + std::to_string(i) + '.', ExceptionType::brackets);
 				else if (isLetter(str[i]))
-					tkns.push_back(str.substr(i, (j = getEndOf(str, i, &MathParser::isLetter)) - i));
+					pr = str.substr(i, (j = getEndOf(str, i, &MathParser::isLetter)) - i);
 				else if (isNumber(str[i]))
-					tkns.push_back(str.substr(i, (j = getEndOf(str, i, &MathParser::isNumber)) - i));
+					pr = str.substr(i, (j = getEndOf(str, i, &MathParser::isNumber)) - i);
 				else
-					tkns.push_back(str.substr(i, (j = getEndOf(str, i, &MathParser::isNone)) - i));
+					pr = str.substr(i, (j = getEndOf(str, i, &MathParser::isNone)) - i);
+				if (!tkns.empty() && meansDefaultOperator(tkns.back(), pr))
+					tkns.push_back(defaultOperator_);
+				tkns.push_back(pr);
 				i = j - 1;
 			}
 			return tkns;
