@@ -10,85 +10,48 @@
 #include "ValueNode.hpp"
 #include "SymbolNode.hpp"
 #include "SignatureNode.hpp"
+#include "ParseException.hpp"
+#include "Tokenizer.hpp"
 
 namespace mathWorker
 {
-	enum class ExceptionType : unsigned char
-	{
-		unknown = 0,
-		brackets,
-		params,
-	};
-
-	class ParseException : public std::exception
-	{
-	public:
-		explicit ParseException(const char* message, const ExceptionType type)
-			: msg_(message), type_{type}
-		{}
-		explicit ParseException(const std::string& message, const ExceptionType type)
-			: msg_(message), type_{type}
-		{}
-		virtual ~ParseException() noexcept
-		{}
-
-		virtual const char* what() const noexcept
-		{
-			return msg_.c_str();
-		}
-		virtual const ExceptionType type() const noexcept
-		{
-			return type_;
-		}
-
-	protected:
-
-		std::string msg_;
-
-		ExceptionType type_ = ExceptionType::unknown;
-
-	};
 
 	class MathParser
 	{
-	private:
-
-		std::string exceptionError_;
-
-		SignatureContext* context_ = nullptr;
-		std::string defaultOperator_;
-
 	public:
+		MathParser() = default;
+		MathParser(const SignatureContext* context, const Tokenizer* tokenizer) :
+			context_{ context }, tokenizer_{tokenizer}
+		{}
 
-		using Token = std::string_view;
-		using TokenArray = std::vector<Token>;
-
-	public:
-		MathParser(SignatureContext* context, const std::string& def = {})
-		{
-			setContext(context, def);
-		}
-
-		void setContext(SignatureContext* context, const std::string& def)
+		void setContext(const SignatureContext* context)
 		{
 			context_ = context;
-			auto found = context->find(def);
-
-			if (found != context->end())
-				defaultOperator_ = def;
+		}
+		void setTokenizer(const Tokenizer* tokenizer)
+		{
+			tokenizer_ = tokenizer;
 		}
 
 		MathNodeP parse(const std::string_view& str)
 		{
-			TokenArray tkns = tokenize(str);
+			TokenArray tkns = tokenizer_->tokenize(str);
 			return parsing(tkns);
 		}
 
-		const std::string& error = exceptionError_;
-	
 	private:
 
-		size_t findTokenWithMinPriority(const std::span<Token> tkns)
+		const SignatureContext* context_ = nullptr;
+		const Tokenizer* tokenizer_ = nullptr;
+
+	private:
+
+		bool isTerm(const Token& tkn) const
+		{
+			return context_->find(tkn) != context_->end();
+		}
+
+		size_t findTokenWithMinPriority(const std::span<Token> tkns) const
 		{
 			size_t ind = std::string::npos;
 			unsigned char priority = 255;
@@ -119,14 +82,14 @@ namespace mathWorker
 					return std::make_unique<SymbolNode>(std::string(tkns[0]));
 				if (isOpenBracket(tkns[0][0]))
 				{
-					TokenArray ntkns = tokenize(tkns[0].substr(1, tkns[0].size() - 2));
+					TokenArray ntkns = tokenizer_->tokenize(tkns[0].substr(1, tkns[0].size() - 2));
 					return parsing(ntkns);
 				}
 				return nullptr;
 			}
 			size_t ind = tkns.size() / 2;
 			std::unique_ptr<SignatureNode> node(new SignatureNode{});
-			node->setName(defaultOperator_);
+			node->setName("");
 
 			MathNodeP left = parsing(tkns.first(ind));
 			MathNodeP right = parsing(tkns.subspan(ind));
@@ -138,7 +101,7 @@ namespace mathWorker
 		MathVector parseParams(const Token& tkn)
 		{
 			MathVector result;
-			TokenArray tkns = tonenizeByComma(tkn.substr(1, tkn.size() - 2));
+			TokenArray tkns = tokenizer_->tonenizeByComma(tkn.substr(1, tkn.size() - 2));
 
 			for (const auto& i : tkns)
 				if (i.empty())
@@ -178,125 +141,6 @@ namespace mathWorker
 				node->setParams(MathRowVector{ left.get(), right.get() });
 			}
 			return std::move(node);
-		}
-
-	private:
-
-		bool isLetter		(const char c) const
-		{
-			return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
-		}
-		bool isNumber		(const char c) const
-		{
-			return (c >= '0' && c <= '9') || c == '.';
-		}
-		bool isOpenBracket	(const char c) const
-		{
-			return c == '(';
-		}
-		bool isCloseBracket	(const char c) const
-		{
-			return c == ')';
-		}
-		bool isComma		(const char c) const
-		{
-			return c == ',';
-		}
-		bool isNone			(const char c) const
-		{
-			return !isNumber(c) && !isLetter(c) && !isOpenBracket(c);
-		}
-
-		bool isTerm(const Token& tkn) const
-		{
-			return context_->find(tkn) != context_->end();
-		}
-
-		bool meansDefaultOperator(const Token& a, const Token& b) const
-		{
-			bool bracket1 = isCloseBracket(a.back());
-			bool bracket2 = isOpenBracket(b[0]);
-
-			bool isNumber1 = isNumber(a[0]);
-			bool isNumber2 = isNumber(b[0]);
-
-			bool isWord1 = isLetter(a[0]);
-			bool isWord2 = isLetter(b[0]);
-
-			if (bracket1 && (isNumber2 || isWord2 || bracket2))
-				return true;
-			if (isNumber1 && (isNumber2 || isWord2 || bracket2))
-				return true;
-			if (!isTerm(a) && isWord1 && (isNumber2 || isWord2 || bracket2))
-				return true;
-			return false;
-		}
-
-		using CheckMethod = bool(MathParser::*)(const char) const;
-
-		size_t getEndOf(const Token& str, size_t i, CheckMethod check) const
-		{
-			while (i < str.size() && (this->*check)(str[i]))
-				++i;
-			return i;
-		}
-		size_t getEndOfBracket(const Token& str, size_t i) const
-		{
-			int lavel = 1;
-			size_t j = i + 1;
-			for (; j < str.size() && lavel > 0; ++j)
-				if (str[j] == '(')
-					++lavel;
-				else if (str[j] == ')')
-					--lavel;
-			if (lavel != 0)
-				throw ParseException("Error of brackets. opened in " + std::to_string(i) + '.', ExceptionType::brackets);
-			return j;
-		}
-
-		TokenArray tokenize(const Token& str) const
-		{
-			TokenArray tkns;
-			size_t j = 0;
-			Token pr;
-			for (size_t i = 0; i < str.size(); ++i)
-			{
-				if (std::isspace(str[i]))
-					continue;
-				if (isOpenBracket(str[i]))
-					pr = str.substr(i, (j = getEndOfBracket(str, i)) - i);
-				else if (isCloseBracket(str[i]))
-					throw ParseException("Not opened bracket in index: " + std::to_string(i) + '.', ExceptionType::brackets);
-				else if (isLetter(str[i]))
-					pr = str.substr(i, (j = getEndOf(str, i, &MathParser::isLetter)) - i);
-				else if (isNumber(str[i]))
-					pr = str.substr(i, (j = getEndOf(str, i, &MathParser::isNumber)) - i);
-				else
-					pr = str.substr(i, (j = getEndOf(str, i, &MathParser::isNone)) - i);
-				if (!tkns.empty() && meansDefaultOperator(tkns.back(), pr))
-					tkns.push_back(defaultOperator_);
-				tkns.push_back(pr);
-				i = j - 1;
-			}
-			return tkns;
-		}
-		TokenArray tonenizeByComma(const Token& str) const
-		{
-			TokenArray tkns;
-			size_t last = 0;
-			for (size_t i = 0; i < str.size(); ++i)
-			{
-				if (isOpenBracket(str[i]))
-					i = getEndOfBracket(str, i) - 1;
-				else if (isComma(str[i]))
-				{
-					tkns.push_back(str.substr(last, i - last));
-					last = i + 1;
-				}
-			}
-			if (last < str.size())
-				tkns.push_back(str.substr(last));
-			return tkns;
 		}
 		
 	};

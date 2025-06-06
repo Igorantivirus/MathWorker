@@ -59,5 +59,14 @@
     <ClInclude Include="Parser.hpp">
       <Filter>Parse</Filter>
     </ClInclude>
+    <ClInclude Include="Tokenizer.hpp">
+      <Filter>Parse</Filter>
+    </ClInclude>
+    <ClInclude Include="ParseException.hpp">
+      <Filter>Parse</Filter>
+    </ClInclude>
+    <ClInclude Include="ParseUtils.hpp">
+      <Filter>Parse</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

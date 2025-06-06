@@ -133,12 +133,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FunctionContext.hpp" />
+    <ClInclude Include="ParseException.hpp" />
     <ClInclude Include="Parser.hpp" />
+    <ClInclude Include="ParseUtils.hpp" />
     <ClInclude Include="SignatureNode.hpp" />
     <ClInclude Include="SymbolNode.hpp" />
     <ClInclude Include="MathDefines.hpp" />
     <ClInclude Include="MathNode.hpp" />
     <ClInclude Include="MathStringConverter.hpp" />
+    <ClInclude Include="Tokenizer.hpp" />
     <ClInclude Include="ValueNode.hpp" />
     <ClInclude Include="VariableContext.hpp" />
   </ItemGroup>

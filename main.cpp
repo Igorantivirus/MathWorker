@@ -284,7 +284,8 @@ MathNodeP makeMyFoo()
 
 void addFunction(SignatureContext& context, const std::string& name, const std::vector<std::string>& paramNames, const std::string realization, const unsigned char priority = 3, const SignatureType type = SignatureType::function)
 {
-	MathParser parser(&context);
+	BaseTokenizer tokenizer(&context, "*");
+	MathParser parser(&context, &tokenizer);
 
 	MathNodeP node = parser.parse(realization);
 	//std::cout << node->toString() << '\n';
@@ -321,18 +322,19 @@ int main()
 {
 	SignatureContext context = generateBaseSignature();
 	VariableContext constants = generateBaseConstants();
+	BaseTokenizer tokenizer(&context, "*");
 
 	addFunction(context, "sqrr", { "a", "b", "c" }, "-(b+sqrt(b^2-4*a*c))/(2*a)");
 	addFunction(context, "abs", { "z" }, "sqrt(real(z)^2+imag(z)^2)");
 
-	MathParser parse(&context, "*");
+	MathParser parser(&context, &tokenizer);
 
 	std::string s;
 
 	while (true)
 	{
 		s = input("Enter: ");
-		MathNodeP ptr = parse.parse(s);
+		MathNodeP ptr = parser.parse(s);
 		std::cout << ptr->toString() << '\n';
 		std::cout << ptr->replace(constants)->calculate(context)->toString() << '\n';
 	}
