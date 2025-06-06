@@ -284,8 +284,7 @@ MathNodeP makeMyFoo()
 
 void addFunction(SignatureContext& context, const std::string& name, const std::vector<std::string>& paramNames, const std::string realization, const unsigned char priority = 3, const SignatureType type = SignatureType::function)
 {
-	MathParser parser;
-	parser.setContext(&context);
+	MathParser parser(&context);
 
 	MathNodeP node = parser.parse(realization);
 	//std::cout << node->toString() << '\n';
@@ -326,27 +325,26 @@ int main()
 	addFunction(context, "sqrr", { "a", "b", "c" }, "-(b+sqrt(b^2-4*a*c))/(2*a)");
 	addFunction(context, "abs", { "z" }, "sqrt(real(z)^2+imag(z)^2)");
 
-	MathParser parse;
-	parse.setContext(&context);
+	MathParser parse(&context, "*");
 
-	//std::string s;
+	std::string s;
 
-	//while (true)
-	//{
-	//	s = input("Enter: ");
-	//	MathNodeP ptr = parse.parse(s);
-	//	std::cout << ptr->toString() << '\n';
-	//	std::cout << ptr->replace(constants)->calculate(context)->toString() << '\n';
-	//}
+	while (true)
+	{
+		s = input("Enter: ");
+		MathNodeP ptr = parse.parse(s);
+		std::cout << ptr->toString() << '\n';
+		std::cout << ptr->replace(constants)->calculate(context)->toString() << '\n';
+	}
 
 
-	std::string s = "ln(-1)";
-	//std::string s = "e^(2*i)-(cos(2)+i*sin(2))+e+exp(1)";
+	//s = "(cos(3))d";
+	//s = "e^(2*i)-(cos(2)+i*sin(2))+e+exp(1)";
 
-	MathNodeP ptr = parse.parse(s);
+	//MathNodeP ptr = parse.parse(s);
 
-	std::cout << ptr->toString() << '\n';
-	std::cout << ptr->replace(constants)->calculate(context)->toString() << '\n';
+	//std::cout << ptr->toString() << '\n';
+	//std::cout << ptr->replace(constants)->calculate(context)->toString() << '\n';
 
 	
 

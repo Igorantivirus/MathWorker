@@ -136,14 +136,16 @@ namespace mathWorker
 			params_.clear();
 			params_.reserve(params.size());
 			for (const auto& i : params)
-				params_.push_back(std::move(i->clone()));
+				if(i != nullptr)
+					params_.push_back(std::move(i->clone()));
 		}
 		void setParams(const MathRowVector& params)
 		{
 			params_.clear();
 			params_.reserve(params.size());
 			for (const auto& i : params)
-				params_.push_back(std::move(i->clone()));
+				if(i != nullptr)
+					params_.push_back(std::move(i->clone()));
 		}
 
 		const SignatureType getType() const
