@@ -20,17 +20,15 @@ namespace mathWorker
 	{
 	public:
 		MathParser() = default;
-		MathParser(const SignatureContext* context, const std::string defautlOperator, const Tokenizer* tokenizer)
+		MathParser(const SignatureContext* context, const Tokenizer* tokenizer)
 		{
-			setContext(context, defautlOperator);
+			setContext(context);
 			setTokenizer(tokenizer);
 		}
 
-		void setContext(const SignatureContext* context, const std::string defautlOperator)
+		void setContext(const SignatureContext* context)
 		{
 			context_ = context;
-			if (context->find(defautlOperator) != context->end())
-				defautlOperator_ = defautlOperator;
 		}
 		void setTokenizer(const Tokenizer* tokenizer)
 		{
@@ -47,8 +45,6 @@ namespace mathWorker
 
 		const SignatureContext* context_ = nullptr;
 		const Tokenizer* tokenizer_ = nullptr;
-
-		std::string defautlOperator_;
 
 	private:
 
@@ -94,12 +90,13 @@ namespace mathWorker
 					return parse(tkns[0].substr(1, tkns[0].size() - 2));
 				throw ParseException(std::string("Unknown token \"") + std::string(tkns[0]) + '\"', ExceptionType::unknown);
 			}
-			auto pr = context_->find(defautlOperator_)->second.assitiation;
+			throw ParseException(std::string("Unknown tokens "), ExceptionType::unknown);
+			/*auto pr = context_->find(defautlOperator_)->second.assitiation;
 			size_t ind = context_->find(defautlOperator_)->second.assitiation == OperatorPriority::leftToRight ? tkns.size() - 1 : 0;
 			
 			SignatureNode* node = new SignatureNode{ defautlOperator_ };
 			processOperatorTkns(node, tkns.first(ind), tkns.subspan(ind));
-			return std::move(MathNodeP(node));
+			return std::move(MathNodeP(node));*/
 		}
 
 		MathVector parametsParsing(const Token token) const

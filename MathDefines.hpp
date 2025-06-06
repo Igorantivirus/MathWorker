@@ -20,7 +20,6 @@ namespace mathWorker
 	{
 		operation = 0,
 		function,
-		unare,
 		specialFunction
 	};
 

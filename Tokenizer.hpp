@@ -158,7 +158,10 @@ namespace mathWorker
 				auto found = context_->find(tkns[i]);
 				if (found == context_->end() || found->second.type == SignatureType::operation)
 				{
+					//TODO сделать чтоб для двух чисел тоже добавлялся параметр по умолчанию
 					res.push_back(tkns[i]);
+					if (meansDefaultOperator(tkns[i], tkns[i + 1]))
+						res.push_back(defautlOperator_);
 					continue;
 				}
 				if (found->second.type == SignatureType::function)
@@ -173,7 +176,7 @@ namespace mathWorker
 					res.push_back(tkns[i]);
 				}
 				if (i + 1 < tkns.size() && meansDefaultOperator(tkns[i], tkns[i + 1]))
-					res.push_back("*");
+					res.push_back(defautlOperator_);
 			}
 			if (i < tkns.size())
 				res.push_back(tkns[i]);
