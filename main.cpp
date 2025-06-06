@@ -28,7 +28,7 @@ SignatureContext generateBaseSignature()
 		{
 			ComplexType res = params[0]->getNumberForced() + params[1]->getNumberForced();
 			return std::make_unique<ValueNode>(res);
-		},0, SignatureType::operation
+		},0, SignatureType::operation, OperatorPriority::leftToRight
 	};
 	context["-"] =
 	{
@@ -40,7 +40,7 @@ SignatureContext generateBaseSignature()
 			else
 				res = params[0]->getNumberForced() - params[1]->getNumberForced();
 			return std::make_unique<ValueNode>(res);
-		},0, SignatureType::operation
+		},0, SignatureType::operation, OperatorPriority::leftToRight
 	};
 	context["*"] =
 	{
@@ -48,7 +48,7 @@ SignatureContext generateBaseSignature()
 		{
 			ComplexType res = params[0]->getNumberForced() * params[1]->getNumberForced();
 			return std::make_unique<ValueNode>(res);
-		},1, SignatureType::operation
+		},1, SignatureType::operation, OperatorPriority::leftToRight
 	};
 	context["/"] =
 	{
@@ -56,7 +56,7 @@ SignatureContext generateBaseSignature()
 		{
 			ComplexType res = params[0]->getNumberForced() / params[1]->getNumberForced();
 			return std::make_unique<ValueNode>(res);
-		},1, SignatureType::operation
+		},1, SignatureType::operation, OperatorPriority::leftToRight
 	};
 	context["^"] =
 	{
@@ -64,7 +64,7 @@ SignatureContext generateBaseSignature()
 		{
 			ComplexType res = std::pow(params[0]->getNumberForced(), params[1]->getNumberForced());
 			return std::make_unique<ValueNode>(res);
-		},2, SignatureType::operation
+		},2, SignatureType::operation, OperatorPriority::rightToLeft
 	};
 
 	context["sin"] =
@@ -318,25 +318,77 @@ std::string input(std::string s = {})
 	return s;
 }
 
+class Base
+{
+public:
+	virtual ~Base() = default;
+	virtual void foo() const
+	{
+		std::cout << "MAIN ABOBA" << '\n';
+	}
+};
+
+class Aboba1 : public Base
+{
+public:
+	void foo() const override
+	{
+		std::cout << "Aboba1" << '\n';
+	}
+};
+class Aboba2 : public Base
+{
+public:
+	void foo() const override
+	{
+		std::cout << "Aboba2" << '\n';
+	}
+};
+
+
+void f()
+{
+	std::vector<Base*> vec;
+
+	vec.push_back(new Base{});
+	vec.push_back(new Aboba1{});
+	vec.push_back(new Aboba2{});
+
+	for (const auto& i : vec)
+		i->foo();
+
+
+	for (auto& i : vec)
+		delete i;
+}
+
+
 int main()
 {
-	SignatureContext context = generateBaseSignature();
-	VariableContext constants = generateBaseConstants();
-	BaseTokenizer tokenizer(&context, "*");
-
-	addFunction(context, "sqrr", { "a", "b", "c" }, "-(b+sqrt(b^2-4*a*c))/(2*a)");
-	addFunction(context, "abs", { "z" }, "sqrt(real(z)^2+imag(z)^2)");
-
-	MathParser parser(&context, &tokenizer);
-
-	std::string s;
-
-	while (true)
+	try
 	{
-		s = input("Enter: ");
-		MathNodeP ptr = parser.parse(s);
-		std::cout << ptr->toString() << '\n';
-		std::cout << ptr->replace(constants)->calculate(context)->toString() << '\n';
+		SignatureContext context = generateBaseSignature();
+		VariableContext constants = generateBaseConstants();
+		BaseTokenizer tokenizer(&context, "*");
+
+		addFunction(context, "sqrr", { "a", "b", "c" }, "-(b+sqrt(b^2-4*a*c))/(2*a)");
+		addFunction(context, "abs", { "z" }, "sqrt(real(z)^2+imag(z)^2)");
+
+		MathParser parser(&context, &tokenizer);
+
+		std::string s;
+
+		while (true)
+		{
+			s = input("Enter: ");
+			MathNodeP ptr = parser.parse(s);
+			std::cout << ptr->toString() << '\n';
+			std::cout << ptr->replace(constants)->calculate(context)->toString() << '\n';
+		}
+	}
+	catch (const ParseException& e)
+	{
+		std::cout << e.what() << ' ' << static_cast<int>(e.type()) << '\n';
 	}
 
 

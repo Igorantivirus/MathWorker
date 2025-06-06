@@ -9,6 +9,7 @@ namespace mathWorker
 		unknown = 0,
 		brackets,
 		params,
+		priority
 	};
 
 	class ParseException : public std::exception

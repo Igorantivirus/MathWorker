@@ -30,11 +30,19 @@ namespace mathWorker
 	using NativeRealization = std::function<MathNodeP(const std::vector<MathNodeP>&)>;
 	using MatherRealization = std::pair<MathNodeP, std::vector<std::string>>;
 
+	enum OperatorPriority : unsigned char
+	{
+		none = 0,
+		leftToRight,
+		rightToLeft
+	};
+
 	struct SignatureRealization
 	{
 		std::variant<NativeRealization, MatherRealization> realization;
 		unsigned char priority = 0;
 		SignatureType type = SignatureType::operation;
+		OperatorPriority assitiation = OperatorPriority::none;
 	};
 
 	using SignatureContext = std::map<std::string, SignatureRealization, std::less<>>;

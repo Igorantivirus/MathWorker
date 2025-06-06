@@ -33,10 +33,10 @@ namespace mathWorker
 			tokenizer_ = tokenizer;
 		}
 
-		MathNodeP parse(const std::string_view& str)
+		MathNodeP parse(const std::string_view& str) const
 		{
 			TokenArray tkns = tokenizer_->tokenize(str);
-			return parsing(tkns);
+			return parseTokens(tkns);
 		}
 
 	private:
@@ -55,22 +55,128 @@ namespace mathWorker
 		{
 			size_t ind = std::string::npos;
 			unsigned char priority = 255;
-			
+
 			for (size_t i = 0; i < tkns.size(); ++i)
 			{
 				auto found = context_->find(tkns[i]);
 				if (found == context_->end())
 					continue;
-				if (found->second.priority < priority)
+
+				const unsigned char current_priority = found->second.priority;
+				const OperatorPriority current_association = found->second.assitiation;
+
+				if (current_priority < priority || (current_priority == priority && current_association == OperatorPriority::leftToRight))
 				{
-					priority = found->second.priority;
+					priority = current_priority;
 					ind = i;
 				}
 			}
 			return ind;
 		}
 
-		MathNodeP lastParams(const std::span<Token> tkns)
+		//size_t findTokenWithMinPriority(const std::span<Token> tkns) const
+		//{
+		//	size_t ind = std::string::npos;
+		//	unsigned char priority = 255;
+		//	//OperatorPriority assotiation = OperatorPriority::none;
+		//	for (size_t i = 0; i < tkns.size(); ++i)
+		//	{
+		//		auto found = context_->find(tkns[i]);
+		//		if (found == context_->end())
+		//			continue;
+		//		if (found->second.priority < priority)
+		//		{
+		//			priority = found->second.priority;
+		//			//found->second.assitiation;
+		//			ind = i;
+		//		}
+		//	}
+		//	return ind;
+		//}
+
+		MathNodeP finalParse(const Token tkn) const
+		{
+			if (isNumber(tkn[0]))
+				return std::make_unique<ValueNode>(RealType(std::stold(std::string(tkn))));
+			if(isLetter(tkn[0]))
+				return std::make_unique<SymbolNode>(std::string(tkn));
+			if (tkn.size() >= 2)
+				return parse(tkn.substr(1, tkn.size() - 2));
+			throw ParseException(std::string("Unknown token \"") + std::string(tkn) + '\"', ExceptionType::unknown);
+		}
+
+		MathVector parametsParsing(const Token token) const
+		{
+			if (token.size() < 2 || !isOpenBracket(token[0]) || !isCloseBracket(token.back()))
+				throw ParseException("Invalid function parameters", ExceptionType::params);
+
+			MathVector result;
+			TokenArray tkns = tokenizer_->tonenizeByComma(token.substr(1, token.size() - 2));
+
+			for (const auto& i : tkns)
+			{
+				if (i.empty())
+					throw ParseException("Empty parameter of function.", ExceptionType::params);
+				result.push_back(parse(i));
+			}
+
+			return std::move(result);
+		}
+
+		void processOperatorTkns(SignatureNode* node, const TokenArrayP tkns, const size_t minInd) const
+		{
+			TokenArrayP left = tkns.first(minInd);
+			TokenArrayP right = tkns.subspan(minInd + 1);
+
+			if (!left.empty())
+				node->addParam(parseTokens(left));
+			if (!right.empty())
+				node->addParam(parseTokens(right));
+		}
+		void processFunctionTkns(SignatureNode* node, const TokenArrayP tkns, const size_t minInd) const
+		{
+			if(!(minInd == 0 && tkns.size() == 2))
+				throw ParseException("After processing function have prooruty less whet somethins else.", ExceptionType::priority);
+			node->setParams(parametsParsing(tkns[1]));
+		}
+		void processSpecFunctionTkns(SignatureNode* node, const TokenArrayP tkns, const size_t minInd) const
+		{
+			if (!(minInd == 0 && tkns.size() == 3))
+				throw ParseException("After processing function have prooruty less whet somethins else.", ExceptionType::priority);
+			node->addParam(finalParse(tkns[1]));
+			node->addParams(parametsParsing(tkns[2]));
+		}
+
+		MathNodeP parseTokens(const TokenArrayP tkns) const
+		{
+			size_t minInd = findTokenWithMinPriority(tkns);
+			if (minInd == std::string::npos)
+			{
+				if (tkns.size() != 1)
+					throw ParseException("Unknowns list of tokens.", ExceptionType::priority);
+				return finalParse(tkns[0]);
+			}
+
+			SignatureNode* node = new SignatureNode{};
+			node->setName(std::string(tkns[minInd]));
+			SignatureType type = context_->find(tkns[minInd])->second.type;
+
+			if (type == SignatureType::operation)
+				processOperatorTkns(node, tkns, minInd);
+			else if (type == SignatureType::function)
+				processFunctionTkns(node, tkns, minInd);
+			else if (type == SignatureType::specialFunction)
+				processSpecFunctionTkns(node, tkns, minInd);
+			return std::move(MathNodeP(node));
+		}
+
+
+	private:
+
+
+		
+
+		/*MathNodeP lastParams(const std::span<Token> tkns)
 		{
 			if (tkns.empty())
 				return nullptr;
@@ -141,7 +247,7 @@ namespace mathWorker
 				node->setParams(MathRowVector{ left.get(), right.get() });
 			}
 			return std::move(node);
-		}
+		}*/
 		
 	};
 

@@ -162,6 +162,13 @@ namespace mathWorker
 		{
 			params_.push_back(std::move(param.clone()));
 		}
+		void addParams(const MathVector& params)
+		{
+			params_.reserve(params_.size() + params.size());
+			for (const auto& i : params)
+				if (i != nullptr)
+					params_.push_back(std::move(i->clone()));
+		}
 
 		#pragma endregion
 
