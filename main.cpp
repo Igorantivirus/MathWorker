@@ -73,7 +73,7 @@ SignatureContext generateBaseSignature()
 		{
 			ComplexType res = std::sin(params[0]->getNumberForced());
 			return std::make_unique<ValueNode>(res);
-		},3, SignatureType::function
+		},4, SignatureType::function
 	};
 	context["cos"] =
 	{
@@ -81,7 +81,7 @@ SignatureContext generateBaseSignature()
 		{
 			ComplexType res = std::cos(params[0]->getNumberForced());
 			return std::make_unique<ValueNode>(res);
-		},3, SignatureType::function
+		},4, SignatureType::function
 	};
 	context["tg"] =
 	{
@@ -89,7 +89,7 @@ SignatureContext generateBaseSignature()
 		{
 			ComplexType res = std::tan(params[0]->getNumberForced());
 			return std::make_unique<ValueNode>(res);
-		},3, SignatureType::function
+		},4, SignatureType::function
 	};
 	context["ctg"] =
 	{
@@ -97,7 +97,7 @@ SignatureContext generateBaseSignature()
 		{
 			ComplexType res = ComplexType(1) / std::tan(params[0]->getNumberForced());
 			return std::make_unique<ValueNode>(res);
-		},3, SignatureType::function
+		},4, SignatureType::function
 	};
 
 	context["arcsin"] =
@@ -106,7 +106,7 @@ SignatureContext generateBaseSignature()
 		{
 			ComplexType res = std::asin(params[0]->getNumberForced());
 			return std::make_unique<ValueNode>(res);
-		},3, SignatureType::function
+		},4, SignatureType::function
 	};
 	context["arccos"] =
 	{
@@ -114,7 +114,7 @@ SignatureContext generateBaseSignature()
 		{
 			ComplexType res = std::acos(params[0]->getNumberForced());
 			return std::make_unique<ValueNode>(res);
-		},3, SignatureType::function
+		},4, SignatureType::function
 	};
 	context["arctg"] =
 	{
@@ -122,7 +122,7 @@ SignatureContext generateBaseSignature()
 		{
 			ComplexType res = std::atan(params[0]->getNumberForced());
 			return std::make_unique<ValueNode>(res);
-		},3, SignatureType::function
+		},4, SignatureType::function
 	};
 	context["arcctg"] =
 	{
@@ -130,7 +130,7 @@ SignatureContext generateBaseSignature()
 		{
 			ComplexType res = ComplexType(std::acos(-1) / 2) - std::atan(params[0]->getNumberForced());
 			return std::make_unique<ValueNode>(res);
-		},3, SignatureType::function
+		},4, SignatureType::function
 	};
 
 	context["ln"] =
@@ -139,7 +139,7 @@ SignatureContext generateBaseSignature()
 		{
 			ComplexType res = std::log(params[0]->getNumberForced());
 			return std::make_unique<ValueNode>(res);
-		},3, SignatureType::function
+		},4, SignatureType::function
 	};
 	context["exp"] =
 	{
@@ -147,7 +147,7 @@ SignatureContext generateBaseSignature()
 		{
 			ComplexType res = std::exp(params[0]->getNumberForced());
 			return std::make_unique<ValueNode>(res);
-		},3, SignatureType::function
+		},4, SignatureType::function
 	};
 	context["log"] =
 	{
@@ -155,7 +155,7 @@ SignatureContext generateBaseSignature()
 		{
 			ComplexType res = std::log(params[1]->getNumberForced()) / std::log(params[0]->getNumberForced());
 			return std::make_unique<ValueNode>(res);
-		},3, SignatureType::specialFunction
+		},4, SignatureType::specialFunction
 	};
 	context["root"] =
 	{
@@ -163,7 +163,7 @@ SignatureContext generateBaseSignature()
 		{
 			ComplexType res = pow(params[1]->getNumberForced(), ComplexType(1) / params[0]->getNumberForced());
 			return std::make_unique<ValueNode>(res);
-		},3, SignatureType::specialFunction
+		},4, SignatureType::specialFunction
 	};
 	context["sqrt"] =
 	{
@@ -171,7 +171,7 @@ SignatureContext generateBaseSignature()
 		{
 			ComplexType res = std::sqrt(params[0]->getNumberForced());
 			return std::make_unique<ValueNode>(res);
-		},3, SignatureType::function
+		},4, SignatureType::function
 	};
 
 	context["conj"] =
@@ -180,7 +180,7 @@ SignatureContext generateBaseSignature()
 		{
 			ComplexType res = std::conj(params[0]->getNumberForced());
 			return std::make_unique<ValueNode>(res);
-		},3, SignatureType::function
+		},4, SignatureType::function
 	};
 	context["imag"] =
 	{
@@ -188,7 +188,7 @@ SignatureContext generateBaseSignature()
 		{
 			ComplexType res = params[0]->getNumberForced().imag();
 			return std::make_unique<ValueNode>(res);
-		},3, SignatureType::function
+		},4, SignatureType::function
 	};
 	context["real"] =
 	{
@@ -196,7 +196,7 @@ SignatureContext generateBaseSignature()
 		{
 			ComplexType res = params[0]->getNumberForced().real();
 			return std::make_unique<ValueNode>(res);
-		},3, SignatureType::function
+		},4, SignatureType::function
 	};
 
 	context["d"] =
@@ -205,7 +205,7 @@ SignatureContext generateBaseSignature()
 		{
 			ComplexType res = params[0]->getNumberForced() * ComplexType(180.l / std::acos(-1));
 			return std::make_unique<ValueNode>(res);
-		},4, SignatureType::unare
+		},3, SignatureType::operation
 	};
 	context["r"] =
 	{
@@ -213,7 +213,7 @@ SignatureContext generateBaseSignature()
 		{
 			ComplexType res = params[0]->getNumberForced() * ComplexType(std::acos(-1) / 180);
 			return std::make_unique<ValueNode>(res);
-		},4, SignatureType::unare
+		},3, SignatureType::operation
 	};
 
 	return context;
@@ -229,7 +229,7 @@ SignatureContext makeBoolContext()
 		{
 			ComplexType res = not(params[0]->getNumberForced().real());
 			return std::make_unique<ValueNode>(res);
-		},3, SignatureType::unare
+		},4, SignatureType::unare
 	};
 	context["&"] =
 	{
@@ -282,10 +282,10 @@ MathNodeP makeMyFoo()
 	return result;
 }
 
-void addFunction(SignatureContext& context, const std::string& name, const std::vector<std::string>& paramNames, const std::string realization, const unsigned char priority = 3, const SignatureType type = SignatureType::function)
+void addFunction(SignatureContext& context, const std::string& name, const std::vector<std::string>& paramNames, const std::string realization, const unsigned char priority = 4, const SignatureType type = SignatureType::function)
 {
-	BaseTokenizer tokenizer(&context, "*");
-	MathParser parser(&context, &tokenizer);
+	BaseTokenizer tokenizer(&context);
+	MathParser parser(&context, "*", &tokenizer);
 
 	MathNodeP node = parser.parse(realization);
 	//std::cout << node->toString() << '\n';
@@ -318,63 +318,18 @@ std::string input(std::string s = {})
 	return s;
 }
 
-class Base
-{
-public:
-	virtual ~Base() = default;
-	virtual void foo() const
-	{
-		std::cout << "MAIN ABOBA" << '\n';
-	}
-};
-
-class Aboba1 : public Base
-{
-public:
-	void foo() const override
-	{
-		std::cout << "Aboba1" << '\n';
-	}
-};
-class Aboba2 : public Base
-{
-public:
-	void foo() const override
-	{
-		std::cout << "Aboba2" << '\n';
-	}
-};
-
-
-void f()
-{
-	std::vector<Base*> vec;
-
-	vec.push_back(new Base{});
-	vec.push_back(new Aboba1{});
-	vec.push_back(new Aboba2{});
-
-	for (const auto& i : vec)
-		i->foo();
-
-
-	for (auto& i : vec)
-		delete i;
-}
-
-
 int main()
 {
 	try
 	{
 		SignatureContext context = generateBaseSignature();
 		VariableContext constants = generateBaseConstants();
-		BaseTokenizer tokenizer(&context, "*");
+		BaseTokenizer tokenizer(&context);
 
 		addFunction(context, "sqrr", { "a", "b", "c" }, "-(b+sqrt(b^2-4*a*c))/(2*a)");
 		addFunction(context, "abs", { "z" }, "sqrt(real(z)^2+imag(z)^2)");
 
-		MathParser parser(&context, &tokenizer);
+		MathParser parser(&context, "*", &tokenizer);
 
 		std::string s;
 
@@ -392,7 +347,7 @@ int main()
 	}
 
 
-	//s = "(cos(3))d";
+	//s = "(cos(4))d";
 	//s = "e^(2*i)-(cos(2)+i*sin(2))+e+exp(1)";
 
 	//MathNodeP ptr = parse.parse(s);
@@ -420,7 +375,7 @@ int main()
 
 
 	////std::string s = "squareRoot(1,2,1)";
-	//std::string s = "2@3";
+	//std::string s = "2@4";
 
 
 	/*MathNodeP ptr = parse.parse(s);
@@ -435,21 +390,21 @@ int main()
 
 
 	//std::string s = "1 + 2";
-	//std::string s = "a-9.9999999+sin(3*pi-2*e/9)-(2+2)*2.98+2i-17sin(cos(5.5))+pi-e";
+	//std::string s = "a-9.9999999+sin(4*pi-2*e/9)-(2+2)*2.98+2i-17sin(cos(5.5))+pi-e";
 	//std::string s = "log2(7)";
 		
 
 
-	/*auto vec3 = parse.tokenize(s);
+	/*auto vec4 = parse.tokenize(s);
 
-	std::cout << vec3 << '\n';*/
+	std::cout << vec4 << '\n';*/
 
-	/*auto vec = parse.tokenizer("a+sin(3*pi-2*e/9)");
+	/*auto vec = parse.tokenizer("a+sin(4*pi-2*e/9)");
 
 	for (const auto& i : vec)
 		std::cout << i << ' ';*/
 
-	/*auto vec = parse.tokenizer("3*pi-2*e/9");
+	/*auto vec = parse.tokenizer("4*pi-2*e/9");
 
 	for (const auto& i : vec)
 		std::cout << i << ' ';*/
@@ -467,7 +422,7 @@ int main()
 
 
 
-	ValueNode v1(ComplexType(3));
+	ValueNode v1(ComplexType(4));
 	ValueNode v2(ComplexType(4));
 
 	SignatureNode sign("abs", MathRowVector{&v1, &v2});

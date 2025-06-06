@@ -17,21 +17,15 @@ namespace mathWorker
 	{
 	public:
 		Tokenizer() = default;
-		Tokenizer(const SignatureContext* context, const std::string& defaultOperator)
+		Tokenizer(const SignatureContext* context)
 		{
-			setSettings(context, defaultOperator);
+			setSettings(context);
 		}
 		virtual ~Tokenizer() = default;
 
-		void setSettings(const SignatureContext* context, const std::string& defaultOperator)
+		void setSettings(const SignatureContext* context)
 		{
 			context_ = context;
-			if (isTerm(defaultOperator))
-				defaultOperator_ = defaultOperator;
-		}
-		const std::string& getDefaultOperator() const
-		{
-			return defaultOperator_;
 		}
 
 		virtual TokenArray tokenize(const Token& str) const = 0;
@@ -41,14 +35,6 @@ namespace mathWorker
 	protected:
 
 		const SignatureContext* context_ = nullptr;
-		std::string defaultOperator_;
-
-	protected:
-
-		bool isTerm(const Token& tkn) const
-		{
-			return context_->find(tkn) != context_->end();
-		}
 
 	};
 
@@ -56,8 +42,8 @@ namespace mathWorker
 	{
 	public:
 		BaseTokenizer() = default;
-		BaseTokenizer(const SignatureContext* context, const std::string& defaultOperator) :
-			Tokenizer(context, defaultOperator)
+		BaseTokenizer(const SignatureContext* context) :
+			Tokenizer(context)
 		{}
 
 		TokenArray tokenize(const Token& str) const override
@@ -79,9 +65,8 @@ namespace mathWorker
 					pr = str.substr(i, (j = getEndOf(str, i, isNumber)) - i);
 				else
 					pr = str.substr(i, (j = getEndOf(str, i, isNone)) - i);
-				if (!tkns.empty() && meansDefaultOperator(tkns.back(), pr))
-					tkns.push_back(defaultOperator_);
-				tkns.push_back(pr);
+				if(!pr.empty())
+					tkns.push_back(pr);
 				i = j - 1;
 			}
 			return tkns;
@@ -109,11 +94,6 @@ namespace mathWorker
 
 		using CheckMethod = bool(*)(const char);
 
-		bool isTerm(const Token& tkn) const
-		{
-			return context_->find(tkn) != context_->end();
-		}
-
 		bool meansDefaultOperator(const Token& a, const Token& b) const
 		{
 			if (a.empty() || b.empty())
@@ -136,6 +116,11 @@ namespace mathWorker
 			return false;
 		}
 
+		bool isTerm(const Token& tkn) const
+		{
+			return context_->find(tkn) != context_->end();
+		}
+
 		size_t getEndOf(const Token& str, size_t i, CheckMethod check) const
 		{
 			while (i < str.size() && check(str[i]))
@@ -156,9 +141,5 @@ namespace mathWorker
 			return j;
 		}
 
-		
-
 	};
-
-
 }

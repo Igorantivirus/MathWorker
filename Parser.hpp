@@ -20,13 +20,17 @@ namespace mathWorker
 	{
 	public:
 		MathParser() = default;
-		MathParser(const SignatureContext* context, const Tokenizer* tokenizer) :
-			context_{ context }, tokenizer_{tokenizer}
-		{}
+		MathParser(const SignatureContext* context, const std::string defautlOperator, const Tokenizer* tokenizer)
+		{
+			setContext(context, defautlOperator);
+			setTokenizer(tokenizer);
+		}
 
-		void setContext(const SignatureContext* context)
+		void setContext(const SignatureContext* context, const std::string defautlOperator)
 		{
 			context_ = context;
+			if (context->find(defautlOperator) != context->end())
+				defautlOperator_ = defautlOperator;
 		}
 		void setTokenizer(const Tokenizer* tokenizer)
 		{
@@ -43,6 +47,8 @@ namespace mathWorker
 
 		const SignatureContext* context_ = nullptr;
 		const Tokenizer* tokenizer_ = nullptr;
+
+		std::string defautlOperator_;
 
 	private:
 
@@ -74,35 +80,30 @@ namespace mathWorker
 			return ind;
 		}
 
-		//size_t findTokenWithMinPriority(const std::span<Token> tkns) const
-		//{
-		//	size_t ind = std::string::npos;
-		//	unsigned char priority = 255;
-		//	//OperatorPriority assotiation = OperatorPriority::none;
-		//	for (size_t i = 0; i < tkns.size(); ++i)
-		//	{
-		//		auto found = context_->find(tkns[i]);
-		//		if (found == context_->end())
-		//			continue;
-		//		if (found->second.priority < priority)
-		//		{
-		//			priority = found->second.priority;
-		//			//found->second.assitiation;
-		//			ind = i;
-		//		}
-		//	}
-		//	return ind;
-		//}
-
-		MathNodeP finalParse(const Token tkn) const
+		MathNodeP finalParse(const TokenArrayP tkns) const
 		{
-			if (isNumber(tkn[0]))
-				return std::make_unique<ValueNode>(RealType(std::stold(std::string(tkn))));
-			if(isLetter(tkn[0]))
-				return std::make_unique<SymbolNode>(std::string(tkn));
-			if (tkn.size() >= 2)
-				return parse(tkn.substr(1, tkn.size() - 2));
-			throw ParseException(std::string("Unknown token \"") + std::string(tkn) + '\"', ExceptionType::unknown);
+			if (tkns.empty())
+				throw ParseException("Empty list of tokens", ExceptionType::unknown);
+			if (tkns.size() == 1)
+			{
+				if (isNumber(tkns[0][0]))
+					return std::make_unique<ValueNode>(RealType(std::stold(std::string(tkns[0]))));
+				if (isLetter(tkns[0][0]))
+					return std::make_unique<SymbolNode>(std::string(tkns[0]));
+				if (tkns[0].size() >= 2)
+					return parse(tkns[0].substr(1, tkns[0].size() - 2));
+				throw ParseException(std::string("Unknown token \"") + std::string(tkns[0]) + '\"', ExceptionType::unknown);
+			}
+			size_t ind = context_->find(defautlOperator_)->second.assitiation == OperatorPriority::leftToRight ? tkns.size() - 1 : 0;
+			
+			TokenArrayP left = tkns.first(ind);
+			TokenArrayP right = tkns.subspan(ind);
+
+			SignatureNode* node = new SignatureNode{};
+			node->setName(defautlOperator_);
+			node->addParam(parseTokens(left));
+			node->addParam(parseTokens(right));
+			return std::move(MathNodeP(node));
 		}
 
 		MathVector parametsParsing(const Token token) const
@@ -143,7 +144,7 @@ namespace mathWorker
 		{
 			if (!(minInd == 0 && tkns.size() == 3))
 				throw ParseException("After processing function have prooruty less whet somethins else.", ExceptionType::priority);
-			node->addParam(finalParse(tkns[1]));
+			node->addParam(finalParse(tkns.subspan(1, 1)));
 			node->addParams(parametsParsing(tkns[2]));
 		}
 
@@ -151,11 +152,7 @@ namespace mathWorker
 		{
 			size_t minInd = findTokenWithMinPriority(tkns);
 			if (minInd == std::string::npos)
-			{
-				if (tkns.size() != 1)
-					throw ParseException("Unknowns list of tokens.", ExceptionType::priority);
-				return finalParse(tkns[0]);
-			}
+				return finalParse(tkns);
 
 			SignatureNode* node = new SignatureNode{};
 			node->setName(std::string(tkns[minInd]));
