@@ -284,11 +284,11 @@ MathNodeP makeMyFoo()
 
 void addFunction(SignatureContext& context, const std::string& name, const std::vector<std::string>& paramNames, const std::string realization, const unsigned char priority = 4, const SignatureType type = SignatureType::function)
 {
-	BaseTokenizer tokenizer(&context);
+	BaseTokenizer tokenizer(&context, "*");
 	MathParser parser(&context, "*", &tokenizer);
 
 	MathNodeP node = parser.parse(realization);
-	//std::cout << node->toString() << '\n';
+	std::cout << node->toString() << '\n';
 
 	MatherRealization pair;
 	pair.first = std::move(node);
@@ -324,14 +324,23 @@ int main()
 	{
 		SignatureContext context = generateBaseSignature();
 		VariableContext constants = generateBaseConstants();
-		BaseTokenizer tokenizer(&context);
-
-		addFunction(context, "sqrr", { "a", "b", "c" }, "-(b+sqrt(b^2-4*a*c))/(2*a)");
-		addFunction(context, "abs", { "z" }, "sqrt(real(z)^2+imag(z)^2)");
-
-		MathParser parser(&context, "*", &tokenizer);
+		BaseTokenizer tokenizer(&context, "*");
 
 		std::string s;
+
+		/*while (true)
+		{
+			s = input("Enter: ");
+			auto ar = tokenizer.tokenize(s);
+			std::cout << ar << '\n';
+		}*/
+
+
+		addFunction(context, "sqrr", { "a", "b", "c" }, "-(b-sqrt(b^2-4a c))/(2a)");
+		addFunction(context, "abs", { "z" }, "sqrt(real(z)^2+imag(z)^2)");
+		addFunction(context, "foo", { "x","y" }, "1 / (x ^ 2 * y ^ 2)");
+
+		MathParser parser(&context, "*", &tokenizer);
 
 		while (true)
 		{

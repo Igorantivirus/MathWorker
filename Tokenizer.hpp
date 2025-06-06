@@ -17,15 +17,17 @@ namespace mathWorker
 	{
 	public:
 		Tokenizer() = default;
-		Tokenizer(const SignatureContext* context)
+		Tokenizer(const SignatureContext* context, const std::string& defautltOperator)
 		{
-			setSettings(context);
+			setSettings(context, defautltOperator);
 		}
 		virtual ~Tokenizer() = default;
 
-		void setSettings(const SignatureContext* context)
+		void setSettings(const SignatureContext* context, const std::string& defautltOperator)
 		{
 			context_ = context;
+			if (context->find(defautltOperator) != context->end())
+				defautlOperator_ = defautltOperator;
 		}
 
 		virtual TokenArray tokenize(const Token& str) const = 0;
@@ -35,41 +37,21 @@ namespace mathWorker
 	protected:
 
 		const SignatureContext* context_ = nullptr;
-
+		std::string defautlOperator_;
 	};
 
 	class BaseTokenizer : public Tokenizer
 	{
 	public:
 		BaseTokenizer() = default;
-		BaseTokenizer(const SignatureContext* context) :
-			Tokenizer(context)
+		BaseTokenizer(const SignatureContext* context, const std::string& defautltOperator) :
+			Tokenizer(context, defautltOperator)
 		{}
 
 		TokenArray tokenize(const Token& str) const override
 		{
-			TokenArray tkns;
-			size_t j = 0;
-			Token pr;
-			for (size_t i = 0; i < str.size(); ++i)
-			{
-				if (std::isspace(str[i]))
-					continue;
-				if (isOpenBracket(str[i]))
-					pr = str.substr(i, (j = getEndOfBracket(str, i)) - i);
-				else if (isCloseBracket(str[i]))
-					throw ParseException("Not opened bracket in index: " + std::to_string(i) + '.', ExceptionType::brackets);
-				else if (isLetter(str[i]))
-					pr = str.substr(i, (j = getEndOf(str, i, isLetter)) - i);
-				else if (isNumber(str[i]))
-					pr = str.substr(i, (j = getEndOf(str, i, isNumber)) - i);
-				else
-					pr = str.substr(i, (j = getEndOf(str, i, isNone)) - i);
-				if(!pr.empty())
-					tkns.push_back(pr);
-				i = j - 1;
-			}
-			return tkns;
+			TokenArray tkns = parseToTokens(str);
+			return addDefaultOperator(tkns);
 		}
 		TokenArray tonenizeByComma(const Token& str) const override
 		{
@@ -139,6 +121,63 @@ namespace mathWorker
 			if (lavel != 0)
 				throw ParseException("Error of brackets. opened in " + std::to_string(i) + '.', ExceptionType::brackets);
 			return j;
+		}
+
+		TokenArray parseToTokens(const Token& str) const
+		{
+			TokenArray tkns;
+			size_t j = 0;
+			Token pr;
+			for (size_t i = 0; i < str.size(); ++i)
+			{
+				if (std::isspace(str[i]))
+					continue;
+				if (isOpenBracket(str[i]))
+					pr = str.substr(i, (j = getEndOfBracket(str, i)) - i);
+				else if (isCloseBracket(str[i]))
+					throw ParseException("Not opened bracket in index: " + std::to_string(i) + '.', ExceptionType::brackets);
+				else if (isLetter(str[i]))
+					pr = str.substr(i, (j = getEndOf(str, i, isLetter)) - i);
+				else if (isNumber(str[i]))
+					pr = str.substr(i, (j = getEndOf(str, i, isNumber)) - i);
+				else
+					pr = str.substr(i, (j = getEndOf(str, i, isNone)) - i);
+				if (!pr.empty())
+					tkns.push_back(pr);
+				i = j - 1;
+			}
+			return tkns;
+		}
+
+		TokenArray addDefaultOperator(const TokenArray& tkns) const
+		{
+			TokenArray res;
+			size_t i = 0;
+			for (; i < tkns.size() - 1; ++i)
+			{
+				auto found = context_->find(tkns[i]);
+				if (found == context_->end() || found->second.type == SignatureType::operation)
+				{
+					res.push_back(tkns[i]);
+					continue;
+				}
+				if (found->second.type == SignatureType::function)
+				{
+					res.push_back(tkns[i++]);
+					res.push_back(tkns[i]);
+				}
+				if (found->second.type == SignatureType::specialFunction)
+				{
+					res.push_back(tkns[i++]);
+					res.push_back(tkns[i++]);
+					res.push_back(tkns[i]);
+				}
+				if (i + 1 < tkns.size() && meansDefaultOperator(tkns[i], tkns[i + 1]))
+					res.push_back("*");
+			}
+			if (i < tkns.size())
+				res.push_back(tkns[i]);
+			return res;
 		}
 
 	};

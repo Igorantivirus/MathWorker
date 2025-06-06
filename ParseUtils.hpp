@@ -25,7 +25,7 @@ namespace mathWorker
 	}
 	bool isNone(const char c)
 	{
-		return !isNumber(c) && !isLetter(c) && !isOpenBracket(c);
+		return !isNumber(c) && !isLetter(c) && !isOpenBracket(c) && !std::isspace(c);
 	}
 
 }
