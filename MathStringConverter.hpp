@@ -33,6 +33,8 @@ namespace mathWorker
 				result.pop_back();
 			if(result.back() == '.')
 				result.pop_back();
+			//if (result.size() == 2 && result[0] == '-' && result[1] == '0')
+			//	return std::string(1, '0');
 			return result;
 		}
 		std::string toString(const ComplexType& value) const override
@@ -54,8 +56,10 @@ namespace mathWorker
 				return value;
 			RealType multiplier = std::pow(10.0L, n);
 			RealType rounded_value = std::round(value * multiplier);
-			return rounded_value / multiplier;
+			RealType res = rounded_value / multiplier;
+			return (std::abs(res) == 0.0l) ? 0.l : res;
 		}
+
 
 	};
 

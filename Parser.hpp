@@ -115,7 +115,10 @@ namespace mathWorker
 			{
 				MathNodeP left = parsing(tkns.first(minInd));
 				MathNodeP right = parsing(tkns.subspan(minInd + 1));
-				node->setParams(MathRowVector{left.get(), right.get()});
+				if(left == nullptr)
+					node->setParams(MathRowVector{right.get()});
+				else
+					node->setParams(MathRowVector{left.get(), right.get()});
 			}
 			else if (type == SignatureType::function)
 			{

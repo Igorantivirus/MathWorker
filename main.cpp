@@ -34,7 +34,11 @@ SignatureContext generateBaseSignature()
 	{
 		[](const std::vector<MathNodeP>& params)->MathNodeP
 		{
-			ComplexType res = params[0]->getNumberForced() - params[1]->getNumberForced();
+			ComplexType res;
+			if (params.size() == 1)
+				res = ComplexType(0) - params[0]->getNumberForced();
+			else
+				res = params[0]->getNumberForced() - params[1]->getNumberForced();
 			return std::make_unique<ValueNode>(res);
 		},0, SignatureType::operation
 	};
@@ -170,6 +174,31 @@ SignatureContext generateBaseSignature()
 		},3, SignatureType::function
 	};
 
+	context["conj"] =
+	{
+		[](const std::vector<MathNodeP>& params)->MathNodeP
+		{
+			ComplexType res = std::conj(params[0]->getNumberForced());
+			return std::make_unique<ValueNode>(res);
+		},3, SignatureType::function
+	};
+	context["imag"] =
+	{
+		[](const std::vector<MathNodeP>& params)->MathNodeP
+		{
+			ComplexType res = params[0]->getNumberForced().imag();
+			return std::make_unique<ValueNode>(res);
+		},3, SignatureType::function
+	};
+	context["real"] =
+	{
+		[](const std::vector<MathNodeP>& params)->MathNodeP
+		{
+			ComplexType res = params[0]->getNumberForced().real();
+			return std::make_unique<ValueNode>(res);
+		},3, SignatureType::function
+	};
+
 	context["d"] =
 	{
 		[](const std::vector<MathNodeP>& params)->MathNodeP
@@ -294,21 +323,24 @@ int main()
 	SignatureContext context = generateBaseSignature();
 	VariableContext constants = generateBaseConstants();
 
+	addFunction(context, "sqrr", { "a", "b", "c" }, "-(b+sqrt(b^2-4*a*c))/(2*a)");
+	addFunction(context, "abs", { "z" }, "sqrt(real(z)^2+imag(z)^2)");
+
 	MathParser parse;
 	parse.setContext(&context);
 
-	/*std::string s;
+	//std::string s;
 
-	while (true)
-	{
-		s = input("Enter: ");
-		MathNodeP ptr = parse.parse(s);
-		std::cout << ptr->toString() << '\n';
-		std::cout << ptr->replace(constants)->calculate(context)->toString() << '\n';
-	}*/
+	//while (true)
+	//{
+	//	s = input("Enter: ");
+	//	MathNodeP ptr = parse.parse(s);
+	//	std::cout << ptr->toString() << '\n';
+	//	std::cout << ptr->replace(constants)->calculate(context)->toString() << '\n';
+	//}
 
 
-	std::string s = "log2(8)^2";
+	std::string s = "ln(-1)";
 	//std::string s = "e^(2*i)-(cos(2)+i*sin(2))+e+exp(1)";
 
 	MathNodeP ptr = parse.parse(s);
