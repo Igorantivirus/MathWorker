@@ -19,7 +19,8 @@ namespace mathWorker
 	enum class SignatureType : unsigned char
 	{
 		operation = 0,
-		unareOperation,
+		unareLeft,
+		unareRight,
 		function,
 		specialFunction
 	};

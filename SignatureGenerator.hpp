@@ -40,12 +40,12 @@ namespace mathWorker
 				return std::make_unique<ValueNode>(res);
 			}, 0, OperatorPriority::rightToLeft);
 
-		signature.addUnareOperator("d", [](const std::vector<MathNodeP>& params)->MathNodeP
+		signature.addUnareRightOperator("d", [](const std::vector<MathNodeP>& params)->MathNodeP
 			{
 				ComplexType res = params[0]->getNumberForced() * ComplexType(180.l / std::acos(-1));
 				return std::make_unique<ValueNode>(res);
 			});
-		signature.addUnareOperator("r", [](const std::vector<MathNodeP>& params)->MathNodeP
+		signature.addUnareRightOperator("r", [](const std::vector<MathNodeP>& params)->MathNodeP
 			{
 				ComplexType res = params[0]->getNumberForced() * ComplexType(std::acos(-1) / 180.l);
 				return std::make_unique<ValueNode>(res);
@@ -134,6 +134,11 @@ namespace mathWorker
 		signature.addFunction("real",	[](const std::vector<MathNodeP>& params)->MathNodeP
 			{
 				ComplexType res = params[0]->getNumberForced().real();
+				return std::make_unique<ValueNode>(res);
+			});
+		signature.addFunction("abs", [](const std::vector<MathNodeP>& params)->MathNodeP
+			{
+				ComplexType res = std::abs(params[0]->getNumberForced());
 				return std::make_unique<ValueNode>(res);
 			});
 

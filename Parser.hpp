@@ -20,10 +20,15 @@ namespace mathWorker
 	class MathParser
 	{
 	public:
-		MathParser() = default;
+		MathParser()
+		{
+			initProcessingMethods();
+		}
 		MathParser(const Signature* signature, const Tokenizer* tokenizer) :
 			signature_{ signature }, tokenizer_{tokenizer}
-		{}
+		{
+			initProcessingMethods();
+		}
 
 		void setsignature(const Signature* signature)
 		{
@@ -42,10 +47,26 @@ namespace mathWorker
 
 	private:
 
+		using ProcessMethod = void(MathParser::*)(SignatureNode*, const TokenArrayP, const size_t) const;
+
 		const Signature* signature_ = nullptr;
 		const Tokenizer* tokenizer_ = nullptr;
 
+		std::map<SignatureType, ProcessMethod> procesingMethods_;
+
 	private:
+
+		void initProcessingMethods()
+		{
+			procesingMethods_ =
+			{
+				{SignatureType::operation,			&MathParser::processOperatorTkns},
+				{SignatureType::function,			&MathParser::processFunctionTkns},
+				{SignatureType::specialFunction,	&MathParser::processSpecFunctionTkns},
+				{SignatureType::unareLeft,			&MathParser::processLeftOperatorTkns},
+				{SignatureType::unareRight,			&MathParser::processRightOperatorTkns}
+			};
+		}
 
 		size_t findTokenWithMaxPriority(const std::span<Token> tkns) const
 		{
@@ -85,12 +106,6 @@ namespace mathWorker
 				throw ParseException(std::string("Unknown token \"") + std::string(tkns[0]) + '\"', ExceptionType::unknown);
 			}
 			throw ParseException(std::string("Unknown tokens "), ExceptionType::unknown);
-			/*auto pr = signature_->find(defautlOperator_)->second.assitiation;
-			size_t ind = signature_->find(defautlOperator_)->second.assitiation == OperatorPriority::leftToRight ? tkns.size() - 1 : 0;
-			
-			SignatureNode* node = new SignatureNode{ defautlOperator_ };
-			processOperatorTkns(node, tkns.first(ind), tkns.subspan(ind));
-			return std::move(MathNodeP(node));*/
 		}
 
 		MathVector parametsParsing(const Token token) const
@@ -111,8 +126,10 @@ namespace mathWorker
 			return std::move(result);
 		}
 
-		void processOperatorTkns(SignatureNode* node, const TokenArrayP left, const TokenArrayP right) const
+		void processOperatorTkns(SignatureNode* node, const TokenArrayP tkns, const size_t minInd) const
 		{
+			const TokenArrayP left = tkns.first(minInd);
+			const TokenArrayP right = tkns.subspan(minInd + 1);
 			if (!left.empty())
 				node->addParam(parseTokens(left));
 			if (!right.empty())
@@ -123,6 +140,26 @@ namespace mathWorker
 			if(!(minInd == 0 && tkns.size() == 2))
 				throw ParseException("After processing function have prooruty less when somethins else.", ExceptionType::priority);
 			node->setParams(parametsParsing(tkns[1]));
+		}
+		void processRightOperatorTkns(SignatureNode* node, const TokenArrayP tkns, const size_t minInd) const
+		{
+			if (minInd != tkns.size() - 1)
+				throw ParseException("After last right unare operator other expressions.", ExceptionType::priority);
+			const TokenArrayP left = tkns.first(minInd);
+			if(!left.empty())
+				node->addParam(parseTokens(left));
+			else
+				throw ParseException("Empty operands of right unare operator.", ExceptionType::params);
+		}
+		void processLeftOperatorTkns(SignatureNode* node, const TokenArrayP tkns, const size_t minInd) const
+		{
+			if (minInd != 0)
+				throw ParseException("Before last left unare operator other expressions.", ExceptionType::priority);
+			const TokenArrayP right = tkns.subspan(1);
+			if (!right.empty())
+				node->addParam(parseTokens(right));
+			else
+				throw ParseException("Empty operands of left unare operator.", ExceptionType::params);
 		}
 		void processSpecFunctionTkns(SignatureNode* node, const TokenArrayP tkns, const size_t minInd) const
 		{
@@ -141,12 +178,8 @@ namespace mathWorker
 			SignatureNode* node = new SignatureNode{ std::string(tkns[minInd]) };
 			SignatureType type = signature_->at(tkns[minInd])->type;
 
-			if (type == SignatureType::operation || type == SignatureType::unareOperation)
-				processOperatorTkns(node, tkns.first(minInd), tkns.subspan(minInd + 1));
-			else if (type == SignatureType::function)
-				processFunctionTkns(node, tkns, minInd);
-			else if (type == SignatureType::specialFunction)
-				processSpecFunctionTkns(node, tkns, minInd);
+			(this->*procesingMethods_.at(type))(node, tkns, minInd);
+
 			return std::move(MathNodeP(node));
 		}
 	};
@@ -157,7 +190,6 @@ namespace mathWorker
 		MathParser parser(&signature, &tokenizer);
 
 		MathNodeP node = parser.parse(realization);
-		//std::cout << node->toString() << '\n';
 
 		MatherRealization pair;
 		pair.first = std::move(node);

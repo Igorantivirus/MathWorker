@@ -48,9 +48,8 @@ int main()
 		}*/
 
 
-		//addFunction(signature, "sqrr", { "a", "b", "c" }, "-(b-sqrt(b^2-4a c))/(2a)");
-		//addFunction(signature, "abs", { "z" }, "sqrt(real(z)^2+imag(z)^2)");
-		//addFunction(signature, "foo", { "x","y" }, "1 / (x ^ 2 * y ^ 2)");
+		addFunction(signature, "sqrr", { "a", "b", "c" }, "-(b-sqrt(b^2-4a c))/(2a)");
+		addFunction(signature, "foo", { "x","y" }, "1 / (x ^ 2 * y ^ 2)");
 		//addFunction(signature, "f", { "x","y" }, "x+y+x y");
 
 

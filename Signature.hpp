@@ -35,13 +35,17 @@ namespace mathWorker
 		{
 			context_[name] = { std::move(realization), 0, SignatureType::function };
 		}
-		void addUnareOperator(const std::string& name, NativeRealization realization)
+		void addUnareRightOperator(const std::string& name, NativeRealization realization)
 		{
-			context_[name] = { realization, 1, SignatureType::unareOperation };
+			context_[name] = { realization, 1, SignatureType::unareRight };
+		}
+		void addUnareLeftOperator(const std::string& name, NativeRealization realization)
+		{
+			context_[name] = { realization, 2, SignatureType::unareLeft };
 		}
 		void addOperator(const std::string& name, NativeRealization realization, const unsigned char priority, const OperatorPriority direction = OperatorPriority::leftToRight)
 		{
-			context_[name] = { realization, static_cast<unsigned char>(priority + 2), SignatureType::operation, direction };
+			context_[name] = { realization, static_cast<unsigned char>(priority + 3), SignatureType::operation, direction };
 		}
 
 		void setDefaultOperator(const std::string& defautlOperator)
