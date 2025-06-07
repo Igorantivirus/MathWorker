@@ -68,5 +68,8 @@
     <ClInclude Include="ParseUtils.hpp">
       <Filter>Parse</Filter>
     </ClInclude>
+    <ClInclude Include="Signature.hpp">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -136,6 +136,7 @@
     <ClInclude Include="ParseException.hpp" />
     <ClInclude Include="Parser.hpp" />
     <ClInclude Include="ParseUtils.hpp" />
+    <ClInclude Include="Signature.hpp" />
     <ClInclude Include="SignatureNode.hpp" />
     <ClInclude Include="SymbolNode.hpp" />
     <ClInclude Include="MathDefines.hpp" />
