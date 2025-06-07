@@ -90,20 +90,25 @@ namespace mathWorker
 				result->params_.push_back(i->replace(variabls));
 			return std::move(result);
 		}
-		MathNodeP calculate(const SignatureContext& context) const override
+		MathNodeP calculate(const Signature& signature) const override
 		{
 			MathVector params;
 			params.reserve(params_.size());
 
 			for (const auto& i : params_)
-				params.push_back(std::move(i->calculate(context)));
+				params.push_back(std::move(i->calculate(signature)));
 
-			const auto& found = context.find(name_);
-			if(found == context.end())
+			const auto realization = signature[name_];
+
+			if(!realization)
 				return std::make_unique<SignatureNode>(*this);
 
-			const NativeRealization* native_func_ptr = std::get_if<NativeRealization>(&found->second.realization);
-			const MatherRealization* mather_node_ptr = std::get_if<MatherRealization>(&found->second.realization);
+			/*const auto& found = context.find(name_);
+			if(found == context.end())
+				return std::make_unique<SignatureNode>(*this);*/
+
+			const NativeRealization* native_func_ptr = std::get_if<NativeRealization>(&realization->realization);
+			const MatherRealization* mather_node_ptr = std::get_if<MatherRealization>(&realization->realization);
 
 			if (native_func_ptr)
 				return (*native_func_ptr)(params);
@@ -116,7 +121,7 @@ namespace mathWorker
 
 				MathNodeP newRes = mather_node_ptr->first->replace(varContext);
 				
-				return std::move(newRes->calculate(context));
+				return std::move(newRes->calculate(signature));
 			}
 			return nullptr;
 		}

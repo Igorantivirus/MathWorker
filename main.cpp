@@ -4,20 +4,13 @@
 #include "SymbolNode.hpp"
 #include "SignatureNode.hpp"
 
+#include "SignatureGenerator.hpp"
+
 #include "Parser.hpp"
 
 using namespace mathWorker;
 
-VariableContext generateBaseConstants()
-{
-	VariableContext context;
-	context["pi"]	= ValueNode(RealType(std::acos(-1))).clone();
-	context["e"]	= ValueNode(std::exp(1)).clone();
-	context["phi"]	= ValueNode(RealType(0.5l + std::sqrt(5) / 2.l)).clone();
-	context["i"]	= ValueNode(ComplexType(0, 1)).clone();
-	context["inf"]	= ValueNode(ComplexType(RealType(1.) / RealType(sin(0)), 0)).clone();
-	return context;
-}
+
 SignatureContext generateBaseSignature()
 {
 	SignatureContext context;
@@ -298,10 +291,10 @@ MathNodeP makeMyFoo()
 	return result;
 }
 
-void addFunction(SignatureContext& context, const std::string& name, const std::vector<std::string>& paramNames, const std::string realization, const unsigned char priority = 4, const SignatureType type = SignatureType::function)
+void addFunction(Signature& signature, const std::string& name, const std::vector<std::string>& paramNames, const std::string realization)
 {
-	BaseTokenizer tokenizer(&context, "*");
-	MathParser parser(&context, &tokenizer);
+	BaseTokenizer tokenizer(&signature);
+	MathParser parser(&signature, &tokenizer);
 
 	MathNodeP node = parser.parse(realization);
 	std::cout << node->toString() << '\n';
@@ -310,10 +303,11 @@ void addFunction(SignatureContext& context, const std::string& name, const std::
 	pair.first = std::move(node);
 	pair.second = paramNames;
 
+	signature.addFunction(name, std::move(pair));
 
-	context[name].realization = std::move(pair);
+	/*context[name].realization = ;
 	context[name].priority = priority;
-	context[name].type = type;
+	context[name].type = type;*/
 }
 
 template<typename T>
@@ -338,9 +332,11 @@ int main()
 {
 	try
 	{
-		SignatureContext context = generateBaseSignature();
+		Signature signature = generateMathSignature();
 		VariableContext constants = generateBaseConstants();
-		BaseTokenizer tokenizer(&context, "*");
+		BaseTokenizer tokenizer(&signature);
+		MathParser parser(&signature, &tokenizer);
+
 
 		std::string s;
 
@@ -352,19 +348,18 @@ int main()
 		}*/
 
 
-		//addFunction(context, "sqrr", { "a", "b", "c" }, "-(b-sqrt(b^2-4a c))/(2a)");
-		//addFunction(context, "abs", { "z" }, "sqrt(real(z)^2+imag(z)^2)");
-		//addFunction(context, "foo", { "x","y" }, "1 / (x ^ 2 * y ^ 2)");
-		//addFunction(context, "f", { "x","y" }, "x+y+x y");
+		//addFunction(signature, "sqrr", { "a", "b", "c" }, "-(b-sqrt(b^2-4a c))/(2a)");
+		//addFunction(signature, "abs", { "z" }, "sqrt(real(z)^2+imag(z)^2)");
+		//addFunction(signature, "foo", { "x","y" }, "1 / (x ^ 2 * y ^ 2)");
+		//addFunction(signature, "f", { "x","y" }, "x+y+x y");
 
-		MathParser parser(&context, &tokenizer);
 
 		while (true)
 		{
 			s = input("Enter: ");
 			MathNodeP ptr = parser.parse(s);
 			std::cout << ptr->toString() << '\n';
-			std::cout << ptr->replace(constants)->calculate(context)->toString() << '\n';
+			std::cout << ptr->replace(constants)->calculate(signature)->toString() << '\n';
 		}
 	}
 	catch (const ParseException& e)

@@ -58,7 +58,7 @@ namespace mathWorker
 		{
 			return std::make_unique<ValueNode>(*this);
 		}
-		MathNodeP calculate(const SignatureContext& context) const override
+		MathNodeP calculate(const Signature& context) const override
 		{
 			return std::make_unique<ValueNode>(*this);
 		}

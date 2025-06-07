@@ -11,6 +11,7 @@
 #include "SymbolNode.hpp"
 #include "SignatureNode.hpp"
 #include "ParseException.hpp"
+#include "Signature.hpp"
 #include "Tokenizer.hpp"
 
 namespace mathWorker
@@ -20,15 +21,13 @@ namespace mathWorker
 	{
 	public:
 		MathParser() = default;
-		MathParser(const SignatureContext* context, const Tokenizer* tokenizer)
-		{
-			setContext(context);
-			setTokenizer(tokenizer);
-		}
+		MathParser(const Signature* signature, const Tokenizer* tokenizer) :
+			signature_{ signature }, tokenizer_{tokenizer}
+		{}
 
-		void setContext(const SignatureContext* context)
+		void setsignature(const Signature* signature)
 		{
-			context_ = context;
+			signature_ = signature;
 		}
 		void setTokenizer(const Tokenizer* tokenizer)
 		{
@@ -43,15 +42,10 @@ namespace mathWorker
 
 	private:
 
-		const SignatureContext* context_ = nullptr;
+		const Signature* signature_ = nullptr;
 		const Tokenizer* tokenizer_ = nullptr;
 
 	private:
-
-		bool isTerm(const Token& tkn) const
-		{
-			return context_->find(tkn) != context_->end();
-		}
 
 		size_t findTokenWithMaxPriority(const std::span<Token> tkns) const
 		{
@@ -60,12 +54,12 @@ namespace mathWorker
 
 			for (size_t i = 0; i < tkns.size(); ++i)
 			{
-				auto found = context_->find(tkns[i]);
-				if (found == context_->end())
+				auto realization = signature_->at(tkns[i]);
+				if (!realization)
 					continue;
 
-				const unsigned char current_priority = found->second.priority;
-				const OperatorPriority current_association = found->second.assitiation;
+				const unsigned char current_priority = realization->priority;
+				const OperatorPriority current_association = realization->assitiation;
 
 				if (current_priority > priority || (current_priority == priority && current_association == OperatorPriority::leftToRight))
 				{
@@ -91,8 +85,8 @@ namespace mathWorker
 				throw ParseException(std::string("Unknown token \"") + std::string(tkns[0]) + '\"', ExceptionType::unknown);
 			}
 			throw ParseException(std::string("Unknown tokens "), ExceptionType::unknown);
-			/*auto pr = context_->find(defautlOperator_)->second.assitiation;
-			size_t ind = context_->find(defautlOperator_)->second.assitiation == OperatorPriority::leftToRight ? tkns.size() - 1 : 0;
+			/*auto pr = signature_->find(defautlOperator_)->second.assitiation;
+			size_t ind = signature_->find(defautlOperator_)->second.assitiation == OperatorPriority::leftToRight ? tkns.size() - 1 : 0;
 			
 			SignatureNode* node = new SignatureNode{ defautlOperator_ };
 			processOperatorTkns(node, tkns.first(ind), tkns.subspan(ind));
@@ -145,7 +139,7 @@ namespace mathWorker
 				return finalParse(tkns);
 
 			SignatureNode* node = new SignatureNode{ std::string(tkns[minInd]) };
-			SignatureType type = context_->find(tkns[minInd])->second.type;
+			SignatureType type = signature_->at(tkns[minInd])->type;
 
 			if (type == SignatureType::operation)
 				processOperatorTkns(node, tkns.first(minInd), tkns.subspan(minInd + 1));

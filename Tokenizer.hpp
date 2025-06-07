@@ -5,6 +5,7 @@
 #include "MathDefines.hpp"
 #include "ParseUtils.hpp"
 #include "ParseException.hpp"
+#include "Signature.hpp"
 
 namespace mathWorker
 {
@@ -17,35 +18,32 @@ namespace mathWorker
 	{
 	public:
 		Tokenizer() = default;
-		Tokenizer(const SignatureContext* context, const std::string& defautltOperator)
+		Tokenizer(const Signature* signature)
 		{
-			setSettings(context, defautltOperator);
+			setSettings(signature);
 		}
 		virtual ~Tokenizer() = default;
 
-		void setSettings(const SignatureContext* context, const std::string& defautltOperator)
+		void setSettings(const Signature* signature)
 		{
-			context_ = context;
-			if (context->find(defautltOperator) != context->end())
-				defaultOperator_ = defautltOperator;
+			signature_ = signature;
 		}
 
 		virtual TokenArray tokenize(const Token str) const = 0;
 		virtual TokenArray tokenizeByComma(const Token str) const = 0;
 
-
 	protected:
 
-		const SignatureContext* context_ = nullptr;
-		std::string defaultOperator_;
+		const Signature* signature_ = nullptr;
+
 	};
 
 	class BaseTokenizer : public Tokenizer
 	{
 	public:
 		BaseTokenizer() = default;
-		BaseTokenizer(const SignatureContext* context, const std::string& defautltOperator) :
-			Tokenizer(context, defautltOperator)
+		BaseTokenizer(const Signature* signature) :
+			Tokenizer(signature)
 		{}
 
 		TokenArray tokenize(const Token str) const override
@@ -88,15 +86,10 @@ namespace mathWorker
 				return true;
 			if (isNumber(a[0]) && (isNumber2 || isWord2 || bracket2))
 				return true;
-			if (!isTerm(a) && isLetter(a[0]) && (isNumber2 || isWord2 || bracket2))
+			if (!signature_->isTerm(a) && isLetter(a[0]) && (isNumber2 || isWord2 || bracket2))
 				return true;
 			
 			return false;
-		}
-
-		bool isTerm(const Token tkn) const
-		{
-			return context_->find(tkn) != context_->end();
 		}
 
 		size_t getEndOf(const Token str, size_t i, CheckMethod check) const
@@ -153,15 +146,17 @@ namespace mathWorker
 			for (; i < tkns.size() - 1; ++i)
 			{
 				res.push_back(tkns[i]);
-				auto found = context_->find(tkns[i]);
-				if (found != context_->end())
+
+				auto realization = signature_->at(tkns[i]);
+
+				if (realization)
 				{
-					if(found->second.type == SignatureType::specialFunction)
+					if(realization->type == SignatureType::specialFunction)
 						res.push_back(tkns[++i]);
 					continue;
 				}
 				if (meansDefaultOperator(tkns[i], tkns[i + 1]))
-					res.push_back(defaultOperator_);
+					res.push_back(signature_->getDefaultOperator());
 			}
 			res.push_back(tkns[i]);
 			return res;
