@@ -151,4 +151,19 @@ namespace mathWorker
 		}
 	};
 
+	void addFunction(Signature& signature, const std::string& name, const std::vector<std::string>& paramNames, const std::string realization)
+	{
+		BaseTokenizer tokenizer(&signature);
+		MathParser parser(&signature, &tokenizer);
+
+		MathNodeP node = parser.parse(realization);
+		//std::cout << node->toString() << '\n';
+
+		MatherRealization pair;
+		pair.first = std::move(node);
+		pair.second = paramNames;
+
+		signature.addFunction(name, std::move(pair));
+	}
+
 }
