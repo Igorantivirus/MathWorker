@@ -132,6 +132,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="FunctionConnector.hpp" />
     <ClInclude Include="FunctionContext.hpp" />
     <ClInclude Include="ParseException.hpp" />
     <ClInclude Include="Parser.hpp" />

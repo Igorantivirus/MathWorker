@@ -35,6 +35,10 @@ namespace mathWorker
 		{
 			context_[name] = { std::move(realization), 0, SignatureType::function };
 		}
+		void addSpecialFunction(const std::string& name, std::variant<NativeRealization, MatherRealization> realization)
+		{
+			context_[name] = { std::move(realization), 0, SignatureType::specialFunction };
+		}
 		void addUnareRightOperator(const std::string& name, NativeRealization realization)
 		{
 			context_[name] = { realization, 1, SignatureType::unareRight };

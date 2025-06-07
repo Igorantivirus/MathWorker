@@ -5,6 +5,7 @@
 #include "SignatureNode.hpp"
 
 #include "SignatureGenerator.hpp"
+#include "FunctionConnector.hpp"
 
 #include "Parser.hpp"
 
@@ -36,7 +37,7 @@ int main()
 		VariableContext constants = generateBaseConstants();
 		BaseTokenizer tokenizer(&signature);
 		MathParser parser(&signature, &tokenizer);
-
+		FunctionConnector connector;
 
 		std::string s;
 
@@ -47,9 +48,18 @@ int main()
 			std::cout << ar << '\n';
 		}*/
 
+		//connector.addFunction(signature, "sqrr", { "a", "b", "c" }, "-(b-sqrt(b^2-4a c))/(2a)");
+		connector.addFunction(signature, "foo", { "x","y" }, "1/(x^2*y^2)");
 
-		addFunction(signature, "sqrr", { "a", "b", "c" }, "-(b-sqrt(b^2-4a c))/(2a)");
-		addFunction(signature, "foo", { "x","y" }, "1 / (x ^ 2 * y ^ 2)");
+		std::cout << connector.addFunction(signature, "f(x)=2x+1") << '\n';
+
+		std::cout << connector.addFunction(signature, "D(a,b,c)=b^2-4a*c") << '\n';
+		std::cout << connector.addFunction(signature, "sqrr(a,b,c)=-(b-sqrt(D(a,b,c)))/(2a)") << '\n';
+
+		std::cout << connector.addFunction(signature, "nR(a,b,c,d)=b^2-3a*c") << '\n';
+		std::cout << connector.addFunction(signature, "mR(a,b,c,d)=2b^3-9a*b*c+27a^2d") << '\n';
+		std::cout << connector.addFunction(signature, "cbrr(a,b,c,d)=-(b+root3((mR(a,b,c,d)+sqrt(mR(a,b,c,d)^2-4nR(a,b,c,d)^3))/2)+root3((mR(a,b,c,d)-sqrt(mR(a,b,c,d)^2-4nR(a,b,c,d)^3))/2))/(3a)") << '\n';
+
 		//addFunction(signature, "f", { "x","y" }, "x+y+x y");
 
 
@@ -61,10 +71,14 @@ int main()
 			std::cout << ptr->replace(constants)->calculate(signature)->toString() << '\n';
 		}
 	}
-	catch (const ParseException& e)
+	catch (char c)
+	{
+		std::cout << c << '\n';
+	}
+	/*catch (const ParseException& e)
 	{
 		std::cout << e.what() << ' ' << static_cast<int>(e.type()) << '\n';
-	}
+	}*/
 
 	return 0;
 }

@@ -40,16 +40,16 @@ namespace mathWorker
 				return std::make_unique<ValueNode>(res);
 			}, 0, OperatorPriority::rightToLeft);
 
-		signature.addUnareRightOperator("d", [](const std::vector<MathNodeP>& params)->MathNodeP
-			{
-				ComplexType res = params[0]->getNumberForced() * ComplexType(180.l / std::acos(-1));
-				return std::make_unique<ValueNode>(res);
-			});
-		signature.addUnareRightOperator("r", [](const std::vector<MathNodeP>& params)->MathNodeP
-			{
-				ComplexType res = params[0]->getNumberForced() * ComplexType(std::acos(-1) / 180.l);
-				return std::make_unique<ValueNode>(res);
-			});
+		//signature.addUnareRightOperator("d", [](const std::vector<MathNodeP>& params)->MathNodeP
+		//	{
+		//		ComplexType res = params[0]->getNumberForced() * ComplexType(180.l / std::acos(-1));
+		//		return std::make_unique<ValueNode>(res);
+		//	});
+		//signature.addUnareRightOperator("r", [](const std::vector<MathNodeP>& params)->MathNodeP
+		//	{
+		//		ComplexType res = params[0]->getNumberForced() * ComplexType(std::acos(-1) / 180.l);
+		//		return std::make_unique<ValueNode>(res);
+		//	});
 
 		signature.addFunction("sin",	[](const std::vector<MathNodeP>& params)->MathNodeP
 			{
@@ -139,6 +139,17 @@ namespace mathWorker
 		signature.addFunction("abs", [](const std::vector<MathNodeP>& params)->MathNodeP
 			{
 				ComplexType res = std::abs(params[0]->getNumberForced());
+				return std::make_unique<ValueNode>(res);
+			});
+
+		signature.addSpecialFunction("log", [](const std::vector<MathNodeP>& params)->MathNodeP
+			{
+				ComplexType res = std::log(params[1]->getNumberForced()) / std::log(params[0]->getNumberForced());
+				return std::make_unique<ValueNode>(res);
+			});
+		signature.addSpecialFunction("root", [](const std::vector<MathNodeP>& params)->MathNodeP
+			{
+				ComplexType res = std::pow(params[1]->getNumberForced(), ComplexType(1) / params[0]->getNumberForced());
 				return std::make_unique<ValueNode>(res);
 			});
 
