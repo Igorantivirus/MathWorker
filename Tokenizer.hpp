@@ -80,7 +80,7 @@ namespace mathWorker
 
 			bool bracket2 = isOpenBracket(b[0]);
 			bool isNumber2 = isNumber(b[0]);
-			bool isWord2 = isLetter(b[0]) && !signature_->isSignatureType(b, SignatureType::unareOperation);
+			bool isWord2 = isLetter(b[0]) && !signature_->isSignatureType(b, SignatureType::unareOperation) && !signature_->isSignatureType(b, SignatureType::operation);
 
 			if (isCloseBracket(a.back()) && (isNumber2 || isWord2 || bracket2))
 				return true;
