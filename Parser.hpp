@@ -121,7 +121,7 @@ namespace mathWorker
 		void processFunctionTkns(SignatureNode* node, const TokenArrayP tkns, const size_t minInd) const
 		{
 			if(!(minInd == 0 && tkns.size() == 2))
-				throw ParseException("After processing function have prooruty less whet somethins else.", ExceptionType::priority);
+				throw ParseException("After processing function have prooruty less when somethins else.", ExceptionType::priority);
 			node->setParams(parametsParsing(tkns[1]));
 		}
 		void processSpecFunctionTkns(SignatureNode* node, const TokenArrayP tkns, const size_t minInd) const
@@ -141,7 +141,7 @@ namespace mathWorker
 			SignatureNode* node = new SignatureNode{ std::string(tkns[minInd]) };
 			SignatureType type = signature_->at(tkns[minInd])->type;
 
-			if (type == SignatureType::operation)
+			if (type == SignatureType::operation || type == SignatureType::unareOperation)
 				processOperatorTkns(node, tkns.first(minInd), tkns.subspan(minInd + 1));
 			else if (type == SignatureType::function)
 				processFunctionTkns(node, tkns, minInd);

@@ -80,7 +80,7 @@ namespace mathWorker
 
 			bool bracket2 = isOpenBracket(b[0]);
 			bool isNumber2 = isNumber(b[0]);
-			bool isWord2 = isLetter(b[0]);
+			bool isWord2 = isLetter(b[0]) && !signature_->isSignatureType(b, SignatureType::unareOperation);
 
 			if (isCloseBracket(a.back()) && (isNumber2 || isWord2 || bracket2))
 				return true;
@@ -153,6 +153,7 @@ namespace mathWorker
 				{
 					if(realization->type == SignatureType::specialFunction)
 						res.push_back(tkns[++i]);
+					//if (realization->type != SignatureType::unareOperation)
 					continue;
 				}
 				if (meansDefaultOperator(tkns[i], tkns[i + 1]))

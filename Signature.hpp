@@ -37,7 +37,7 @@ namespace mathWorker
 		}
 		void addUnareOperator(const std::string& name, NativeRealization realization)
 		{
-			context_[name] = { realization, 1, SignatureType::operation };
+			context_[name] = { realization, 1, SignatureType::unareOperation };
 		}
 		void addOperator(const std::string& name, NativeRealization realization, const unsigned char priority, const OperatorPriority direction = OperatorPriority::leftToRight)
 		{
@@ -61,6 +61,17 @@ namespace mathWorker
 		bool isTerm(const std::string_view str) const
 		{
 			return context_.find(str) != context_.end();
+		}
+
+		bool isSignatureType(const std::string& str, const SignatureType type) const
+		{
+			const auto& found = context_.find(str);
+			return found == context_.end() ? false : (found->second.type == type);
+		}
+		bool isSignatureType(const std::string_view str, const SignatureType type) const
+		{
+			const auto& found = context_.find(str);
+			return found == context_.end() ? false : (found->second.type == type);
 		}
 
 		const SignatureRealization* operator[](const std::string& str) const
