@@ -53,10 +53,10 @@ namespace mathWorker
 			return context_->find(tkn) != context_->end();
 		}
 
-		size_t findTokenWithMinPriority(const std::span<Token> tkns) const
+		size_t findTokenWithMaxPriority(const std::span<Token> tkns) const
 		{
 			size_t ind = std::string::npos;
-			unsigned char priority = 255;
+			char priority = -1;
 
 			for (size_t i = 0; i < tkns.size(); ++i)
 			{
@@ -67,7 +67,7 @@ namespace mathWorker
 				const unsigned char current_priority = found->second.priority;
 				const OperatorPriority current_association = found->second.assitiation;
 
-				if (current_priority < priority || (current_priority == priority && current_association == OperatorPriority::leftToRight))
+				if (current_priority > priority || (current_priority == priority && current_association == OperatorPriority::leftToRight))
 				{
 					priority = current_priority;
 					ind = i;
@@ -140,7 +140,7 @@ namespace mathWorker
 
 		MathNodeP parseTokens(const TokenArrayP tkns) const
 		{
-			size_t minInd = findTokenWithMinPriority(tkns);
+			size_t minInd = findTokenWithMaxPriority(tkns);
 			if (minInd == std::string::npos)
 				return finalParse(tkns);
 

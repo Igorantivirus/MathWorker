@@ -28,7 +28,7 @@ SignatureContext generateBaseSignature()
 		{
 			ComplexType res = params[0]->getNumberForced() + params[1]->getNumberForced();
 			return std::make_unique<ValueNode>(res);
-		},0, SignatureType::operation, OperatorPriority::leftToRight
+		},4, SignatureType::operation, OperatorPriority::leftToRight
 	};
 	context["-"] =
 	{
@@ -40,7 +40,7 @@ SignatureContext generateBaseSignature()
 			else
 				res = params[0]->getNumberForced() - params[1]->getNumberForced();
 			return std::make_unique<ValueNode>(res);
-		},0, SignatureType::operation, OperatorPriority::leftToRight
+		},4, SignatureType::operation, OperatorPriority::leftToRight
 	};
 	context["*"] =
 	{
@@ -48,7 +48,7 @@ SignatureContext generateBaseSignature()
 		{
 			ComplexType res = params[0]->getNumberForced() * params[1]->getNumberForced();
 			return std::make_unique<ValueNode>(res);
-		},1, SignatureType::operation, OperatorPriority::leftToRight
+		},3, SignatureType::operation, OperatorPriority::leftToRight
 	};
 	context["/"] =
 	{
@@ -56,7 +56,7 @@ SignatureContext generateBaseSignature()
 		{
 			ComplexType res = params[0]->getNumberForced() / params[1]->getNumberForced();
 			return std::make_unique<ValueNode>(res);
-		},1, SignatureType::operation, OperatorPriority::leftToRight
+		},3, SignatureType::operation, OperatorPriority::leftToRight
 	};
 	context["^"] =
 	{
@@ -67,145 +67,6 @@ SignatureContext generateBaseSignature()
 		},2, SignatureType::operation, OperatorPriority::rightToLeft
 	};
 
-	context["sin"] =
-	{
-		[](const std::vector<MathNodeP>& params)->MathNodeP
-		{
-			ComplexType res = std::sin(params[0]->getNumberForced());
-			return std::make_unique<ValueNode>(res);
-		},4, SignatureType::function
-	};
-	context["cos"] =
-	{
-		[](const std::vector<MathNodeP>& params)->MathNodeP
-		{
-			ComplexType res = std::cos(params[0]->getNumberForced());
-			return std::make_unique<ValueNode>(res);
-		},4, SignatureType::function
-	};
-	context["tg"] =
-	{
-		[](const std::vector<MathNodeP>& params)->MathNodeP
-		{
-			ComplexType res = std::tan(params[0]->getNumberForced());
-			return std::make_unique<ValueNode>(res);
-		},4, SignatureType::function
-	};
-	context["ctg"] =
-	{
-		[](const std::vector<MathNodeP>& params)->MathNodeP
-		{
-			ComplexType res = ComplexType(1) / std::tan(params[0]->getNumberForced());
-			return std::make_unique<ValueNode>(res);
-		},4, SignatureType::function
-	};
-
-	context["arcsin"] =
-	{
-		[](const std::vector<MathNodeP>& params)->MathNodeP
-		{
-			ComplexType res = std::asin(params[0]->getNumberForced());
-			return std::make_unique<ValueNode>(res);
-		},4, SignatureType::function
-	};
-	context["arccos"] =
-	{
-		[](const std::vector<MathNodeP>& params)->MathNodeP
-		{
-			ComplexType res = std::acos(params[0]->getNumberForced());
-			return std::make_unique<ValueNode>(res);
-		},4, SignatureType::function
-	};
-	context["arctg"] =
-	{
-		[](const std::vector<MathNodeP>& params)->MathNodeP
-		{
-			ComplexType res = std::atan(params[0]->getNumberForced());
-			return std::make_unique<ValueNode>(res);
-		},4, SignatureType::function
-	};
-	context["arcctg"] =
-	{
-		[](const std::vector<MathNodeP>& params)->MathNodeP
-		{
-			ComplexType res = ComplexType(std::acos(-1) / 2) - std::atan(params[0]->getNumberForced());
-			return std::make_unique<ValueNode>(res);
-		},4, SignatureType::function
-	};
-
-	context["ln"] =
-	{
-		[](const std::vector<MathNodeP>& params)->MathNodeP
-		{
-			ComplexType res = std::log(params[0]->getNumberForced());
-			return std::make_unique<ValueNode>(res);
-		},4, SignatureType::function
-	};
-	context["exp"] =
-	{
-		[](const std::vector<MathNodeP>& params)->MathNodeP
-		{
-			ComplexType res = std::exp(params[0]->getNumberForced());
-			return std::make_unique<ValueNode>(res);
-		},4, SignatureType::function
-	};
-	context["log"] =
-	{
-		[](const std::vector<MathNodeP>& params)->MathNodeP
-		{
-			ComplexType res = std::log(params[1]->getNumberForced()) / std::log(params[0]->getNumberForced());
-			return std::make_unique<ValueNode>(res);
-		},4, SignatureType::specialFunction
-	};
-	context["root"] =
-	{
-		[](const std::vector<MathNodeP>& params)->MathNodeP
-		{
-			ComplexType res = pow(params[1]->getNumberForced(), ComplexType(1) / params[0]->getNumberForced());
-			return std::make_unique<ValueNode>(res);
-		},4, SignatureType::specialFunction
-	};
-	context["sqrt"] =
-	{
-		[](const std::vector<MathNodeP>& params)->MathNodeP
-		{
-			ComplexType res = std::sqrt(params[0]->getNumberForced());
-			return std::make_unique<ValueNode>(res);
-		},4, SignatureType::function
-	};
-	context["pow"] =
-	{
-		[](const std::vector<MathNodeP>& params)->MathNodeP
-		{
-			ComplexType res = std::pow(params[0]->getNumberForced(), params[1]->getNumberForced());
-			return std::make_unique<ValueNode>(res);
-		},4, SignatureType::function
-	};
-
-	context["conj"] =
-	{
-		[](const std::vector<MathNodeP>& params)->MathNodeP
-		{
-			ComplexType res = std::conj(params[0]->getNumberForced());
-			return std::make_unique<ValueNode>(res);
-		},4, SignatureType::function
-	};
-	context["imag"] =
-	{
-		[](const std::vector<MathNodeP>& params)->MathNodeP
-		{
-			ComplexType res = params[0]->getNumberForced().imag();
-			return std::make_unique<ValueNode>(res);
-		},4, SignatureType::function
-	};
-	context["real"] =
-	{
-		[](const std::vector<MathNodeP>& params)->MathNodeP
-		{
-			ComplexType res = params[0]->getNumberForced().real();
-			return std::make_unique<ValueNode>(res);
-		},4, SignatureType::function
-	};
 
 	context["d"] =
 	{
@@ -213,7 +74,7 @@ SignatureContext generateBaseSignature()
 		{
 			ComplexType res = params[0]->getNumberForced() * ComplexType(180.l / std::acos(-1));
 			return std::make_unique<ValueNode>(res);
-		},3, SignatureType::operation
+		},1, SignatureType::operation
 	};
 	context["r"] =
 	{
@@ -221,7 +82,144 @@ SignatureContext generateBaseSignature()
 		{
 			ComplexType res = params[0]->getNumberForced() * ComplexType(std::acos(-1) / 180.l);
 			return std::make_unique<ValueNode>(res);
-		},3, SignatureType::operation
+		},1, SignatureType::operation
+	};
+
+	context["sin"] =
+	{
+		[](const std::vector<MathNodeP>& params)->MathNodeP
+		{
+			ComplexType res = std::sin(params[0]->getNumberForced());
+			return std::make_unique<ValueNode>(res);
+		},0, SignatureType::function
+	};
+	context["cos"] =
+	{
+		[](const std::vector<MathNodeP>& params)->MathNodeP
+		{
+			ComplexType res = std::cos(params[0]->getNumberForced());
+			return std::make_unique<ValueNode>(res);
+		},0, SignatureType::function
+	};
+	context["tg"] =
+	{
+		[](const std::vector<MathNodeP>& params)->MathNodeP
+		{
+			ComplexType res = std::tan(params[0]->getNumberForced());
+			return std::make_unique<ValueNode>(res);
+		},0, SignatureType::function
+	};
+	context["ctg"] =
+	{
+		[](const std::vector<MathNodeP>& params)->MathNodeP
+		{
+			ComplexType res = ComplexType(1) / std::tan(params[0]->getNumberForced());
+			return std::make_unique<ValueNode>(res);
+		},0, SignatureType::function
+	};
+	context["arcsin"] =
+	{
+		[](const std::vector<MathNodeP>& params)->MathNodeP
+		{
+			ComplexType res = std::asin(params[0]->getNumberForced());
+			return std::make_unique<ValueNode>(res);
+		},0, SignatureType::function
+	};
+	context["arccos"] =
+	{
+		[](const std::vector<MathNodeP>& params)->MathNodeP
+		{
+			ComplexType res = std::acos(params[0]->getNumberForced());
+			return std::make_unique<ValueNode>(res);
+		},0, SignatureType::function
+	};
+	context["arctg"] =
+	{
+		[](const std::vector<MathNodeP>& params)->MathNodeP
+		{
+			ComplexType res = std::atan(params[0]->getNumberForced());
+			return std::make_unique<ValueNode>(res);
+		},0, SignatureType::function
+	};
+	context["arcctg"] =
+	{
+		[](const std::vector<MathNodeP>& params)->MathNodeP
+		{
+			ComplexType res = ComplexType(std::acos(-1) / 2) - std::atan(params[0]->getNumberForced());
+			return std::make_unique<ValueNode>(res);
+		},0, SignatureType::function
+	};
+	context["ln"] =
+	{
+		[](const std::vector<MathNodeP>& params)->MathNodeP
+		{
+			ComplexType res = std::log(params[0]->getNumberForced());
+			return std::make_unique<ValueNode>(res);
+		},0, SignatureType::function
+	};
+	context["exp"] =
+	{
+		[](const std::vector<MathNodeP>& params)->MathNodeP
+		{
+			ComplexType res = std::exp(params[0]->getNumberForced());
+			return std::make_unique<ValueNode>(res);
+		},0, SignatureType::function
+	};
+	context["log"] =
+	{
+		[](const std::vector<MathNodeP>& params)->MathNodeP
+		{
+			ComplexType res = std::log(params[1]->getNumberForced()) / std::log(params[0]->getNumberForced());
+			return std::make_unique<ValueNode>(res);
+		},0, SignatureType::specialFunction
+	};
+	context["root"] =
+	{
+		[](const std::vector<MathNodeP>& params)->MathNodeP
+		{
+			ComplexType res = pow(params[1]->getNumberForced(), ComplexType(1) / params[0]->getNumberForced());
+			return std::make_unique<ValueNode>(res);
+		},0, SignatureType::specialFunction
+	};
+	context["sqrt"] =
+	{
+		[](const std::vector<MathNodeP>& params)->MathNodeP
+		{
+			ComplexType res = std::sqrt(params[0]->getNumberForced());
+			return std::make_unique<ValueNode>(res);
+		},0, SignatureType::function
+	};
+	context["pow"] =
+	{
+		[](const std::vector<MathNodeP>& params)->MathNodeP
+		{
+			ComplexType res = std::pow(params[0]->getNumberForced(), params[1]->getNumberForced());
+			return std::make_unique<ValueNode>(res);
+		},0, SignatureType::function
+	};
+	context["conj"] =
+	{
+		[](const std::vector<MathNodeP>& params)->MathNodeP
+		{
+			ComplexType res = std::conj(params[0]->getNumberForced());
+			return std::make_unique<ValueNode>(res);
+		},0, SignatureType::function
+	};
+	context["imag"] =
+	{
+		[](const std::vector<MathNodeP>& params)->MathNodeP
+		{
+			ComplexType res = params[0]->getNumberForced().imag();
+			return std::make_unique<ValueNode>(res);
+		},0, SignatureType::function
+	};
+	context["real"] =
+	{
+		[](const std::vector<MathNodeP>& params)->MathNodeP
+		{
+			ComplexType res = params[0]->getNumberForced().real();
+			return std::make_unique<ValueNode>(res);
+		},0, SignatureType::function
 	};
 
 	return context;
