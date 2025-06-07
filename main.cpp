@@ -173,6 +173,14 @@ SignatureContext generateBaseSignature()
 			return std::make_unique<ValueNode>(res);
 		},4, SignatureType::function
 	};
+	context["pow"] =
+	{
+		[](const std::vector<MathNodeP>& params)->MathNodeP
+		{
+			ComplexType res = std::pow(params[0]->getNumberForced(), params[1]->getNumberForced());
+			return std::make_unique<ValueNode>(res);
+		},4, SignatureType::function
+	};
 
 	context["conj"] =
 	{
@@ -211,7 +219,7 @@ SignatureContext generateBaseSignature()
 	{
 		[](const std::vector<MathNodeP>& params)->MathNodeP
 		{
-			ComplexType res = params[0]->getNumberForced() * ComplexType(std::acos(-1) / 180);
+			ComplexType res = params[0]->getNumberForced() * ComplexType(std::acos(-1) / 180.l);
 			return std::make_unique<ValueNode>(res);
 		},3, SignatureType::operation
 	};
@@ -294,7 +302,7 @@ MathNodeP makeMyFoo()
 
 void addFunction(SignatureContext& context, const std::string& name, const std::vector<std::string>& paramNames, const std::string realization, const unsigned char priority = 4, const SignatureType type = SignatureType::function)
 {
-	BaseTokenizer tokenizer(&context, "&");
+	BaseTokenizer tokenizer(&context, "*");
 	MathParser parser(&context, &tokenizer);
 
 	MathNodeP node = parser.parse(realization);
@@ -332,9 +340,9 @@ int main()
 {
 	try
 	{
-		SignatureContext context = makeBoolContext();
+		SignatureContext context = generateBaseSignature();
 		VariableContext constants = generateBaseConstants();
-		BaseTokenizer tokenizer(&context, "&");
+		BaseTokenizer tokenizer(&context, "*");
 
 		std::string s;
 
@@ -349,7 +357,7 @@ int main()
 		//addFunction(context, "sqrr", { "a", "b", "c" }, "-(b-sqrt(b^2-4a c))/(2a)");
 		//addFunction(context, "abs", { "z" }, "sqrt(real(z)^2+imag(z)^2)");
 		//addFunction(context, "foo", { "x","y" }, "1 / (x ^ 2 * y ^ 2)");
-		addFunction(context, "f", { "x","y" }, "x+y+x y");
+		//addFunction(context, "f", { "x","y" }, "x+y+x y");
 
 		MathParser parser(&context, &tokenizer);
 

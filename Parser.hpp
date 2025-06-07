@@ -105,7 +105,7 @@ namespace mathWorker
 				throw ParseException("Invalid function parameters", ExceptionType::params);
 
 			MathVector result;
-			TokenArray tkns = tokenizer_->tonenizeByComma(token.substr(1, token.size() - 2));
+			TokenArray tkns = tokenizer_->tokenizeByComma(token.substr(1, token.size() - 2));
 
 			for (const auto& i : tkns)
 			{
