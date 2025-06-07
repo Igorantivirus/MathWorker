@@ -1,4 +1,5 @@
 #include <iostream>
+#include <chrono>
 
 #include "ValueNode.hpp"
 #include "SymbolNode.hpp"
@@ -31,54 +32,41 @@ std::string input(std::string s = {})
 
 int main()
 {
-	try
+	Signature signature = generateMathSignature();
+	VariableContext constants = generateBaseConstants();
+	BaseTokenizer tokenizer(&signature);
+	MathParser parser(&signature, &tokenizer);
+	FunctionConnector connector;
+
+	std::string s;
+
+	while (true)
 	{
-		Signature signature = generateMathSignature();
-		VariableContext constants = generateBaseConstants();
-		BaseTokenizer tokenizer(&signature);
-		MathParser parser(&signature, &tokenizer);
-		FunctionConnector connector;
-
-		std::string s;
-
-		/*while (true)
+		try
 		{
-			s = input("Enter: ");
-			auto ar = tokenizer.tokenize(s);
-			std::cout << ar << '\n';
-		}*/
+			s = input(": ");
 
-		//connector.addFunction(signature, "sqrr", { "a", "b", "c" }, "-(b-sqrt(b^2-4a c))/(2a)");
-		connector.addFunction(signature, "foo", { "x","y" }, "1/(x^2*y^2)");
+			auto start = std::chrono::high_resolution_clock::now();
 
-		std::cout << connector.addFunction(signature, "f(x)=2x+1") << '\n';
+			MathNodeP res = parser.parse(s)->replace(constants)->calculate(signature);
+			
+			auto stop = std::chrono::high_resolution_clock::now();
 
-		std::cout << connector.addFunction(signature, "D(a,b,c)=b^2-4a*c") << '\n';
-		std::cout << connector.addFunction(signature, "sqrr(a,b,c)=-(b-sqrt(D(a,b,c)))/(2a)") << '\n';
-
-		std::cout << connector.addFunction(signature, "nR(a,b,c,d)=b^2-3a*c") << '\n';
-		std::cout << connector.addFunction(signature, "mR(a,b,c,d)=2b^3-9a*b*c+27a^2d") << '\n';
-		std::cout << connector.addFunction(signature, "cbrr(a,b,c,d)=-(b+root3((mR(a,b,c,d)+sqrt(mR(a,b,c,d)^2-4nR(a,b,c,d)^3))/2)+root3((mR(a,b,c,d)-sqrt(mR(a,b,c,d)^2-4nR(a,b,c,d)^3))/2))/(3a)") << '\n';
-
-		//addFunction(signature, "f", { "x","y" }, "x+y+x y");
-
-
-		while (true)
-		{
-			s = input("Enter: ");
-			MathNodeP ptr = parser.parse(s);
-			std::cout << ptr->toString() << '\n';
-			std::cout << ptr->replace(constants)->calculate(signature)->toString() << '\n';
+			std::cout << "Time: " << std::chrono::duration_cast<std::chrono::nanoseconds>(stop - start).count() << '\n';
+			std::cout << res->toString() << '\n';
 		}
+		catch (const std::exception& e)
+		{
+			std::cout << e.what() << '\n';
+		}
+		catch (...)
+		{
+			std::cout << "Unlnown error" << '\n';
+		}
+
 	}
-	catch (char c)
-	{
-		std::cout << c << '\n';
-	}
-	/*catch (const ParseException& e)
-	{
-		std::cout << e.what() << ' ' << static_cast<int>(e.type()) << '\n';
-	}*/
+
+
 
 	return 0;
 }

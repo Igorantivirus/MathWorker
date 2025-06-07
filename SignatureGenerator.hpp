@@ -36,7 +36,15 @@ namespace mathWorker
 			}, 1, OperatorPriority::leftToRight);
 		signature.addOperator("^", [](const std::vector<MathNodeP>& params)->MathNodeP
 			{
-				ComplexType res = std::pow(params[0]->getNumberForced(), params[1]->getNumberForced());
+				ComplexType a = params[0]->getNumberForced();
+				ComplexType b = params[1]->getNumberForced();
+				bool isR_a = std::abs(a.imag()) < 1e-16;
+				bool isR_b = std::abs(b.imag()) < 1e-16;
+				ComplexType res{};
+				if (isR_a && isR_b)
+					res = std::pow(a.real(), b.real());
+				else
+					res = std::pow(a, b);
 				return std::make_unique<ValueNode>(res);
 			}, 0, OperatorPriority::rightToLeft);
 
@@ -101,16 +109,6 @@ namespace mathWorker
 				ComplexType res = std::exp(params[0]->getNumberForced());
 				return std::make_unique<ValueNode>(res);
 			});
-		signature.addFunction("log",	[](const std::vector<MathNodeP>& params)->MathNodeP
-			{
-				ComplexType res = std::log(params[1]->getNumberForced()) / std::log(params[0]->getNumberForced());
-				return std::make_unique<ValueNode>(res);
-			});
-		signature.addFunction("root",	[](const std::vector<MathNodeP>& params)->MathNodeP
-			{
-				ComplexType res = pow(params[1]->getNumberForced(), ComplexType(1) / params[0]->getNumberForced());
-				return std::make_unique<ValueNode>(res);
-			});
 		signature.addFunction("sqrt",	[](const std::vector<MathNodeP>& params)->MathNodeP
 			{
 				ComplexType res = std::sqrt(params[0]->getNumberForced());
@@ -118,7 +116,15 @@ namespace mathWorker
 			});
 		signature.addFunction("pow",	[](const std::vector<MathNodeP>& params)->MathNodeP
 			{
-				ComplexType res = std::pow(params[0]->getNumberForced(), params[1]->getNumberForced());
+				ComplexType a = params[0]->getNumberForced();
+				ComplexType b = params[1]->getNumberForced();
+				bool isR_a = std::abs(a.imag()) < 1e-16;
+				bool isR_b = std::abs(b.imag()) < 1e-16;
+				ComplexType res{};
+				if (isR_a && isR_b)
+					res = std::pow(a.real(), b.real());
+				else
+					res = std::pow(a, b);
 				return std::make_unique<ValueNode>(res);
 			});
 		signature.addFunction("conj",	[](const std::vector<MathNodeP>& params)->MathNodeP
@@ -149,8 +155,24 @@ namespace mathWorker
 			});
 		signature.addSpecialFunction("root", [](const std::vector<MathNodeP>& params)->MathNodeP
 			{
-				ComplexType res = std::pow(params[1]->getNumberForced(), ComplexType(1) / params[0]->getNumberForced());
+				ComplexType a = params[1]->getNumberForced();
+				ComplexType r = params[0]->getNumberForced();
+				
+				bool isR_a = std::abs(a.imag()) < 1e-16;
+				bool isR_r = std::abs(r.imag()) < 1e-16;
+				ComplexType res{};
+				if (isR_a && isR_r && std::fmod(r.real(), 2) == 1 && a.real() < 0)
+					res = -std::pow(-a.real(), 1 / r.real());
+				else
+					res = std::pow(a, ComplexType(1) / r);
 				return std::make_unique<ValueNode>(res);
+
+
+				/*if(isR(root) && std::fmod(root.real(), 2) == 1 && isR(a) && a.real() < 0)
+				return - std::pow(-a.real(), 1 / root.real());
+			return std::pow(a, Complex(1) / root);*/
+				/*ComplexType res = std::pow(params[1]->getNumberForced(), ComplexType(1) / params[0]->getNumberForced());
+				return std::make_unique<ValueNode>(res);*/
 			});
 
 		signature.setDefaultOperator("*");
@@ -162,11 +184,12 @@ namespace mathWorker
 	{
 		Signature signature;
 
-		signature.addOperator("!", [](const std::vector<MathNodeP>& params)->MathNodeP
+		signature.addUnareLeftOperator("!", [](const std::vector<MathNodeP>& params)->MathNodeP
 			{
 				ComplexType res = not(params[0]->getNumberForced().real());
 				return std::make_unique<ValueNode>(res);
-			}, 0);
+			});
+
 		signature.addOperator("&", [](const std::vector<MathNodeP>& params)->MathNodeP
 			{
 				ComplexType res = params[0]->getNumberForced().real() && params[1]->getNumberForced().real();
