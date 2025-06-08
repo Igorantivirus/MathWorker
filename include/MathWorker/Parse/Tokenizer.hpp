@@ -2,10 +2,10 @@
 
 #include <span>
 
-#include "MathUtils/MathDefines.hpp"
+#include "../MathUtils/MathDefines.hpp"
 #include "ParseUtils.hpp"
 #include "ParseException.hpp"
-#include "Signature.hpp"
+#include "../Signature.hpp"
 
 namespace mathWorker
 {

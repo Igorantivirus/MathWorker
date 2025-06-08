@@ -8,7 +8,7 @@
 #include "include/MathWorker/SignatureGenerator.hpp"
 #include "include/MathWorker/FunctionConnector.hpp"
 
-#include "include/MathWorker/Parser.hpp"
+#include "include/MathWorker/Parse/Parser.hpp"
 
 using namespace mathWorker;
 

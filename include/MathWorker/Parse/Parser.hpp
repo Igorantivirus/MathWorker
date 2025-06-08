@@ -4,14 +4,14 @@
 #include <span>
 #include <algorithm>
 
-#include "MathUtils/MathDefines.hpp"
-#include "MathClasses/MathNode.hpp"
+#include "../MathUtils/MathDefines.hpp"
+#include "../MathClasses/MathNode.hpp"
 
-#include "MathClasses/ValueNode.hpp"
-#include "MathClasses/SymbolNode.hpp"
-#include "MathClasses/SignatureNode.hpp"
+#include "../MathClasses/ValueNode.hpp"
+#include "../MathClasses/SymbolNode.hpp"
+#include "../MathClasses/SignatureNode.hpp"
 #include "ParseException.hpp"
-#include "Signature.hpp"
+#include "../Signature.hpp"
 #include "Tokenizer.hpp"
 
 namespace mathWorker

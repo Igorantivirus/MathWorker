@@ -1,6 +1,6 @@
 #pragma once
 
-#include "MathUtils/MathDefines.hpp"
+#include "../MathUtils/MathDefines.hpp"
 
 namespace mathWorker
 {
