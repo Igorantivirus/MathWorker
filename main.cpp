@@ -1,14 +1,14 @@
 #include <iostream>
 #include <chrono>
 
-#include "ValueNode.hpp"
-#include "SymbolNode.hpp"
-#include "SignatureNode.hpp"
+#include "include/MathWorker/ValueNode.hpp"
+#include "include/MathWorker/SymbolNode.hpp"
+#include "include/MathWorker/SignatureNode.hpp"
 
-#include "SignatureGenerator.hpp"
-#include "FunctionConnector.hpp"
+#include "include/MathWorker/SignatureGenerator.hpp"
+#include "include/MathWorker/FunctionConnector.hpp"
 
-#include "Parser.hpp"
+#include "include/MathWorker/Parser.hpp"
 
 using namespace mathWorker;
 
