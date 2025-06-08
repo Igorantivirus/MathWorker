@@ -87,7 +87,7 @@ int main()
 	return 0;
 }
 ```
-2. **Example 2** Custom Signature
+2. **Example 2**: Custom Signature
 
 ```cpp
 #include <iostream>
