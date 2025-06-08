@@ -138,7 +138,6 @@
     <ClInclude Include="include\MathWorker\MathClasses\ValueNode.hpp" />
     <ClInclude Include="include\MathWorker\MathUtils\MathDefines.hpp" />
     <ClInclude Include="include\MathWorker\MathUtils\MathStringConverter.hpp" />
-    <ClInclude Include="include\MathWorker\MathWorker.hpp" />
     <ClInclude Include="include\MathWorker\Parse\ParseException.hpp" />
     <ClInclude Include="include\MathWorker\Parse\Parser.hpp" />
     <ClInclude Include="include\MathWorker\Parse\ParseUtils.hpp" />
