@@ -74,5 +74,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
+    <None Include=".gitattributes" />
+    <None Include=".gitignore" />
+    <None Include="README_RU.md" />
   </ItemGroup>
 </Project>

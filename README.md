@@ -1,52 +1,54 @@
 ﻿<!--MathWorker-->
 <h1 align="center">MathWorker</h1>
 
-<h2>Описание</h2>
+[![Русская версия](https://img.shields.io/badge/Русская%20версия-blue)](README_RU.md)
 
-С++ библиотека для обработки математических выражений с полностью настраиваемой сигнатурой. 
-Способка парсить математические выражения из std строки.
-Можно добавлять в процессе работы новые константы, функции и операторы для сигнатуры.
+<h2>Description</h2>
 
-<h2>Зависимости</h2>
+A C++ library for processing mathematical expressions with a fully customizable signature.
+It's capable of parsing mathematical expressions from a std::string.
+You can add new constants, functions, and operators to the signature at runtime.
+
+<h2>Dependencies</h2>
 
 C++20.
 
-<h2>Ключевые особенности</h2>
+<h2>Key Features</h2>
 
-* ⚡ **Один заголовочный файл**
-* 🚀 **Легковесная и быстрая**
-* 🔗 **Без дополнительных библиотек**
-* 🛠️ **Полностью настраиваемая**
-* ✅ **Независима от <regex>**
+* ⚡ **Single-header file**
+* 🚀 ** Lightweight and fast**
+* 🔗 **No external dependencies**
+* 🛠️ **Fully customizable**
+* ✅ **`<regex>`-independent**
 
 <h2>Установка</h2>
 
-1. **Клонирование репозитория**
+1. **Clone the repository**
    ```sh
    git clone https://github.com/Igorantivirus/MathWorker
    ```
-2. **Добавьте путь к папке include в параметрах проекта**
+2. **Add the path to the include folder in your project settings**
    </br>
-   Дайте проетку путь к папке include из распакованного репозитория, например, для VS22 это делается следующим образом:
+   Provide your project with the path to the include folder from the cloned repository. For example, in VS22, you can do this as follows:
    
    - **Visual Studio 2022**
      </br>
-     Перейдите в `Имя проекта`->`Свойства`->`C/C++`->`Общее`
+     Go to `Project Name`->`Properties`->`C/C++`->`General`
      </br>
-     В поле `Дополнительные катаолги включаемых файлов`
-     вставьте путь до папки "include".
-3. **Подключите заголовочный файл в коде**
+     In the `Additional Include Directories`
+     field, paste the path to the "include" folder.
+3. **Include the header file in your code**
    ```cpp
    #include "MathWorker/MathWorker.hpp"
    ```
 
-<h2>Документация</h2>
+<h2>Documentation</h2>
 
-В разработке
+Work in progress.
 
-<h2>Примеры</h2>
+<h2>Examples</h2>
 
-1. **Пример 1**: Консольный калькулятор
+1. **Example  1**: Консольный калькулятор
 
 ``` cpp
 #include <iostream>
@@ -57,7 +59,7 @@ using namespace mathWorker;
 
 int main()
 {
-	//Основная сигнатура и константы алгебры
+	// Basic algebraic signature and constants
 	Signature signature = generator::mathSignature();
 	VariableContext constants = generator::baseConstants();
 	
@@ -85,7 +87,7 @@ int main()
 	return 0;
 }
 ```
-2. **Прмер 2** Своя сигнатура
+2. **Example 2** Custom Signature
 
 ```cpp
 #include <iostream>
@@ -101,7 +103,7 @@ int main()
 	BaseTokenizer tokenizer(&signature);
 	MathParser parser(&signature, &tokenizer);
 	
-	//Кастомный оператор
+	// Custom operator
 	signature.addOperator("@", [](const std::vector<MathNodeP>& params)->MathNodeP
 	{
 		ComplexType left = params[0]->getNumberForced();
@@ -112,7 +114,7 @@ int main()
 	
 	FunctionConnector connector;
 
-	//Добавление функции (один из 3-х способов)
+	// Adding a function (one of 3 ways)
 	connector.addFunction(signature, "f(x)=2@x@17");
 
 	std::string s = "f(1)@2";
@@ -122,17 +124,17 @@ int main()
 }
 ```
 
-**Вывод**: `323`
+**Output**: `323`
 
 
 <h2>Road Map</h2>
 
-1. Переработка работы с памятью
-2. Добавление шаблонности
-3. Перерабокта добавления функций (для предотвращения ошибок)
-4. Вывод выражения после парсинга в LaTex
-5. Релиз
+1. Memory management overhaul
+2. Add template support
+3. Rework function addition (to prevent errors)
+4. Output the parsed expression in LaTeX format
+5. Release
 
-<h2>Лицензия</h2>
+<h2>License</h2>
 
 **The MIT License**
