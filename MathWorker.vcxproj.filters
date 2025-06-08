@@ -32,50 +32,47 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MathNode.hpp">
-      <Filter>MathClasses</Filter>
-    </ClInclude>
-    <ClInclude Include="ValueNode.hpp">
-      <Filter>MathClasses</Filter>
-    </ClInclude>
-    <ClInclude Include="MathStringConverter.hpp">
-      <Filter>AdditionalUtils</Filter>
-    </ClInclude>
-    <ClInclude Include="SymbolNode.hpp">
-      <Filter>MathClasses</Filter>
-    </ClInclude>
-    <ClInclude Include="MathDefines.hpp">
-      <Filter>AdditionalUtils</Filter>
-    </ClInclude>
-    <ClInclude Include="VariableContext.hpp">
-      <Filter>Context</Filter>
-    </ClInclude>
-    <ClInclude Include="FunctionContext.hpp">
-      <Filter>Context</Filter>
-    </ClInclude>
-    <ClInclude Include="SignatureNode.hpp">
-      <Filter>MathClasses</Filter>
-    </ClInclude>
-    <ClInclude Include="Parser.hpp">
-      <Filter>Parse</Filter>
-    </ClInclude>
-    <ClInclude Include="Tokenizer.hpp">
-      <Filter>Parse</Filter>
-    </ClInclude>
-    <ClInclude Include="ParseException.hpp">
-      <Filter>Parse</Filter>
-    </ClInclude>
-    <ClInclude Include="ParseUtils.hpp">
-      <Filter>Parse</Filter>
-    </ClInclude>
-    <ClInclude Include="Signature.hpp">
+    <ClInclude Include="include\MathWorker\MathClasses\MathNode.hpp">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="SignatureGenerator.hpp">
+    <ClInclude Include="include\MathWorker\MathClasses\SignatureNode.hpp">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="FunctionConnector.hpp">
+    <ClInclude Include="include\MathWorker\MathClasses\SymbolNode.hpp">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="include\MathWorker\MathClasses\ValueNode.hpp">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MathWorker\MathUtils\MathDefines.hpp">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MathWorker\MathUtils\MathStringConverter.hpp">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MathWorker\Parse\ParseException.hpp">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MathWorker\Parse\Parser.hpp">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MathWorker\Parse\ParseUtils.hpp">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MathWorker\Parse\Tokenizer.hpp">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MathWorker\Signature\FunctionConnector.hpp">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MathWorker\Signature\Signature.hpp">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MathWorker\Signature\SignatureGenerator.hpp">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md" />
   </ItemGroup>
 </Project>
