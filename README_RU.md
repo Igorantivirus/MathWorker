@@ -1,7 +1,7 @@
 ﻿<!--MathWorker-->
 <h1 align="center">MathWorker</h1>
 
-[![English version](https://img.shields.io/badge/English%version-blue)](README_RU.md)
+[![English version](https://img.shields.io/badge/English%version-blue)](README.md)
 
 <h2>Описание</h2>
 
