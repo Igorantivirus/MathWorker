@@ -1,9 +1,9 @@
 #include <iostream>
 #include <chrono>
 
-#include "include/MathWorker/ValueNode.hpp"
-#include "include/MathWorker/SymbolNode.hpp"
-#include "include/MathWorker/SignatureNode.hpp"
+#include "include/MathWorker/MathClasses/ValueNode.hpp"
+#include "include/MathWorker/MathClasses/SymbolNode.hpp"
+#include "include/MathWorker/MathClasses/SignatureNode.hpp"
 
 #include "include/MathWorker/SignatureGenerator.hpp"
 #include "include/MathWorker/FunctionConnector.hpp"

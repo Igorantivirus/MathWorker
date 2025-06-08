@@ -132,21 +132,19 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="FunctionConnector.hpp" />
-    <ClInclude Include="FunctionContext.hpp" />
-    <ClInclude Include="ParseException.hpp" />
-    <ClInclude Include="Parser.hpp" />
-    <ClInclude Include="ParseUtils.hpp" />
-    <ClInclude Include="Signature.hpp" />
-    <ClInclude Include="SignatureGenerator.hpp" />
-    <ClInclude Include="SignatureNode.hpp" />
-    <ClInclude Include="SymbolNode.hpp" />
-    <ClInclude Include="MathDefines.hpp" />
-    <ClInclude Include="MathNode.hpp" />
-    <ClInclude Include="MathStringConverter.hpp" />
-    <ClInclude Include="Tokenizer.hpp" />
-    <ClInclude Include="ValueNode.hpp" />
-    <ClInclude Include="VariableContext.hpp" />
+    <ClInclude Include="include\MathWorker\FunctionConnector.hpp" />
+    <ClInclude Include="include\MathWorker\MathClasses\MathNode.hpp" />
+    <ClInclude Include="include\MathWorker\MathClasses\SignatureNode.hpp" />
+    <ClInclude Include="include\MathWorker\MathClasses\SymbolNode.hpp" />
+    <ClInclude Include="include\MathWorker\MathClasses\ValueNode.hpp" />
+    <ClInclude Include="include\MathWorker\MathDefines.hpp" />
+    <ClInclude Include="include\MathWorker\MathStringConverter.hpp" />
+    <ClInclude Include="include\MathWorker\ParseException.hpp" />
+    <ClInclude Include="include\MathWorker\Parser.hpp" />
+    <ClInclude Include="include\MathWorker\ParseUtils.hpp" />
+    <ClInclude Include="include\MathWorker\Signature.hpp" />
+    <ClInclude Include="include\MathWorker\SignatureGenerator.hpp" />
+    <ClInclude Include="include\MathWorker\Tokenizer.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "MathNode.hpp"
-#include "MathDefines.hpp"
 
 namespace mathWorker
 {

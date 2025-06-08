@@ -5,11 +5,11 @@
 #include <algorithm>
 
 #include "MathDefines.hpp"
-#include "MathNode.hpp"
+#include "MathClasses/MathNode.hpp"
 
-#include "ValueNode.hpp"
-#include "SymbolNode.hpp"
-#include "SignatureNode.hpp"
+#include "MathClasses/ValueNode.hpp"
+#include "MathClasses/SymbolNode.hpp"
+#include "MathClasses/SignatureNode.hpp"
 #include "ParseException.hpp"
 #include "Signature.hpp"
 #include "Tokenizer.hpp"

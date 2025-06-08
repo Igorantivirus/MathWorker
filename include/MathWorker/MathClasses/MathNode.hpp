@@ -1,8 +1,8 @@
 #pragma once
 
-#include "MathDefines.hpp"
-#include "MathStringConverter.hpp"
-#include "Signature.hpp"
+#include "../MathDefines.hpp"
+#include "../MathStringConverter.hpp"
+#include "../Signature.hpp"
 
 namespace mathWorker
 {
