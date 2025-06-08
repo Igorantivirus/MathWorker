@@ -4,7 +4,7 @@
 #include <span>
 #include <algorithm>
 
-#include "MathDefines.hpp"
+#include "MathUtils/MathDefines.hpp"
 #include "MathClasses/MathNode.hpp"
 
 #include "MathClasses/ValueNode.hpp"

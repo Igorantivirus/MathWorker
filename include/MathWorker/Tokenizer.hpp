@@ -2,7 +2,7 @@
 
 #include <span>
 
-#include "MathDefines.hpp"
+#include "MathUtils/MathDefines.hpp"
 #include "ParseUtils.hpp"
 #include "ParseException.hpp"
 #include "Signature.hpp"

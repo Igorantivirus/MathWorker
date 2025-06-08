@@ -137,8 +137,8 @@
     <ClInclude Include="include\MathWorker\MathClasses\SignatureNode.hpp" />
     <ClInclude Include="include\MathWorker\MathClasses\SymbolNode.hpp" />
     <ClInclude Include="include\MathWorker\MathClasses\ValueNode.hpp" />
-    <ClInclude Include="include\MathWorker\MathDefines.hpp" />
-    <ClInclude Include="include\MathWorker\MathStringConverter.hpp" />
+    <ClInclude Include="include\MathWorker\MathUtils\MathDefines.hpp" />
+    <ClInclude Include="include\MathWorker\MathUtils\MathStringConverter.hpp" />
     <ClInclude Include="include\MathWorker\ParseException.hpp" />
     <ClInclude Include="include\MathWorker\Parser.hpp" />
     <ClInclude Include="include\MathWorker\ParseUtils.hpp" />
