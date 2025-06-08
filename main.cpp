@@ -25,8 +25,8 @@ std::string input(std::string s = {})
 
 int main()
 {
-	Signature signature = generateMathSignature();
-	VariableContext constants = generateBaseConstants();
+	Signature signature = generator::mathSignature();
+	VariableContext constants = generator::baseConstants();
 	BaseTokenizer tokenizer(&signature);
 	MathParser parser(&signature, &tokenizer);
 	FunctionConnector connector;
