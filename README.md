@@ -21,7 +21,7 @@ C++20.
 * 🛠️ **Fully customizable**
 * ✅ **`<regex>`-independent**
 
-<h2>Установка</h2>
+<h2>Installation</h2>
 
 1. **Clone the repository**
    ```sh
@@ -48,7 +48,7 @@ Work in progress.
 
 <h2>Examples</h2>
 
-1. **Example  1**: Консольный калькулятор
+1. **Example  1**: Console Calculator
 
 ``` cpp
 #include <iostream>
