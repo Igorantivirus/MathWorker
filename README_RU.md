@@ -1,6 +1,8 @@
 ﻿<!--MathWorker-->
 <h1 align="center">MathWorker</h1>
 
+[![English version](https://img.shields.io/badge/English%version-blue)](README_RU.md)
+
 <h2>Описание</h2>
 
 С++ библиотека для обработки математических выражений с полностью настраиваемой сигнатурой. 
