@@ -5,7 +5,7 @@
 #include "../MathUtils/MathDefines.hpp"
 #include "ParseUtils.hpp"
 #include "ParseException.hpp"
-#include "../Signature.hpp"
+#include "../Signature/Signature.hpp"
 
 namespace mathWorker
 {

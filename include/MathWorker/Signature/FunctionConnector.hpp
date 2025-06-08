@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Parse/Parser.hpp"
+#include "../Parse/Parser.hpp"
 
 namespace mathWorker
 {

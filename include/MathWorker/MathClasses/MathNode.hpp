@@ -2,7 +2,7 @@
 
 #include "../MathUtils/MathDefines.hpp"
 #include "../MathUtils/MathStringConverter.hpp"
-#include "../Signature.hpp"
+#include "../Signature/Signature.hpp"
 
 namespace mathWorker
 {

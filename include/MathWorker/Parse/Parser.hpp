@@ -11,7 +11,7 @@
 #include "../MathClasses/SymbolNode.hpp"
 #include "../MathClasses/SignatureNode.hpp"
 #include "ParseException.hpp"
-#include "../Signature.hpp"
+#include "../Signature/Signature.hpp"
 #include "Tokenizer.hpp"
 
 namespace mathWorker

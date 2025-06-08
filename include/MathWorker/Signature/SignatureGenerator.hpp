@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Signature.hpp"
-#include "Parse/Parser.hpp"
+#include "../Parse/Parser.hpp"
 
 namespace mathWorker
 {

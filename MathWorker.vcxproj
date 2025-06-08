@@ -132,7 +132,6 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\MathWorker\FunctionConnector.hpp" />
     <ClInclude Include="include\MathWorker\MathClasses\MathNode.hpp" />
     <ClInclude Include="include\MathWorker\MathClasses\SignatureNode.hpp" />
     <ClInclude Include="include\MathWorker\MathClasses\SymbolNode.hpp" />
@@ -143,8 +142,9 @@
     <ClInclude Include="include\MathWorker\Parse\Parser.hpp" />
     <ClInclude Include="include\MathWorker\Parse\ParseUtils.hpp" />
     <ClInclude Include="include\MathWorker\Parse\Tokenizer.hpp" />
-    <ClInclude Include="include\MathWorker\Signature.hpp" />
-    <ClInclude Include="include\MathWorker\SignatureGenerator.hpp" />
+    <ClInclude Include="include\MathWorker\Signature\FunctionConnector.hpp" />
+    <ClInclude Include="include\MathWorker\Signature\Signature.hpp" />
+    <ClInclude Include="include\MathWorker\Signature\SignatureGenerator.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
