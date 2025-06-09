@@ -16,14 +16,14 @@
     <Filter Include="MathClasses">
       <UniqueIdentifier>{f3ec5983-87fb-4ac6-89aa-e64183b8ae2d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="AdditionalUtils">
-      <UniqueIdentifier>{f4afd9c5-9a53-45b6-94cf-b8941c8a1a8d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Context">
-      <UniqueIdentifier>{936ce97a-ca5e-4158-bfb1-6460ba60af5f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Parse">
       <UniqueIdentifier>{4e530cb2-b73d-43c1-8e1a-2043d967a543}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MathUtils">
+      <UniqueIdentifier>{f4afd9c5-9a53-45b6-94cf-b8941c8a1a8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Signature">
+      <UniqueIdentifier>{936ce97a-ca5e-4158-bfb1-6460ba60af5f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -32,44 +32,44 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\MathWorker\MathClasses\MathNode.hpp">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="include\MathWorker\MathClasses\SignatureNode.hpp">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="include\MathWorker\MathClasses\SymbolNode.hpp">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="include\MathWorker\MathClasses\ValueNode.hpp">
-      <Filter>Файлы заголовков</Filter>
+    <ClInclude Include="include\MathWorker\Signature\FunctionConnector.hpp">
+      <Filter>Signature</Filter>
     </ClInclude>
     <ClInclude Include="include\MathWorker\MathUtils\MathDefines.hpp">
-      <Filter>Файлы заголовков</Filter>
+      <Filter>MathUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MathWorker\MathClasses\MathNode.hpp">
+      <Filter>MathClasses</Filter>
     </ClInclude>
     <ClInclude Include="include\MathWorker\MathUtils\MathStringConverter.hpp">
-      <Filter>Файлы заголовков</Filter>
+      <Filter>MathUtils</Filter>
     </ClInclude>
     <ClInclude Include="include\MathWorker\Parse\ParseException.hpp">
-      <Filter>Файлы заголовков</Filter>
+      <Filter>Parse</Filter>
     </ClInclude>
     <ClInclude Include="include\MathWorker\Parse\Parser.hpp">
-      <Filter>Файлы заголовков</Filter>
+      <Filter>Parse</Filter>
     </ClInclude>
     <ClInclude Include="include\MathWorker\Parse\ParseUtils.hpp">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="include\MathWorker\Parse\Tokenizer.hpp">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="include\MathWorker\Signature\FunctionConnector.hpp">
-      <Filter>Файлы заголовков</Filter>
+      <Filter>Parse</Filter>
     </ClInclude>
     <ClInclude Include="include\MathWorker\Signature\Signature.hpp">
-      <Filter>Файлы заголовков</Filter>
+      <Filter>Signature</Filter>
     </ClInclude>
     <ClInclude Include="include\MathWorker\Signature\SignatureGenerator.hpp">
-      <Filter>Файлы заголовков</Filter>
+      <Filter>Signature</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MathWorker\MathClasses\SignatureNode.hpp">
+      <Filter>MathClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MathWorker\MathClasses\SymbolNode.hpp">
+      <Filter>MathClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MathWorker\Parse\Tokenizer.hpp">
+      <Filter>Parse</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MathWorker\MathClasses\ValueNode.hpp">
+      <Filter>MathClasses</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
