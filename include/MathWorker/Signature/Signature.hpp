@@ -62,19 +62,9 @@ namespace mathWorker
 			return defaultOperator_;
 		}
 
-		bool isTerm(const std::string& str) const
-		{
-			return context_.find(str) != context_.end();
-		}
 		bool isTerm(const std::string_view str) const
 		{
 			return context_.find(str) != context_.end();
-		}
-
-		bool isSignatureType(const std::string& str, const SignatureType type) const
-		{
-			const auto& found = context_.find(str);
-			return found == context_.end() ? false : (found->second.type == type);
 		}
 		bool isSignatureType(const std::string_view str, const SignatureType type) const
 		{
@@ -82,15 +72,7 @@ namespace mathWorker
 			return found == context_.end() ? false : (found->second.type == type);
 		}
 
-		const SignatureRealization* operator[](const std::string& str) const
-		{
-			return at(str);
-		}
 		const SignatureRealization* operator[](const std::string_view str) const
-		{
-			return at(str);
-		}
-		SignatureRealization* operator[](const std::string& str)
 		{
 			return at(str);
 		}
@@ -98,18 +80,8 @@ namespace mathWorker
 		{
 			return at(str);
 		}
-		
-		const SignatureRealization* at(const std::string& str) const
-		{
-			auto found = context_.find(str);
-			return (found == context_.end()) ? (nullptr) : (&found->second);
-		}
+
 		const SignatureRealization* at(const std::string_view str) const
-		{
-			auto found = context_.find(str);
-			return (found == context_.end()) ? (nullptr) : (&found->second);
-		}
-		SignatureRealization* at(const std::string& str)
 		{
 			auto found = context_.find(str);
 			return (found == context_.end()) ? (nullptr) : (&found->second);
