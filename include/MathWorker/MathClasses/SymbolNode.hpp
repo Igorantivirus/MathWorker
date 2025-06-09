@@ -12,7 +12,7 @@ namespace mathWorker
 		#pragma region Initializing
 
 		SymbolNode() = default;
-		SymbolNode(const std::string name) :
+		SymbolNode(const std::string& name) :
 			name_{ name }
 		{}
 		SymbolNode(const SymbolNode& other) :
