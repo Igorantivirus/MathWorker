@@ -99,16 +99,12 @@ namespace mathWorker
 			params.reserve(params_.size());
 
 			for (const auto& i : params_)
-				params.push_back(std::move(i->calculate(signature)));
+				params.push_back(i->calculate(signature));
 
 			const auto realization = signature[name_];
 
 			if(!realization)
 				return std::make_unique<SignatureNode>(*this);
-
-			/*const auto& found = context.find(name_);
-			if(found == context.end())
-				return std::make_unique<SignatureNode>(*this);*/
 
 			const NativeRealization* native_func_ptr = std::get_if<NativeRealization>(&realization->realization);
 			const MatherRealization* mather_node_ptr = std::get_if<MatherRealization>(&realization->realization);
@@ -118,15 +114,15 @@ namespace mathWorker
 			if (mather_node_ptr)
 			{
 				VariableContext varContext;
-
+				//TODO сделать обработку ошибок
 				for (size_t i = 0; i < std::min(params.size(), mather_node_ptr->second.size()); ++i)
 					varContext[mather_node_ptr->second[i]] = params[i]->clone();
 
 				MathNodeP newRes = mather_node_ptr->first->replace(varContext);
 				
-				return std::move(newRes->calculate(signature));
+				return newRes->calculate(signature);
 			}
-			return nullptr;
+			return std::make_unique<SignatureNode>(*this);
 		}
 		ComplexType getNumberForced() const override
 		{
@@ -148,15 +144,7 @@ namespace mathWorker
 			params_.reserve(params.size());
 			for (const auto& i : params)
 				if(i != nullptr)
-					params_.push_back(std::move(i->clone()));
-		}
-		void setParams(const MathRowVector& params)
-		{
-			params_.clear();
-			params_.reserve(params.size());
-			for (const auto& i : params)
-				if(i != nullptr)
-					params_.push_back(std::move(i->clone()));
+					params_.push_back(i->clone());
 		}
 
 		const SignatureType getType() const
@@ -167,18 +155,18 @@ namespace mathWorker
 		void addParam(const MathNodeP& param)
 		{
 			if (param != nullptr)
-				params_.push_back(std::move(param->clone()));
+				params_.push_back(param->clone());
 		}
 		void addParam(const MathNode& param)
 		{
-			params_.push_back(std::move(param.clone()));
+			params_.push_back(param.clone());
 		}
 		void addParams(const MathVector& params)
 		{
 			params_.reserve(params_.size() + params.size());
 			for (const auto& i : params)
 				if (i != nullptr)
-					params_.push_back(std::move(i->clone()));
+					params_.push_back(i->clone());
 		}
 
 		#pragma endregion
