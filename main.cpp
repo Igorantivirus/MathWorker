@@ -27,8 +27,9 @@ int main()
 {
 	Signature signature = generator::mathSignature();
 	VariableContext constants = generator::baseConstants();
-	BaseTokenizer tokenizer(&signature);
-	MathParser parser(&signature, &tokenizer);
+
+	MathParser parser(signature, std::make_unique<BaseTokenizer>(signature));
+
 	FunctionConnector connector;
 
 	std::string s;

@@ -11,8 +11,7 @@ namespace mathWorker
 
 		void addFunction(Signature& signature, const std::string& name, const std::vector<std::string>& paramNames, const std::string realization)
 		{
-			BaseTokenizer tokenizer(&signature);
-			MathParser parser(&signature, &tokenizer);
+			MathParser parser(signature, std::make_unique<BaseTokenizer>(signature));
 
 			MathNodeP node = parser.parse(realization);
 
@@ -35,7 +34,7 @@ namespace mathWorker
 			if (firstOpenBracket == std::string::npos)
 				return false;
 
-			BaseTokenizer tokenizer(&signature);
+			BaseTokenizer tokenizer(signature);
 
 			std::string paramsStr = fStr.substr(firstOpenBracket + 1, (equalInd - 1) - (firstOpenBracket + 1));
 			TokenArray paramsP = tokenizer.tokenizeByComma(paramsStr);

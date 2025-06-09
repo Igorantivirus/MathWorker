@@ -20,23 +20,19 @@ namespace mathWorker
 	class MathParser
 	{
 	public:
-		MathParser()
-		{
-			initProcessingMethods();
-		}
-		MathParser(const Signature* signature, const Tokenizer* tokenizer) :
-			signature_{ signature }, tokenizer_{tokenizer}
+		MathParser(const Signature& signature, std::unique_ptr<const Tokenizer> tokenizer) :
+			signature_{ signature }, tokenizer_{std::move(tokenizer)}
 		{
 			initProcessingMethods();
 		}
 
-		void setsignature(const Signature* signature)
+		void setsignature(const Signature& signature)
 		{
 			signature_ = signature;
 		}
-		void setTokenizer(const Tokenizer* tokenizer)
+		void setTokenizer(std::unique_ptr<const Tokenizer> tokenizer)
 		{
-			tokenizer_ = tokenizer;
+			tokenizer_ = std::move(tokenizer);
 		}
 
 		MathNodeP parse(const std::string_view& str) const
@@ -49,8 +45,8 @@ namespace mathWorker
 
 		using ProcessMethod = void(MathParser::*)(SignatureNode*, const TokenArrayP, const size_t) const;
 
-		const Signature* signature_ = nullptr;
-		const Tokenizer* tokenizer_ = nullptr;
+		std::reference_wrapper<const Signature> signature_;
+		std::unique_ptr<const Tokenizer> tokenizer_;
 
 		std::map<SignatureType, ProcessMethod> procesingMethods_;
 
@@ -75,7 +71,7 @@ namespace mathWorker
 
 			for (size_t i = 0; i < tkns.size(); ++i)
 			{
-				auto realization = signature_->at(tkns[i]);
+				auto realization = signature_.get().at(tkns[i]);
 				if (!realization)
 					continue;
 
@@ -176,7 +172,7 @@ namespace mathWorker
 				return finalParse(tkns);
 
 			SignatureNode* node = new SignatureNode{ std::string(tkns[minInd]) };
-			SignatureType type = signature_->at(tkns[minInd])->type;
+			SignatureType type = signature_.get().at(tkns[minInd])->type;
 
 			(this->*procesingMethods_.at(type))(node, tkns, minInd);
 

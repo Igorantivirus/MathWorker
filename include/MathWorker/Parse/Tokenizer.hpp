@@ -18,13 +18,14 @@ namespace mathWorker
 	{
 	public:
 		Tokenizer() = default;
-		Tokenizer(const Signature* signature)
+		Tokenizer(const Signature& signature) :
+			signature_(signature)
 		{
 			setSettings(signature);
 		}
 		virtual ~Tokenizer() = default;
 
-		void setSettings(const Signature* signature)
+		void setSettings(const Signature& signature)
 		{
 			signature_ = signature;
 		}
@@ -34,7 +35,7 @@ namespace mathWorker
 
 	protected:
 
-		const Signature* signature_ = nullptr;
+		std::reference_wrapper<const Signature> signature_;
 
 	};
 
@@ -42,7 +43,7 @@ namespace mathWorker
 	{
 	public:
 		BaseTokenizer() = default;
-		BaseTokenizer(const Signature* signature) :
+		BaseTokenizer(const Signature& signature) :
 			Tokenizer(signature)
 		{}
 
@@ -81,14 +82,14 @@ namespace mathWorker
 			bool bracket2 = isOpenBracket(b[0]);
 			bool isNumber2 = isNumber(b[0]);
 			bool isWord2 = isLetter(b[0]) &&
-				!signature_->isSignatureType(b, SignatureType::unareRight) &&
-				!signature_->isSignatureType(b, SignatureType::operation);
+				!signature_.get().isSignatureType(b, SignatureType::unareRight) &&
+				!signature_.get().isSignatureType(b, SignatureType::operation);
 
 			if (isCloseBracket(a.back()) && (isNumber2 || isWord2 || bracket2))
 				return true;
 			if (isNumber(a[0]) && (isNumber2 || isWord2 || bracket2))
 				return true;
-			if (!signature_->isTerm(a) && isLetter(a[0]) && (isNumber2 || isWord2 || bracket2))
+			if (!signature_.get().isTerm(a) && isLetter(a[0]) && (isNumber2 || isWord2 || bracket2))
 				return true;
 			
 			return false;
@@ -149,7 +150,10 @@ namespace mathWorker
 			{
 				res.push_back(tkns[i]);
 
-				auto realization = signature_->at(tkns[i]);
+
+				
+
+				auto realization = signature_.get().at(tkns[i]);
 
 				if (realization)
 				{
@@ -159,7 +163,7 @@ namespace mathWorker
 					continue;
 				}
 				if (meansDefaultOperator(tkns[i], tkns[i + 1]))
-					res.push_back(signature_->getDefaultOperator());
+					res.push_back(signature_.get().getDefaultOperator());
 			}
 			res.push_back(tkns[i]);
 			return res;
