@@ -16,7 +16,7 @@ C++20.
 <h2>Key Features</h2>
 
 * ⚡ **Single-header file**
-* 🚀 ** Lightweight and fast**
+* 🚀 **Lightweight and fast**
 * 🔗 **No external dependencies**
 * 🛠️ **Fully customizable**
 * ✅ **`<regex>`-independent**
