@@ -15,8 +15,6 @@ namespace mathWorker
 
 			MathNodeP node = parser.parse(realization);
 
-			//std::cout << node->toString() << '\n';
-
 			MatherRealization pair;
 			pair.first = std::move(node);
 			pair.second = paramNames;
