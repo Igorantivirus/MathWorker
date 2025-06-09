@@ -25,6 +25,9 @@
     <Filter Include="Signature">
       <UniqueIdentifier>{936ce97a-ca5e-4158-bfb1-6460ba60af5f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Examples">
+      <UniqueIdentifier>{1a1b09de-11f3-446e-822d-e989470e20ef}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -70,6 +73,12 @@
     </ClInclude>
     <ClInclude Include="include\MathWorker\MathClasses\ValueNode.hpp">
       <Filter>MathClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Examples\ConsoleCalculator.hpp">
+      <Filter>Examples</Filter>
+    </ClInclude>
+    <ClInclude Include="Examples\CastomAlgebr.hpp">
+      <Filter>Examples</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

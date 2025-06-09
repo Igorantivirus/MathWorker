@@ -134,6 +134,8 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Examples\CastomAlgebr.hpp" />
+    <ClInclude Include="Examples\ConsoleCalculator.hpp" />
     <ClInclude Include="include\MathWorker\MathClasses\MathNode.hpp" />
     <ClInclude Include="include\MathWorker\MathClasses\SignatureNode.hpp" />
     <ClInclude Include="include\MathWorker\MathClasses\SymbolNode.hpp" />

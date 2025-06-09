@@ -62,9 +62,8 @@ int main()
 	//Основная сигнатура и константы алгебры
 	Signature signature = generator::mathSignature();
 	VariableContext constants = generator::baseConstants();
-	
-	BaseTokenizer tokenizer(&signature);
-	MathParser parser(&signature, &tokenizer);
+
+	MathParser parser(signature, std::make_unique<BaseTokenizer>(signature));
 	FunctionConnector connector;
 
 	std::string s;
@@ -100,8 +99,7 @@ int main()
 {
 	Signature signature;
 	VariableContext constants;
-	BaseTokenizer tokenizer(&signature);
-	MathParser parser(&signature, &tokenizer);
+	MathParser parser(signature, std::make_unique<BaseTokenizer>(signature));
 	
 	//Кастомный оператор
 	signature.addOperator("@", [](const std::vector<MathNodeP>& params)->MathNodeP
