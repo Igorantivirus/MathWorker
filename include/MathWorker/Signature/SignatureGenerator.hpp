@@ -197,27 +197,27 @@ namespace mathWorker
 				{
 					ComplexType res = params[0]->getNumberForced().real() && params[1]->getNumberForced().real();
 					return std::make_unique<ValueNode>(res);
-				}, 1);
+				}, 0);
 			signature.addOperator("|", [](const std::vector<MathNodeP>& params)->MathNodeP
 				{
 					ComplexType res = params[0]->getNumberForced().real() || params[1]->getNumberForced().real();
 					return std::make_unique<ValueNode>(res);
-				}, 2);
+				}, 1);
 			signature.addOperator("->", [](const std::vector<MathNodeP>& params)->MathNodeP
 				{
 					ComplexType res = not(params[0]->getNumberForced().real()) || params[1]->getNumberForced().real();
 					return std::make_unique<ValueNode>(res);
-				}, 2);
+				}, 1);
 			signature.addOperator("+", [](const std::vector<MathNodeP>& params)->MathNodeP
 				{
 					ComplexType res = params[0]->getNumberForced() != params[1]->getNumberForced();
 					return std::make_unique<ValueNode>(res);
-				}, 3);
+				}, 2);
 			signature.addOperator("=", [](const std::vector<MathNodeP>& params)->MathNodeP
 				{
 					ComplexType res = params[0]->getNumberForced() == params[1]->getNumberForced();
 					return std::make_unique<ValueNode>(res);
-				}, 3);
+				}, 2);
 
 			return signature;
 		}
