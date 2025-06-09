@@ -24,7 +24,7 @@ namespace mathWorker
 	};
 
 	using SignatureContext = std::map<std::string, SignatureRealization, std::less<>>;
-
+	using VariableContext = std::map<std::string, MathNodeP>;
 
 	class Signature
 	{

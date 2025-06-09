@@ -26,6 +26,5 @@ namespace mathWorker
 	};
 
 	using MathNodeP = std::unique_ptr<MathNode>;
-	using VariableContext = std::map<std::string, MathNodeP>;
 
 }

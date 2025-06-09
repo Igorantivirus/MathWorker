@@ -90,7 +90,7 @@ namespace mathWorker
 
 		MathNodeP replace(const VariableContext& variabls) const override
 		{
-			std::unique_ptr<SignatureNode> result = std::make_unique<SignatureNode>(*this);
+			std::unique_ptr<SignatureNode> result = std::make_unique<SignatureNode>(name_, type_);
 			result->params_.reserve(params_.size());
 			for (const auto& i : params_)
 				result->params_.push_back(i->replace(variabls));

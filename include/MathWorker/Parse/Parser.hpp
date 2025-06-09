@@ -176,7 +176,7 @@ namespace mathWorker
 
 			(this->*procesingMethods_.at(type))(node, tkns, minInd);
 
-			return std::move(MathNodeP(node));
+			return MathNodeP(node);
 		}
 	};
 }

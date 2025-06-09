@@ -13,7 +13,7 @@ namespace mathWorker
 	public:
 		virtual ~StringConverter() = default;
 
-		virtual std::string toString(const RealType& value) const = 0;
+		virtual std::string toString(const RealType value) const = 0;
 		virtual std::string toString(const ComplexType& value) const = 0;
 		//Convertation to other types
 	};
@@ -22,7 +22,7 @@ namespace mathWorker
 	{
 	public:
 
-		std::string toString(const RealType& value) const override
+		std::string toString(const RealType value) const override
 		{
 			std::stringstream out;
 			out << std::setprecision(15) << round(value, 15);
@@ -33,22 +33,25 @@ namespace mathWorker
 				result.pop_back();
 			if(result.back() == '.')
 				result.pop_back();
-			//if (result.size() == 2 && result[0] == '-' && result[1] == '0')
-			//	return std::string(1, '0');
 			return result;
 		}
 		std::string toString(const ComplexType& value) const override
 		{
 			std::string real = toString(value.real());
 			std::string imag = toString(value.imag());
-			if (imag.size() == 1 && imag[0] == '0')
+			if (equal(imag, '0'))
 				return real;
-			if (real.size() == 1 && real[0] == '0')
-				return imag + 'i';
-			return real + (imag[0] == '-' ? "" : "+") + imag + 'i';
+			if (equal(real, '0'))
+				return (equal(imag, '1') ? "" : imag) + 'i';
+			return real + (imag[0] == '-' ? "" : "+") + (equal(imag, '1') ? "" : imag) + 'i';
 		}
 
 	private:
+
+		bool equal(const std::string& str, const char c) const
+		{
+			return str.size() == 1 && str[0] == c;
+		}
 
 		long double round(RealType value, unsigned int n) const
 		{
