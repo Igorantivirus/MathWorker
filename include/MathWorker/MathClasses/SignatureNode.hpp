@@ -22,11 +22,14 @@ namespace mathWorker
 		{
 			setParams(params);
 		}
-		SignatureNode(const std::string& name, const MathRowVector& params, const SignatureType type = SignatureType::function) :
+		/*SignatureNode(const std::string& name, const std::initializer_list<MathNodeP>&& list, const SignatureType type = SignatureType::function) :
+			name_{ name }, type_{ type }, params_{std::move(list)}
+		{}*/
+		/*SignatureNode(const std::string& name, const MathRowVector& params, const SignatureType type = SignatureType::function) :
 			name_{ name }, type_{ type }
 		{
 			setParams(params);
-		}
+		}*/
 		SignatureNode(const SignatureNode& other) :
 			name_{ other.name_ }, type_{other.type_}
 		{
@@ -79,12 +82,12 @@ namespace mathWorker
 		}
 		MathNodeP clone() const override
 		{
-			return std::make_unique< SignatureNode>(name_, params_, type_);
+			return std::make_unique<SignatureNode>(*this);
 		}
 
 		MathNodeP replace(const VariableContext& variabls) const override
 		{
-			std::unique_ptr<SignatureNode> result(new SignatureNode(name_, MathRowVector{}, type_));
+			std::unique_ptr<SignatureNode> result = std::make_unique<SignatureNode>(*this);
 			result->params_.reserve(params_.size());
 			for (const auto& i : params_)
 				result->params_.push_back(i->replace(variabls));
