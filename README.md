@@ -48,7 +48,7 @@ Work in progress.
 
 <h2>Examples</h2>
 
-1. **Example  1**: Console Calculator
+1. **Example 1**: Console Calculator
 
 ``` cpp
 #include <iostream>
@@ -81,7 +81,7 @@ int main()
 		}
 		catch (...)
 		{
-			std::cout << "Unlnown error" << '\n';
+			std::cout << "Unknown error" << '\n';
 		}
 	}
 	return 0;
