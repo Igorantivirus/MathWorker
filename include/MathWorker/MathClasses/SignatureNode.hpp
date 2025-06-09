@@ -7,6 +7,9 @@
 namespace mathWorker
 {
 
+	using MathVector = std::vector<MathNodeP>;
+	using MathRowVector = std::vector<MathNode*>;
+
 	class SignatureNode : public MathNode
 	{
 	public:

@@ -28,10 +28,4 @@ namespace mathWorker
 	using MathNodeP = std::unique_ptr<MathNode>;
 	using VariableContext = std::map<std::string, MathNodeP>;
 
-	
-
-	using MathVector = std::vector<MathNodeP>;
-	using MathRowVector = std::vector<MathNode*>;
-
-
 }
