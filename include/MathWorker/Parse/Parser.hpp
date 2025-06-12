@@ -172,10 +172,11 @@ namespace mathWorker
 				return finalParse(tkns);
 
 			SignatureNode* node = new SignatureNode{ std::string(tkns[minInd]) };
-			SignatureType type = signature_.get().at(tkns[minInd])->type;
-			node->setType(type);
+			node->setType(signature_.get().at(tkns[minInd])->type);
+			node->setPriority(signature_.get().at(tkns[minInd])->priority);
+			//SignatureType type = ;
 
-			(this->*procesingMethods_.at(type))(node, tkns, minInd);
+			(this->*procesingMethods_.at(node->getType()))(node, tkns, minInd);
 
 			return MathNodeP(node);
 		}

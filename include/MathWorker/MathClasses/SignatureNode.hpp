@@ -156,6 +156,15 @@ namespace mathWorker
 			type_ = type;
 		}
 
+		const unsigned char getPriority() const
+		{
+			return priority_;
+		}
+		void setPriority(const unsigned char priority)
+		{
+			priority_ = priority;
+		}
+
 		const SignatureType getType() const
 		{
 			return type_;
@@ -183,6 +192,7 @@ namespace mathWorker
 	private:
 
 		SignatureType type_ = SignatureType::function;
+		unsigned char priority_ = 0;
 
 		std::string name_;
 
