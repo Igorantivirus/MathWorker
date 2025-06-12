@@ -13,7 +13,7 @@ namespace mathWorker
 		virtual ~MathNode() = default;
 
 		virtual std::string toString() const = 0;
-		virtual std::string toString(const BaseStringConverter&) const = 0;
+		virtual std::string toString(const BaseStringConverter&, const unsigned char prevProiority = 0) const = 0;
 
 		virtual std::unique_ptr<MathNode> clone() const = 0;
 

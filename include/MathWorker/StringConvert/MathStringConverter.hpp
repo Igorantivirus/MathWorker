@@ -37,7 +37,7 @@ namespace mathWorker
 				return (equal(imag, '1') ? "" : imag) + 'i';
 			return real + (imag[0] == '-' ? "" : "+") + (equal(imag, '1') ? "" : imag) + 'i';
 		}
-		virtual std::string toString(const std::vector<std::string>& params, const std::string& term, const SignatureType type) const
+		virtual std::string toString(const std::vector<std::string>& params, const std::string& term, const SignatureType type, const bool needBrackets) const
 		{
 			std::string res = term + '(';
 			if (params.empty())

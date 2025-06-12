@@ -45,7 +45,7 @@ namespace mathWorker
 			BaseStringConverter converter;
 			return converter.toString(value_);
 		}
-		std::string toString(const BaseStringConverter& converter) const override
+		std::string toString(const BaseStringConverter& converter, const unsigned char) const override
 		{
 			return converter.toString(value_);
 		}

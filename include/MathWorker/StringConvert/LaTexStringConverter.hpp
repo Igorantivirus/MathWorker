@@ -9,18 +9,30 @@ namespace mathWorker
 	{
 	public:
 
-		std::string toString(const std::vector<std::string>& params, const std::string& term, const SignatureType type) const override
+		std::string toString(const std::vector<std::string>& params, const std::string& term, const SignatureType type, const bool needBrackets = false) const override
 		{
 			if (type == SignatureType::function)
-				return BaseStringConverter::toString(params, term, type);
+				return processFunction(params, term, type);
 			if (type == SignatureType::operation)
-				return processOperation(params, term, type);
+				return needBrackets ? ("\\left(" + processOperation(params, term, type) + "\\right)") : processOperation(params, term, type);
 			if (type == SignatureType::specialFunction)
 				return processSFunction(params, term, type);
 			return processUnareOper(params, term, type);
 		}
 
 	private:
+
+		std::string processFunction(const std::vector<std::string>& params, const std::string& term, const SignatureType type) const
+		{
+			std::string res = term + "\\left(";
+			if (params.empty())
+				return res + "\\right)";
+			res += params[0];
+			for (size_t i = 1; i < params.size(); ++i)
+				res += ',' + params[i];
+			res += "\\right)";
+			return res;
+		}
 
 		std::string processOperation(const std::vector<std::string>& params, const std::string& term, const SignatureType type) const
 		{
@@ -30,6 +42,8 @@ namespace mathWorker
 				return "\\frac{" + params[0] + "}{" + params[1] + '}';
 			if (equal(term, '^'))
 				return params[0] + "^{" + params[1] + '}';
+			if (equal(term, '*'))
+				return params[0] + "\\cdot" + params[1];
 			return params[0] + term + params[1];
 		}
 

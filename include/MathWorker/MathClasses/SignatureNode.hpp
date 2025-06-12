@@ -75,14 +75,14 @@ namespace mathWorker
 			res += params_[params_.size() - 1]->toString() + ')';
 			return res;
 		}
-		std::string toString(const BaseStringConverter& converter) const override
+		std::string toString(const BaseStringConverter& converter, const unsigned char prevProiority) const override
 		{
 			std::vector<std::string> params;
 			params.reserve(params_.size());
 			for (const auto& i : params_)
-				params.push_back(i->toString(converter));
+				params.push_back(i->toString(converter, priority_));
 
-			return converter.toString(params, name_, type_);
+			return converter.toString(params, name_, type_, prevProiority > priority_);
 		}
 		MathNodeP clone() const override
 		{
