@@ -41,7 +41,7 @@ namespace mathWorker
 		{
 			return name_;
 		}
-		std::string toString(const StringConverter& converter) const override
+		std::string toString(const BaseStringConverter& converter) const override
 		{
 			return name_;
 		}

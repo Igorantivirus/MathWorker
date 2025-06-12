@@ -80,6 +80,9 @@
     <ClInclude Include="Examples\CastomAlgebr.hpp">
       <Filter>Examples</Filter>
     </ClInclude>
+    <ClInclude Include="include\MathWorker\MathUtils\MathJaxStringConverter.hpp">
+      <Filter>MathUtils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />

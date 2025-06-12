@@ -75,7 +75,7 @@ namespace mathWorker
 			res += params_[params_.size() - 1]->toString() + ')';
 			return res;
 		}
-		std::string toString(const StringConverter& converter) const override
+		std::string toString(const BaseStringConverter& converter) const override
 		{
 			std::string res = name_ + '(';
 			for (size_t i = 0; i < params_.size() - 1; ++i)
