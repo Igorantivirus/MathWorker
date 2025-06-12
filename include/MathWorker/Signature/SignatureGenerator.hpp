@@ -158,8 +158,8 @@ namespace mathWorker
 				});
 			signature.addSpecialFunction("root", [](const std::vector<MathNodeP>& params)->MathNodeP
 				{
-					ComplexType a = params[1]->getNumberForced();
 					ComplexType r = params[0]->getNumberForced();
+					ComplexType a = params[1]->getNumberForced();
 				
 					bool isR_a = std::abs(a.imag()) < 1e-16;
 					bool isR_r = std::abs(r.imag()) < 1e-16;

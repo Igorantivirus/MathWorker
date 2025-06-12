@@ -2,12 +2,13 @@
 
 #include <sstream>
 #include <iomanip>
+#include <vector>
 
-#include "MathDefines.hpp"
+#include "../MathUtils/MathDefines.hpp"
+#include "ConvertStringException.hpp"
 
 namespace mathWorker
 {
-
 	class BaseStringConverter
 	{
 	public:
@@ -35,6 +36,17 @@ namespace mathWorker
 			if (equal(real, '0'))
 				return (equal(imag, '1') ? "" : imag) + 'i';
 			return real + (imag[0] == '-' ? "" : "+") + (equal(imag, '1') ? "" : imag) + 'i';
+		}
+		virtual std::string toString(const std::vector<std::string>& params, const std::string& term, const SignatureType type) const
+		{
+			std::string res = term + '(';
+			if (params.empty())
+				return res + ')';
+			res += params[0];
+			for (size_t i = 1; i < params.size(); ++i)
+				res += ',' + params[i];
+			res += ')';
+			return res;
 		}
 		//Convertation to other types
 

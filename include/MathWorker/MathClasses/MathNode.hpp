@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../MathUtils/MathDefines.hpp"
-#include "../MathUtils/MathStringConverter.hpp"
+#include "../StringConvert/MathStringConverter.hpp"
 #include "../Signature/Signature.hpp"
 
 namespace mathWorker

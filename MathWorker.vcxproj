@@ -141,8 +141,6 @@
     <ClInclude Include="include\MathWorker\MathClasses\SymbolNode.hpp" />
     <ClInclude Include="include\MathWorker\MathClasses\ValueNode.hpp" />
     <ClInclude Include="include\MathWorker\MathUtils\MathDefines.hpp" />
-    <ClInclude Include="include\MathWorker\MathUtils\MathJaxStringConverter.hpp" />
-    <ClInclude Include="include\MathWorker\MathUtils\MathStringConverter.hpp" />
     <ClInclude Include="include\MathWorker\Parse\ParseException.hpp" />
     <ClInclude Include="include\MathWorker\Parse\Parser.hpp" />
     <ClInclude Include="include\MathWorker\Parse\ParseUtils.hpp" />
@@ -150,6 +148,9 @@
     <ClInclude Include="include\MathWorker\Signature\FunctionConnector.hpp" />
     <ClInclude Include="include\MathWorker\Signature\Signature.hpp" />
     <ClInclude Include="include\MathWorker\Signature\SignatureGenerator.hpp" />
+    <ClInclude Include="include\MathWorker\StringConvert\ConvertStringException.hpp" />
+    <ClInclude Include="include\MathWorker\StringConvert\LaTexStringConverter.hpp" />
+    <ClInclude Include="include\MathWorker\StringConvert\MathStringConverter.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitattributes" />

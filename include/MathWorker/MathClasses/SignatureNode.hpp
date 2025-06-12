@@ -77,11 +77,12 @@ namespace mathWorker
 		}
 		std::string toString(const BaseStringConverter& converter) const override
 		{
-			std::string res = name_ + '(';
-			for (size_t i = 0; i < params_.size() - 1; ++i)
-				res += params_[i]->toString(converter) + ',';
-			res += params_[params_.size() - 1]->toString(converter) + ')';
-			return res;
+			std::vector<std::string> params;
+			params.reserve(params_.size());
+			for (const auto& i : params_)
+				params.push_back(i->toString(converter));
+
+			return converter.toString(params, name_, type_);
 		}
 		MathNodeP clone() const override
 		{

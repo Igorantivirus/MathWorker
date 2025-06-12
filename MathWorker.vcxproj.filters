@@ -28,6 +28,9 @@
     <Filter Include="Examples">
       <UniqueIdentifier>{1a1b09de-11f3-446e-822d-e989470e20ef}</UniqueIdentifier>
     </Filter>
+    <Filter Include="StringConvert">
+      <UniqueIdentifier>{dc1be28b-530f-4f06-93a7-4cc8467e5598}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -43,9 +46,6 @@
     </ClInclude>
     <ClInclude Include="include\MathWorker\MathClasses\MathNode.hpp">
       <Filter>MathClasses</Filter>
-    </ClInclude>
-    <ClInclude Include="include\MathWorker\MathUtils\MathStringConverter.hpp">
-      <Filter>MathUtils</Filter>
     </ClInclude>
     <ClInclude Include="include\MathWorker\Parse\ParseException.hpp">
       <Filter>Parse</Filter>
@@ -80,8 +80,14 @@
     <ClInclude Include="Examples\CastomAlgebr.hpp">
       <Filter>Examples</Filter>
     </ClInclude>
-    <ClInclude Include="include\MathWorker\MathUtils\MathJaxStringConverter.hpp">
-      <Filter>MathUtils</Filter>
+    <ClInclude Include="include\MathWorker\StringConvert\LaTexStringConverter.hpp">
+      <Filter>StringConvert</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MathWorker\StringConvert\MathStringConverter.hpp">
+      <Filter>StringConvert</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MathWorker\StringConvert\ConvertStringException.hpp">
+      <Filter>StringConvert</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
