@@ -151,6 +151,11 @@ namespace mathWorker
 					params_.push_back(i->clone());
 		}
 
+		void setType(const SignatureType type)
+		{
+			type_ = type;
+		}
+
 		const SignatureType getType() const
 		{
 			return type_;

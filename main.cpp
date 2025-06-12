@@ -2,6 +2,7 @@
 #include <chrono>
 
 #include "include/MathWorker/MathWorker.hpp"
+#include "include/MathWorker/StringConvert/LaTexStringConverter.hpp"
 
 using namespace mathWorker;
 
@@ -32,6 +33,8 @@ int main()
 
 	FunctionConnector connector;
 
+	LaTexStringConverter converter;
+
 	std::string s;
 
 	while (true)
@@ -42,12 +45,13 @@ int main()
 
 			auto start = std::chrono::high_resolution_clock::now();
 
-			MathNodeP res = parser.parse(s)->replace(constants)->calculate(signature);
+			//MathNodeP res = parser.parse(s)->replace(constants)->calculate(signature);
+			MathNodeP res = parser.parse(s);
 			
 			auto stop = std::chrono::high_resolution_clock::now();
 
 			std::cout << "Time: " << std::chrono::duration_cast<std::chrono::nanoseconds>(stop - start).count() << '\n';
-			std::cout << res->toString() << '\n';
+			std::cout << res->toString(converter) << '\n';
 		}
 		catch (const std::exception& e)
 		{

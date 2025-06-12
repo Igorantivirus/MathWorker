@@ -173,6 +173,7 @@ namespace mathWorker
 
 			SignatureNode* node = new SignatureNode{ std::string(tkns[minInd]) };
 			SignatureType type = signature_.get().at(tkns[minInd])->type;
+			node->setType(type);
 
 			(this->*procesingMethods_.at(type))(node, tkns, minInd);
 
