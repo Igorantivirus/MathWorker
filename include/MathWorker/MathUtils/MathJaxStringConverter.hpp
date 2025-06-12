@@ -5,7 +5,7 @@
 namespace mathWorker
 {
 
-	class MathJaxStringConverter : public StringConverter
+	class MathJaxStringConverter : public BaseStringConverter
 	{
 	public:
 
