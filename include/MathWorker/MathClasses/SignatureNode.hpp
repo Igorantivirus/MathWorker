@@ -118,7 +118,7 @@ namespace mathWorker
 			if (mather_node_ptr)
 			{
 				VariableContext varContext;
-				//TODO сделать обработку ошибок
+				//TODO СЃРґРµР»Р°С‚СЊ РѕР±СЂР°Р±РѕС‚РєСѓ РѕС€РёР±РѕРє
 				for (size_t i = 0; i < std::min(params.size(), mather_node_ptr->second.size()); ++i)
 					varContext[mather_node_ptr->second[i]] = params[i]->clone();
 
