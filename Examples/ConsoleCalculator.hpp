@@ -8,7 +8,7 @@ using namespace mathWorker;
 
 int example1()
 {
-	//Основная сигнатура и константы алгебры
+	//РћСЃРЅРѕРІРЅР°СЏ СЃРёРіРЅР°С‚СѓСЂР° Рё РєРѕРЅСЃС‚Р°РЅС‚С‹ Р°Р»РіРµР±СЂС‹
 	Signature signature = generator::mathSignature();
 	VariableContext constants = generator::baseConstants();
 

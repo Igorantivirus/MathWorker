@@ -12,7 +12,7 @@ int example2()
 	VariableContext constants;
 	MathParser parser(signature, std::make_unique<BaseTokenizer>(signature));
 
-	//Кастомный оператор
+	//РљР°СЃС‚РѕРјРЅС‹Р№ РѕРїРµСЂР°С‚РѕСЂ
 	signature.addOperator("@", [](const std::vector<MathNodeP>& params)->MathNodeP
 		{
 			ComplexType left = params[0]->getNumberForced();
@@ -23,7 +23,7 @@ int example2()
 
 	FunctionConnector connector;
 
-	//Добавление функции (один из 3-х способов)
+	//Р”РѕР±Р°РІР»РµРЅРёРµ С„СѓРЅРєС†РёРё (РѕРґРёРЅ РёР· 3-С… СЃРїРѕСЃРѕР±РѕРІ)
 	connector.addFunction(signature, "f(x)=2@x@17");
 
 	std::string s = "f(1)@2";
