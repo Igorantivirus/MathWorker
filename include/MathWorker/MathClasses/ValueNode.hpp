@@ -12,72 +12,31 @@ namespace mathWorker
 		#pragma region Initializing
 
 		ValueNode() = default;
-		ValueNode(const ComplexType& value) :
-			value_{ value }
-		{}
-		ValueNode(const RealType& value) :
-			value_{ value, 0 }
-		{}
-		ValueNode(const ValueNode& other) :
-			value_{other.value_}
-		{}
-		ValueNode(ValueNode&& other) noexcept :
-			value_{ std::move(other.value_) }
-		{}
+		ValueNode(const ComplexType& value);
+		ValueNode(const RealType& value);
+		ValueNode(const ValueNode& other);
+		ValueNode(ValueNode&& other) noexcept;
 
-		ValueNode& operator=(const ValueNode& other)
-		{
-			value_ = other.value_;
-			return *this;
-		}
-		ValueNode& operator=(ValueNode&& other) noexcept
-		{
-			value_ = std::move(other.value_);
-			return *this;
-		}
+		ValueNode& operator=(const ValueNode& other);
+		ValueNode& operator=(ValueNode&& other) noexcept;
 
 		#pragma endregion
 
 		#pragma region Overrided
 
-		std::string toString() const override
-		{
-			BaseStringConverter converter;
-			return converter.toString(value_);
-		}
-		std::string toString(const BaseStringConverter& converter, const unsigned char) const override
-		{
-			return converter.toString(value_);
-		}
-		MathNodeP clone() const override
-		{
-			return std::make_unique<ValueNode>(*this);
-		}
-		MathNodeP replace(const VariableContext& variabls) const override
-		{
-			return std::make_unique<ValueNode>(*this);
-		}
-		MathNodeP calculate(const Signature& context) const override
-		{
-			return std::make_unique<ValueNode>(*this);
-		}
-		ComplexType getNumberForced() const override
-		{
-			return value_;
-		}
+		std::string toString() const override;
+		std::string toString(const BaseStringConverter& converter, const unsigned char) const override;
+		MathNodeP clone() const override;
+		MathNodeP replace(const VariableContext& variabls) const override;
+		MathNodeP calculate(const Signature& context) const override;
+		ComplexType getNumberForced() const override;
 
 		#pragma endregion
 
 		#pragma region Methods
 
-		const ComplexType& getValue() const
-		{
-			return value_;
-		}
-		void setValue(const ComplexType& value)
-		{
-			value_ = value;
-		}
+		const ComplexType& getValue() const;
+		void setValue(const ComplexType& value);
 
 		#pragma endregion
 
