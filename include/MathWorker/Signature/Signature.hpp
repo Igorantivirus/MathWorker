@@ -101,10 +101,6 @@ namespace mathWorker
 		{
 			return constantContext_; 
 		}
-		void setVariableContext(const VariableContext& constantContext)
-		{
-			constantContext_ = constantContext;
-		}
 
 	private:
 
