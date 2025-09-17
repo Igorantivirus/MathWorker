@@ -180,6 +180,12 @@ namespace mathWorker
 
 			signature.setDefaultOperator("*");
 
+			signature.addConstant("pi",		std::make_unique<ValueNode>(ValueNode(RealType(std::acos(-1)))));
+			signature.addConstant("e",		std::make_unique<ValueNode>(ValueNode(std::exp(1))));
+			signature.addConstant("phi",	std::make_unique<ValueNode>(ValueNode(RealType(0.5l + std::sqrt(5) / 2.l))));
+			signature.addConstant("i",		std::make_unique<ValueNode>(ValueNode(ComplexType(0, 1))));
+			signature.addConstant("inf",	std::make_unique<ValueNode>(ValueNode(ComplexType(RealType(1.) / RealType(sin(0)), 0))));
+
 			return signature;
 		}
 
@@ -222,16 +228,16 @@ namespace mathWorker
 			return signature;
 		}
 
-		VariableContext baseConstants()
-		{
-			VariableContext context;
-			context["pi"]	= ValueNode(RealType(std::acos(-1))).clone();
-			context["e"]	= ValueNode(std::exp(1)).clone();
-			context["phi"]	= ValueNode(RealType(0.5l + std::sqrt(5) / 2.l)).clone();
-			context["i"]	= ValueNode(ComplexType(0, 1)).clone();
-			context["inf"]	= ValueNode(ComplexType(RealType(1.) / RealType(sin(0)), 0)).clone();
-			return context;
-		}
+		// VariableContext baseConstants()
+		// {
+		// 	VariableContext context;
+		// 	context["pi"]	= ValueNode(RealType(std::acos(-1))).clone();
+		// 	context["e"]	= ValueNode(std::exp(1)).clone();
+		// 	context["phi"]	= ValueNode(RealType(0.5l + std::sqrt(5) / 2.l)).clone();
+		// 	context["i"]	= ValueNode(ComplexType(0, 1)).clone();
+		// 	context["inf"]	= ValueNode(ComplexType(RealType(1.) / RealType(sin(0)), 0)).clone();
+		// 	return context;
+		// }
 
 
 	}
