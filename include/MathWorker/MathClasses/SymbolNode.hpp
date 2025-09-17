@@ -12,71 +12,30 @@ namespace mathWorker
 		#pragma region Initializing
 
 		SymbolNode() = default;
-		SymbolNode(const std::string& name) :
-			name_{ name }
-		{}
-		SymbolNode(const SymbolNode& other) :
-			name_{ other.name_ }
-		{}
-		SymbolNode(SymbolNode&& other) noexcept :
-			name_{ std::move(other.name_) }
-		{}
+		SymbolNode(const std::string& name);
+		SymbolNode(const SymbolNode& other);
+		SymbolNode(SymbolNode&& other) noexcept;
 
-		SymbolNode& operator=(const SymbolNode& other)
-		{
-			name_ = other.name_;
-			return *this;
-		}
-		SymbolNode& operator=(SymbolNode&& other) noexcept
-		{
-			name_ = std::move(other.name_);
-			return *this;
-		}
+		SymbolNode& operator=(const SymbolNode& other);
+		SymbolNode& operator=(SymbolNode&& other) noexcept;
 
 		#pragma endregion
 
 		#pragma	region Overrided
 
-		std::string toString() const override
-		{
-			return name_;
-		}
-		std::string toString(const BaseStringConverter& converter, const unsigned char) const override
-		{
-			return name_;
-		}
-		MathNodeP clone() const override
-		{
-			return std::make_unique<SymbolNode>(*this);
-		}
-		MathNodeP replace(const VariableContext& context) const override
-		{
-			const auto found = context.find(name_);
-			if(found == context.end())
-				return std::make_unique<SymbolNode>(*this);
-			return found->second->clone();
-		}
-		MathNodeP calculate(const Signature& context) const override
-		{
-			return std::make_unique<SymbolNode>(*this);
-		}
-		ComplexType getNumberForced() const override
-		{
-			return ComplexType(std::nanl(""), std::nanl(""));
-		}
+		std::string toString() const override;
+		std::string toString(const BaseStringConverter& converter, const unsigned char) const override;
+		MathNodeP clone() const override;
+		MathNodeP replace(const VariableContext& context) const override;
+		MathNodeP calculate(const Signature& context) const override;
+		ComplexType getNumberForced() const override;
 
 		#pragma	endregion
 
 		#pragma region Methods
 
-		const std::string& getName() const
-		{
-			return name_;
-		}
-		void setName(const std::string& name)
-		{
-			name_ = name;
-		}
+		const std::string& getName() const;
+		void setName(const std::string& name);
 
 		#pragma endregion
 
