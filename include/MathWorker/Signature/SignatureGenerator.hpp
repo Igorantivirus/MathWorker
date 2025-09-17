@@ -124,7 +124,7 @@ namespace mathWorker
 					bool isR_a = std::abs(a.imag()) < 1e-16;
 					bool isR_b = std::abs(b.imag()) < 1e-16;
 					ComplexType res{};
-					if (isR_a && isR_b)
+					if (isR_a && isR_b && a.real() >= 0.l)
 						res = std::pow(a.real(), b.real());
 					else
 						res = std::pow(a, b);
