@@ -9,7 +9,7 @@ namespace mathWorker
 	{
 	public:
 
-		void addFunction(Signature& signature, const std::string& name, const std::vector<std::string>& paramNames, const std::string realization)
+		void addFunction(Signature& signature, const std::string& name, std::vector<std::string> paramNames, const std::string realization)
 		{
 			MathParser parser(signature, std::make_unique<BaseTokenizer>(signature));
 
@@ -17,7 +17,7 @@ namespace mathWorker
 
 			MatherRealization pair;
 			pair.first = std::move(node);
-			pair.second = paramNames;
+			pair.second = std::move(paramNames);
 
 			signature.addFunction(name, std::move(pair));
 		}
