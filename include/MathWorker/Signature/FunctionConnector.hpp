@@ -38,7 +38,7 @@ namespace mathWorker
 			TokenArray paramsP = tokenizer.tokenizeByComma(paramsStr);
 			std::vector<std::string> params(paramsP.begin(), paramsP.end());
 
-			addFunction(signature, fStr.substr(0, firstOpenBracket), params, fStr.substr(equalInd + 1));
+			addFunction(signature, fStr.substr(0, firstOpenBracket), std::move(params), fStr.substr(equalInd + 1));
 			return true;
 		}
 
