@@ -17,17 +17,18 @@ namespace mathWorker
 	class Tokenizer
 	{
 	public:
-		Tokenizer() = default;
 		Tokenizer(const Signature& signature) :
 			signature_(signature)
-		{
-			setSettings(signature);
-		}
+		{}
 		virtual ~Tokenizer() = default;
 
 		void setSettings(const Signature& signature)
 		{
 			signature_ = signature;
+		}
+		const Signature& getSettings() const
+		{
+			return signature_;
 		}
 
 		virtual TokenArray tokenize(const Token str) const = 0;
@@ -42,9 +43,7 @@ namespace mathWorker
 	class BaseTokenizer : public Tokenizer
 	{
 	public:
-		BaseTokenizer() = default;
-		BaseTokenizer(const Signature& signature) :
-			Tokenizer(signature)
+		BaseTokenizer(const Signature& signature) : Tokenizer{signature}
 		{}
 
 		TokenArray tokenize(const Token str) const override

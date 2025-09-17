@@ -20,24 +20,21 @@ namespace mathWorker
 	class MathParser
 	{
 	public:
-		MathParser(const Signature& signature, std::unique_ptr<const Tokenizer> tokenizer) :
-			signature_{ signature }, tokenizer_{std::move(tokenizer)}
+		MathParser(const Tokenizer& tokenizer) :
+			tokenizer_{tokenizer}, signature_{tokenizer.getSettings()}
 		{
 			initProcessingMethods();
 		}
-
-		void setsignature(const Signature& signature)
+			
+		void setTokenizer(const Tokenizer& tokenizer)
 		{
-			signature_ = signature;
-		}
-		void setTokenizer(std::unique_ptr<const Tokenizer> tokenizer)
-		{
-			tokenizer_ = std::move(tokenizer);
+			tokenizer_ = tokenizer;
+			signature_ = tokenizer.getSettings();
 		}
 
 		MathNodeP parse(const std::string_view& str) const
 		{
-			TokenArray tkns = tokenizer_->tokenize(str);
+			TokenArray tkns = tokenizer_.get().tokenize(str);
 			return parseTokens(tkns);
 		}
 
@@ -45,8 +42,8 @@ namespace mathWorker
 
 		using ProcessMethod = void(MathParser::*)(SignatureNode*, const TokenArrayP, const size_t) const;
 
+		std::reference_wrapper<const Tokenizer> tokenizer_;
 		std::reference_wrapper<const Signature> signature_;
-		std::unique_ptr<const Tokenizer> tokenizer_;
 
 		std::map<SignatureType, ProcessMethod> procesingMethods_;
 
@@ -110,7 +107,7 @@ namespace mathWorker
 				throw ParseException("Invalid function parameters", ExceptionType::params);
 
 			MathVector result;
-			TokenArray tkns = tokenizer_->tokenizeByComma(token.substr(1, token.size() - 2));
+			TokenArray tkns = tokenizer_.get().tokenizeByComma(token.substr(1, token.size() - 2));
 
 			for (const auto& i : tkns)
 			{
