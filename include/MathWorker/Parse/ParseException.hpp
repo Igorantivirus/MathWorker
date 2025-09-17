@@ -15,23 +15,12 @@ namespace mathWorker
 	class ParseException : public std::exception
 	{
 	public:
-		explicit ParseException(const char* message, const ExceptionType type)
-			: msg_(message), type_{ type }
-		{}
-		explicit ParseException(const std::string& message, const ExceptionType type)
-			: msg_(message), type_{ type }
-		{}
-		virtual ~ParseException() noexcept
-		{}
+		explicit ParseException(const char* message, const ExceptionType type);
+		explicit ParseException(const std::string& message, const ExceptionType type);
+		virtual ~ParseException() noexcept;
 
-		virtual const char* what() const noexcept
-		{
-			return msg_.c_str();
-		}
-		virtual const ExceptionType type() const noexcept
-		{
-			return type_;
-		}
+		virtual const char* what() const noexcept;
+		virtual const ExceptionType type() const noexcept;
 
 	protected:
 
