@@ -17,7 +17,7 @@ namespace mathWorker
 		virtual std::string toString(const RealType value) const
 		{
 			std::stringstream out;
-			out << std::setprecision(15) << round(value, 15);
+			out << std::setprecision(6) << round(value, 6);
 			std::string result = out.str();
 			if (result.find('.') == std::string::npos)
 				return result;
