@@ -168,14 +168,21 @@ namespace mathWorker
 			if (minInd == std::string::npos)
 				return finalParse(tkns);
 
-			SignatureNode* node = new SignatureNode{ std::string(tkns[minInd]) };
-			node->setType(signature_.get().at(tkns[minInd])->type);
-			node->setPriority(signature_.get().at(tkns[minInd])->priority);
-			//SignatureType type = ;
+			std::unique_ptr<SignatureNode> nodeP = std::make_unique<SignatureNode>(std::string(tkns[minInd]));
+			auto term = signature_.get().at(tkns[minInd]);
+			
+			nodeP->setType(term->type);
+			nodeP->setPriority(term->priority);
+			(this->*procesingMethods_.at(nodeP->getType()))(nodeP.get(), tkns, minInd);
 
-			(this->*procesingMethods_.at(node->getType()))(node, tkns, minInd);
+			// SignatureNode* node = new SignatureNode{ std::string(tkns[minInd]) };
+			// node->setType(signature_.get().at(tkns[minInd])->type);
+			// node->setPriority(signature_.get().at(tkns[minInd])->priority);
+			// //SignatureType type = ;
 
-			return MathNodeP(node);
+			// (this->*procesingMethods_.at(node->getType()))(node, tkns, minInd);
+
+			return nodeP;
 		}
 	};
 }
