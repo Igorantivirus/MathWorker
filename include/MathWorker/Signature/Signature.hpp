@@ -31,23 +31,23 @@ namespace mathWorker
 	public:
 		Signature() = default;
 		
-		void addFunction(const std::string& name, std::variant<NativeRealization, MatherRealization> realization)
+		void addFunction(const std::string& name, std::variant<NativeRealization, MatherRealization>&& realization)
 		{
 			functionalContext_[name] = { std::move(realization), 0, SignatureType::function };
 		}
-		void addSpecialFunction(const std::string& name, std::variant<NativeRealization, MatherRealization> realization)
+		void addSpecialFunction(const std::string& name, std::variant<NativeRealization, MatherRealization>&& realization)
 		{
 			functionalContext_[name] = { std::move(realization), 0, SignatureType::specialFunction };
 		}
-		void addUnareRightOperator(const std::string& name, NativeRealization realization)
+		void addUnareRightOperator(const std::string& name, NativeRealization&& realization)
 		{
 			functionalContext_[name] = { realization, 1, SignatureType::unareRight };
 		}
-		void addUnareLeftOperator(const std::string& name, NativeRealization realization)
+		void addUnareLeftOperator(const std::string& name, NativeRealization&& realization)
 		{
 			functionalContext_[name] = { realization, 2, SignatureType::unareLeft };
 		}
-		void addOperator(const std::string& name, NativeRealization realization, const unsigned char priority, const OperatorPriority direction = OperatorPriority::leftToRight)
+		void addOperator(const std::string& name, NativeRealization&& realization, const unsigned char priority, const OperatorPriority direction = OperatorPriority::leftToRight)
 		{
 			functionalContext_[name] = { realization, static_cast<unsigned char>(priority + 3), SignatureType::operation, direction };
 		}
