@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stack>
+#include <array>
 #include <span>
 #include <algorithm>
 
@@ -45,20 +46,28 @@ namespace mathWorker
 		std::reference_wrapper<const Tokenizer> tokenizer_;
 		std::reference_wrapper<const Signature> signature_;
 
-		std::map<SignatureType, ProcessMethod> procesingMethods_;
+		// std::map<SignatureType, ProcessMethod> procesingMethods_;
+		std::array<ProcessMethod, 5> procesingMethods_;
 
 	private:
 
 		void initProcessingMethods()
 		{
-			procesingMethods_ =
-			{
-				{SignatureType::operation,			&MathParser::processOperatorTkns},
-				{SignatureType::function,			&MathParser::processFunctionTkns},
-				{SignatureType::specialFunction,	&MathParser::processSpecFunctionTkns},
-				{SignatureType::unareLeft,			&MathParser::processLeftOperatorTkns},
-				{SignatureType::unareRight,			&MathParser::processRightOperatorTkns}
-			};
+			procesingMethods_[static_cast<unsigned char>(SignatureType::operation)]			= &MathParser::processOperatorTkns;
+			procesingMethods_[static_cast<unsigned char>(SignatureType::function)]			= &MathParser::processFunctionTkns;
+			procesingMethods_[static_cast<unsigned char>(SignatureType::specialFunction)]	= &MathParser::processSpecFunctionTkns;
+			procesingMethods_[static_cast<unsigned char>(SignatureType::unareLeft)]			= &MathParser::processLeftOperatorTkns;
+			procesingMethods_[static_cast<unsigned char>(SignatureType::unareRight)]		= &MathParser::processRightOperatorTkns;
+
+
+			// procesingMethods_ =
+			// {
+			// 	{SignatureType::operation,			&MathParser::processOperatorTkns},
+			// 	{SignatureType::function,			&MathParser::processFunctionTkns},
+			// 	{SignatureType::specialFunction,	&MathParser::processSpecFunctionTkns},
+			// 	{SignatureType::unareLeft,			&MathParser::processLeftOperatorTkns},
+			// 	{SignatureType::unareRight,			&MathParser::processRightOperatorTkns}
+			// };
 		}
 
 		size_t findTokenWithMaxPriority(const std::span<Token> tkns) const
@@ -116,7 +125,8 @@ namespace mathWorker
 				result.push_back(parse(i));
 			}
 
-			return std::move(result);
+			// return std::move(result);
+			return result;
 		}
 
 		void processOperatorTkns(SignatureNode* node, const TokenArrayP tkns, const size_t minInd) const
@@ -173,7 +183,12 @@ namespace mathWorker
 			
 			nodeP->setType(term->type);
 			nodeP->setPriority(term->priority);
-			(this->*procesingMethods_.at(nodeP->getType()))(nodeP.get(), tkns, minInd);
+			// (this->*procesingMethods_.at(nodeP->getType()))(nodeP.get(), tkns, minInd);
+			
+			const ProcessMethod& method = procesingMethods_[static_cast<unsigned char>(nodeP->getType())];
+			(this->*method)(nodeP.get(), tkns, minInd);
+			
+			// (this->*procesingMethods_[static_cast<unsigned char>(nodeP->getType())])(nodeP.get(), tkns, minInd);
 
 			// SignatureNode* node = new SignatureNode{ std::string(tkns[minInd]) };
 			// node->setType(signature_.get().at(tkns[minInd])->type);
