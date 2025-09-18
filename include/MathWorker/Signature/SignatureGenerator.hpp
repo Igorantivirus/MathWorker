@@ -62,6 +62,13 @@ namespace mathWorker
 			//		return std::make_unique<ValueNode>(res);
 			//	});
 
+			signature.addFunction("if",	[](const std::vector<MathNodeP>& params)->MathNodeP
+				{
+					ComplexType ifVal = params[0]->getNumberForced();
+					if(std::abs(ifVal.imag()) <= 1e-16f && std::abs(ifVal.real() ) <= 1e-16f)
+						return params[2]->clone();
+					return params[1]->clone();
+				});
 			signature.addFunction("sin",	[](const std::vector<MathNodeP>& params)->MathNodeP
 				{
 					ComplexType res = std::sin(params[0]->getNumberForced());
