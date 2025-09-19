@@ -25,12 +25,55 @@ namespace mathWorker
 					if(std::abs(ifV.imag()) <= 1e-16f && std::abs(ifV.real() ) <= 1e-16f)
 						return ifParams[1]->calculate(signature);
 					return ifParams[0]->calculate(signature);
-				}, 3, OperatorPriority::rightToLeft, ArgEvalPolicy::lazy);
+				}, 4, OperatorPriority::rightToLeft, ArgEvalPolicy::lazy);
 			signature.addOperator(":", [](const std::vector<MathNodeP>& params)->MathNodeP
 				{
 					return std::make_unique<ValueNode>();
+				}, 4, OperatorPriority::rightToLeft);
+			signature.addOperator("<", [](const std::vector<MathNodeP>& params)->MathNodeP
+				{
+					ComplexType a = params[0]->getNumberForced();
+					ComplexType b = params[1]->getNumberForced();
+					if(std::abs(a.imag()) <= 1.e-16l && std::abs(b.imag()) <= 1.e-16l)
+						return std::make_unique<ValueNode>(a.real() < b.real());
+					return std::make_unique<ValueNode>(ComplexType(std::nanl(""), std::nanl("")));
 				}, 3, OperatorPriority::rightToLeft);
-
+			signature.addOperator("<=", [](const std::vector<MathNodeP>& params)->MathNodeP
+				{
+					ComplexType a = params[0]->getNumberForced();
+					ComplexType b = params[1]->getNumberForced();
+					if(std::abs(a.imag()) <= 1.e-16l && std::abs(b.imag()) <= 1.e-16l)
+						return std::make_unique<ValueNode>(a.real() <= b.real());
+					return std::make_unique<ValueNode>(ComplexType(std::nanl(""), std::nanl("")));
+				}, 3, OperatorPriority::rightToLeft);
+			signature.addOperator(">", [](const std::vector<MathNodeP>& params)->MathNodeP
+				{
+					ComplexType a = params[0]->getNumberForced();
+					ComplexType b = params[1]->getNumberForced();
+					if(std::abs(a.imag()) <= 1.e-16l && std::abs(b.imag()) <= 1.e-16l)
+						return std::make_unique<ValueNode>(a.real() > b.real());
+					return std::make_unique<ValueNode>(ComplexType(std::nanl(""), std::nanl("")));
+				}, 3, OperatorPriority::rightToLeft);
+			signature.addOperator(">=", [](const std::vector<MathNodeP>& params)->MathNodeP
+				{
+					ComplexType a = params[0]->getNumberForced();
+					ComplexType b = params[1]->getNumberForced();
+					if(std::abs(a.imag()) <= 1.e-16l && std::abs(b.imag()) <= 1.e-16l)
+						return std::make_unique<ValueNode>(a.real() >= b.real());
+					return std::make_unique<ValueNode>(ComplexType(std::nanl(""), std::nanl("")));
+				}, 3, OperatorPriority::rightToLeft);
+			signature.addOperator("==", [](const std::vector<MathNodeP>& params)->MathNodeP
+				{
+					ComplexType a = params[0]->getNumberForced();
+					ComplexType b = params[1]->getNumberForced();
+					return std::make_unique<ValueNode>(ComplexType(a == b, 0));
+				}, 3, OperatorPriority::rightToLeft);
+			signature.addOperator("!=", [](const std::vector<MathNodeP>& params)->MathNodeP
+				{
+					ComplexType a = params[0]->getNumberForced();
+					ComplexType b = params[1]->getNumberForced();
+					return std::make_unique<ValueNode>(ComplexType(a != b, 0));
+				}, 3, OperatorPriority::rightToLeft);
 			signature.addOperator("+", [](const std::vector<MathNodeP>& params)->MathNodeP
 				{
 					ComplexType res = params[0]->getNumberForced() + params[1]->getNumberForced();
