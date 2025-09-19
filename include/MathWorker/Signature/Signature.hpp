@@ -53,9 +53,9 @@ namespace mathWorker
 		{
 			functionalContext_[name] = SignatureRealization{ realization, 2, SignatureType::unareLeft };
 		}
-		void addOperator(const std::string& name, NativeRealization&& realization, const unsigned char priority, const OperatorPriority direction = OperatorPriority::leftToRight)
+		void addOperator(const std::string& name, NativeRealization&& realization, const unsigned char priority, const OperatorPriority direction = OperatorPriority::leftToRight, const ArgEvalPolicy policy = ArgEvalPolicy::eagar)
 		{ 
-			functionalContext_[name] = SignatureRealization{ realization, static_cast<unsigned char>(priority + 3), SignatureType::operation, direction };
+			functionalContext_[name] = SignatureRealization{ realization, static_cast<unsigned char>(priority + 3), SignatureType::operation, direction, policy };
 		}
 
 		void setDefaultOperator(const std::string& defautlOperator)
