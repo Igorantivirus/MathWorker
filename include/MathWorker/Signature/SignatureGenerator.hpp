@@ -13,19 +13,24 @@ namespace mathWorker
 		{
 			Signature signature;
 
-			// signature.addOperator("?", [](const std::vector<MathNodeP>& params)->MathNodeP
-			// 	{
-			// 		ComplexType ifV = params[0]->getNumberForced();
-			// 		if(std::abs(ifV.imag()) <= 1e-16f && std::abs(ifV.real() ) <= 1e-16f)
-			// 			return params[0]->clone();
-			// 		return nullptr;
-			// 	}, 3, OperatorPriority::rightToLeft);
-			// signature.addOperator(":", [](const std::vector<MathNodeP>& params)->MathNodeP
-			// 	{
-			// 		if(params[0])
-			// 			return params[0]->clone();
-			// 		return params[1]->clone();
-			// 	}, 3, OperatorPriority::rightToLeft);
+			signature.addOperator("?", [&signature](const std::vector<MathNodeP>& params)->MathNodeP
+				{
+					ComplexType ifV = params[0]->calculate(signature)->getNumberForced();
+					const MathNodeP& first = params[1];
+					const SignatureNode* node = dynamic_cast<const SignatureNode*>(first.get());
+					if(!node)
+						return std::make_unique<ValueNode>();
+
+					const MathVector& ifParams = node->getParams();
+					if(std::abs(ifV.imag()) <= 1e-16f && std::abs(ifV.real() ) <= 1e-16f)
+						return ifParams[1]->calculate(signature);
+					return ifParams[0]->calculate(signature);
+				}, 3, OperatorPriority::rightToLeft, ArgEvalPolicy::lazy);
+			signature.addOperator(":", [](const std::vector<MathNodeP>& params)->MathNodeP
+				{
+					return std::make_unique<ValueNode>();
+				}, 3, OperatorPriority::rightToLeft);
+
 			signature.addOperator("+", [](const std::vector<MathNodeP>& params)->MathNodeP
 				{
 					ComplexType res = params[0]->getNumberForced() + params[1]->getNumberForced();
@@ -192,15 +197,6 @@ namespace mathWorker
 				});
 
 			signature.setDefaultOperator("*");
-			
-			signature.addFunction("if", [&signature](const std::vector<MathNodeP>& params)->MathNodeP
-			{
-				ComplexType ifV = params[0]->getNumberForced();
-				if(std::abs(ifV.real()) <= 1e-16l && std::abs(ifV.real()) <= 1e-16l)
-					return params[2]->calculate(signature);
-				return params[1]->calculate(signature);
-			}, ArgEvalPolicy::lazy);
-
 
 			signature.addConstant("pi",		std::make_unique<ValueNode>(ValueNode(RealType(std::acos(-1)))));
 			signature.addConstant("e",		std::make_unique<ValueNode>(ValueNode(std::exp(1))));
