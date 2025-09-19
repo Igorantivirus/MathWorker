@@ -133,7 +133,7 @@ namespace mathWorker
 			return std::make_unique<SignatureNode>(*this);
 
 
-			
+
 			// if(realization->taken_)
 			// 	throw std::logic_error("Recursive");
 
@@ -198,7 +198,12 @@ namespace mathWorker
 		{
 			return type_;
 		}
-		
+		const MathVector& getParams() const
+		{
+			return params_;
+		}
+
+
 		void addParam(const MathNodeP& param)
 		{
 			if (param != nullptr)
