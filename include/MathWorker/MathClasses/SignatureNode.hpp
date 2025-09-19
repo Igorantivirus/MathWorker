@@ -102,11 +102,15 @@ namespace mathWorker
 			MathVector params;
 			params.reserve(params_.size());
 
-			for (const auto& i : params_)
-				params.push_back(i->calculate(signature));
+			if(signature.isIfFunction(name_))
+				for (const auto& i : params_)
+					params.push_back(i->clone());
+			else
+				for (const auto& i : params_)
+					params.push_back(i->calculate(signature));
 
 			const auto realization = signature[name_];
-
+			
 			if(!realization)
 				return std::make_unique<SignatureNode>(*this);
 
@@ -127,6 +131,28 @@ namespace mathWorker
 				return newRes->calculate(signature);
 			}
 			return std::make_unique<SignatureNode>(*this);
+			// if(realization->taken_)
+			// 	throw std::logic_error("Recursive");
+
+			// realization->taken_ = true;
+			// MathNodeP res;
+			// if (native_func_ptr)
+			// 	res = (*native_func_ptr)(params);
+			// if (mather_node_ptr)
+			// {
+			// 	VariableContext varContext;
+			// 	//TODO сделать обработку ошибок
+			// 	for (size_t i = 0; i < std::min(params.size(), mather_node_ptr->second.size()); ++i)
+			// 		varContext[mather_node_ptr->second[i]] = params[i]->clone();
+
+			// 	MathNodeP newRes = mather_node_ptr->first->replace(varContext);
+				
+			// 	res = newRes->calculate(signature);
+			// }
+			// realization->taken_ = false;
+			// if(res)
+			// 	return res;
+			// return std::make_unique<SignatureNode>(*this);
 		}
 		ComplexType getNumberForced() const override
 		{

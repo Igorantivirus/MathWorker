@@ -62,13 +62,6 @@ namespace mathWorker
 			//		return std::make_unique<ValueNode>(res);
 			//	});
 
-			signature.addFunction("if",	[](const std::vector<MathNodeP>& params)->MathNodeP
-				{
-					ComplexType ifVal = params[0]->getNumberForced();
-					if(std::abs(ifVal.imag()) <= 1e-16f && std::abs(ifVal.real() ) <= 1e-16f)
-						return params[2]->clone();
-					return params[1]->clone();
-				});
 			signature.addFunction("sin",	[](const std::vector<MathNodeP>& params)->MathNodeP
 				{
 					ComplexType res = std::sin(params[0]->getNumberForced());
@@ -186,6 +179,13 @@ namespace mathWorker
 				});
 
 			signature.setDefaultOperator("*");
+			signature.addIfFunction("if",	[&signature](const std::vector<MathNodeP>& params)->MathNodeP
+				{
+					ComplexType ifVal = params[0]->getNumberForced();
+					if(std::abs(ifVal.imag()) <= 1e-16f && std::abs(ifVal.real() ) <= 1e-16f)
+						return params[2]->calculate(signature);
+					return params[1]->calculate(signature);
+				});
 
 			signature.addConstant("pi",		std::make_unique<ValueNode>(ValueNode(RealType(std::acos(-1)))));
 			signature.addConstant("e",		std::make_unique<ValueNode>(ValueNode(std::exp(1))));
