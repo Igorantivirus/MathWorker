@@ -49,12 +49,6 @@ namespace mathWorker
 	public:
 		Signature() = default;
 		
-		void addIfFunction(const std::string& name, NativeRealization&& realization)
-		{
-			ifFunction_ = name;
-			functionalContext_[name] = SignatureRealization{ std::move(realization), 0, SignatureType::function };
-		}
-
 		void addFunction(const std::string& name, std::variant<NativeRealization, MatherRealization>&& realization, const ArgEvalPolicy policy = ArgEvalPolicy::eagar)
 		{
 			functionalContext_[name] = SignatureRealization{ std::move(realization), 0, SignatureType::function, OperatorPriority::none, policy};
@@ -89,10 +83,6 @@ namespace mathWorker
 		bool isTerm(const std::string_view str) const
 		{
 			return functionalContext_.find(str) != functionalContext_.end();
-		}
-		bool isIfFunction(const std::string_view str) const
-		{
-			return str == ifFunction_;
 		}
 		bool isSignatureType(const std::string_view str, const SignatureType type) const
 		{
@@ -136,7 +126,6 @@ namespace mathWorker
 		VariableContext constantContext_;
 
 		std::string defaultOperator_;
-		std::string ifFunction_;
 
 	};
 
