@@ -14,6 +14,11 @@ namespace mathWorker
 		leftToRight,
 		rightToLeft
 	};
+	enum class ArgEvalPolicy : bool
+	{
+		eagar = false,
+		lazy = true
+	};
 
 	struct SignatureRealization
 	{
@@ -21,6 +26,7 @@ namespace mathWorker
 		unsigned char priority = 0;
 		SignatureType type = SignatureType::operation;
 		OperatorPriority assitiation = OperatorPriority::none;
+		ArgEvalPolicy policy = ArgEvalPolicy::eagar;
 
 	// 	SignatureRealization() = default;
 	// 	SignatureRealization(std::variant<NativeRealization, MatherRealization>&& realiz, const unsigned char prior = 0, const SignatureType t = SignatureType::operation, OperatorPriority assitiat = OperatorPriority::none) :
@@ -48,9 +54,10 @@ namespace mathWorker
 			ifFunction_ = name;
 			functionalContext_[name] = SignatureRealization{ std::move(realization), 0, SignatureType::function };
 		}
-		void addFunction(const std::string& name, std::variant<NativeRealization, MatherRealization>&& realization)
+
+		void addFunction(const std::string& name, std::variant<NativeRealization, MatherRealization>&& realization, const ArgEvalPolicy policy = ArgEvalPolicy::eagar)
 		{
-			functionalContext_[name] = SignatureRealization{ std::move(realization), 0, SignatureType::function };
+			functionalContext_[name] = SignatureRealization{ std::move(realization), 0, SignatureType::function, OperatorPriority::none, policy};
 		}
 		void addSpecialFunction(const std::string& name, std::variant<NativeRealization, MatherRealization>&& realization)
 		{

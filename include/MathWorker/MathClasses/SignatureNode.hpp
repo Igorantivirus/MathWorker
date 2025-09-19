@@ -99,20 +99,20 @@ namespace mathWorker
 		}
 		MathNodeP calculate(const Signature& signature) const override
 		{
+			//Получаем реализацию сигнатуры
+			const auto realization = signature[name_];
+			if(!realization)
+				return std::make_unique<SignatureNode>(*this);
+
 			MathVector params;
 			params.reserve(params_.size());
 
-			if(signature.isIfFunction(name_))
+			if(realization->policy == ArgEvalPolicy::lazy)
 				for (const auto& i : params_)
 					params.push_back(i->clone());
 			else
 				for (const auto& i : params_)
 					params.push_back(i->calculate(signature));
-
-			const auto realization = signature[name_];
-			
-			if(!realization)
-				return std::make_unique<SignatureNode>(*this);
 
 			const NativeRealization* native_func_ptr = std::get_if<NativeRealization>(&realization->realization);
 			const MatherRealization* mather_node_ptr = std::get_if<MatherRealization>(&realization->realization);
@@ -131,6 +131,9 @@ namespace mathWorker
 				return newRes->calculate(signature);
 			}
 			return std::make_unique<SignatureNode>(*this);
+
+
+			
 			// if(realization->taken_)
 			// 	throw std::logic_error("Recursive");
 
