@@ -27,18 +27,6 @@ namespace mathWorker
 		SignatureType type = SignatureType::operation;
 		OperatorPriority assitiation = OperatorPriority::none;
 		ArgEvalPolicy policy = ArgEvalPolicy::eagar;
-
-	// 	SignatureRealization() = default;
-	// 	SignatureRealization(std::variant<NativeRealization, MatherRealization>&& realiz, const unsigned char prior = 0, const SignatureType t = SignatureType::operation, OperatorPriority assitiat = OperatorPriority::none) :
-	// 		realization{std::move(realiz)}, priority{prior}, type{t}, assitiation{assitiat}
-	// 	{}
-
-	// 	friend class SignatureNode;
-
-	// private:
-
-	// 	mutable bool taken_ = false;
-
 	};
 
 	using FunctionalContext = std::map<std::string, SignatureRealization, std::less<>>;
