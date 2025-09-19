@@ -5,10 +5,10 @@
 namespace mathWorker
 {
 
-	class SignatureConnector
+	class BufferedSignatureConnector
 	{
 	public:
-		SignatureConnector(Signature& signature) :
+		BufferedSignatureConnector(Signature& signature) :
 			signature_{signature}
 		{}
 
@@ -117,10 +117,10 @@ namespace mathWorker
 
 	};
 
-	class FunctionConnector
+	class DirectSignatureConnector
 	{
 	public:
-		FunctionConnector(Signature& signature) :
+		DirectSignatureConnector(Signature& signature) :
 			signature_{signature}
 		{}
 
