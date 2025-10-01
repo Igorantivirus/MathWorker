@@ -217,6 +217,11 @@ namespace mathWorker
 			return (str.find('(') < equalInd) ? addFunction(str) : addConstant(str);			
 		}
 
+		void changeSignature(Signature& signature)
+		{
+			signature_ = signature;
+		}
+
 	private:
 
 		std::reference_wrapper<Signature> signature_;
