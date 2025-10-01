@@ -4,8 +4,7 @@
 
 namespace mathWorker
 {
-
-	class BufferedSignatureConnector
+	class [[deprecated("Use the ABOBA class better, it has a better chance of not making an error.")]] BufferedSignatureConnector
 	{
 	public:
 		BufferedSignatureConnector(Signature& signature) :
@@ -29,6 +28,10 @@ namespace mathWorker
 
 			std::string name = cStr.substr(0, equalInd);
 			std::string realization = cStr.substr(equalInd + 1);
+
+			if(isSimpleMathString(realization))
+				return addFullConstant(name, realization), true;
+
 			addConstant(name, realization);
 			return true;
 		}
@@ -62,8 +65,8 @@ namespace mathWorker
 
 		void fillSignature() const
 		{
-			BaseTokenizer tokenizer(signature_);
-			MathParser parser(tokenizer);
+			// BaseTokenizer tokenizer(signature_);
+			// MathParser parser(tokenizer);
 
 			//ДОбавлены заголовки функций
 			for(const auto& [name, realization] : functions_)
@@ -77,8 +80,14 @@ namespace mathWorker
 			for(const auto& [name, realization] : constants_)
 				signature_.get().addConstant(name, nullptr);
 			
-			addConstants(parser);
-			addFunctions(parser);
+			addConstants();
+			addFunctions();
+		}
+
+		void setSimpleSymbols(const std::string& str)
+		{
+			for (unsigned char c : str)
+        		lookup_[c] = true;
 		}
 
 	private:
@@ -92,27 +101,48 @@ namespace mathWorker
 		std::map<std::string, std::string> constants_;
 		std::map<std::string, std::pair<std::vector<std::string>, std::string>> functions_;
 
+		BaseTokenizer tokenizer_{signature_};
+		MathParser parser_{tokenizer_};
+
+		std::string simpleSymbols_;
+
+		bool lookup_[256] = {false};
+
 	private:
 
-		void addConstants(const MathParser& parser) const
+		void addConstants(/*const MathParser& parser*/) const
 		{
 			for(const auto& [name, realization] : constants_)
 			{
-				MathNodeP node = parser.parse(realization)->replace(signature_.get().getVariableContext());
+				MathNodeP node = parser_.parse(realization)->replace(signature_.get().getVariableContext());
 				signature_.get().addConstant(name, std::move(node));
 			}
 		}
-		void addFunctions(const MathParser& parser) const
+		void addFunctions(/*const MathParser& parser*/) const
 		{
 			for(const auto& [name, realization] : functions_)
 			{
-				MathNodeP node = parser.parse(realization.second)->replace(signature_.get().getVariableContext());
+				MathNodeP node = parser_.parse(realization.second)->replace(signature_.get().getVariableContext());
 
 				MatherRealization pr;
 				pr.first = std::move(node);
 				pr.second = realization.first;
 				signature_.get().addFunction(name, std::move(pr));
 			}
+		}
+
+		void addFullConstant(const std::string& name, const std::string& realization)
+		{
+			MathNodeP node = parser_.parse(realization)->replace(signature_.get().getVariableContext());
+			signature_.get().addConstant(name, std::move(node));
+		}
+
+		bool isSimpleMathString(const std::string& str)
+		{
+			for (unsigned char c : str)
+				if (!lookup_[c])
+					return false;
+			return true;
 		}
 
 	};
