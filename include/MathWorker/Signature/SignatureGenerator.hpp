@@ -112,17 +112,6 @@ namespace mathWorker
 					return std::make_unique<ValueNode>(res);
 				}, 0, OperatorPriority::rightToLeft);
 
-			//signature.addUnareRightOperator("d", [](const std::vector<MathNodeP>& params)->MathNodeP
-			//	{
-			//		ComplexType res = params[0]->getNumberForced() * ComplexType(180.l / std::acos(-1));
-			//		return std::make_unique<ValueNode>(res);
-			//	});
-			//signature.addUnareRightOperator("r", [](const std::vector<MathNodeP>& params)->MathNodeP
-			//	{
-			//		ComplexType res = params[0]->getNumberForced() * ComplexType(std::acos(-1) / 180.l);
-			//		return std::make_unique<ValueNode>(res);
-			//	});
-
 			signature.addFunction("sin",	[](const std::vector<MathNodeP>& params)->MathNodeP
 				{
 					ComplexType res = std::sin(params[0]->getNumberForced());
@@ -288,18 +277,6 @@ namespace mathWorker
 
 			return signature;
 		}
-
-		// VariableContext baseConstants()
-		// {
-		// 	VariableContext context;
-		// 	context["pi"]	= ValueNode(RealType(std::acos(-1))).clone();
-		// 	context["e"]	= ValueNode(std::exp(1)).clone();
-		// 	context["phi"]	= ValueNode(RealType(0.5l + std::sqrt(5) / 2.l)).clone();
-		// 	context["i"]	= ValueNode(ComplexType(0, 1)).clone();
-		// 	context["inf"]	= ValueNode(ComplexType(RealType(1.) / RealType(sin(0)), 0)).clone();
-		// 	return context;
-		// }
-
 
 	}
 
