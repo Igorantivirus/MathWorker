@@ -278,6 +278,12 @@ namespace mathWorker
 			return signature;
 		}
 
+		Signature mathVariableSumnature()
+		{
+			// TODO:
+			return {};
+		}
+
 	}
 
 }
