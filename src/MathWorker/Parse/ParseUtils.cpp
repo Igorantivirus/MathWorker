@@ -1,4 +1,4 @@
-#pragma once
+#include <MathWorker/Parse/ParseUtils.hpp>
 
 namespace mathWorker
 {
