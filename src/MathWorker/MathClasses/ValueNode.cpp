@@ -1,5 +1,3 @@
-#pragma once
-
 #include <MathWorker/MathClasses/ValueNode.hpp>
 
 namespace mathWorker
