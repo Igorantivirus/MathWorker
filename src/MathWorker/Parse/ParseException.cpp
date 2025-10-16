@@ -1,13 +1,13 @@
-#include "ParseException.hpp"
+#include <MathWorker/Parse/ParseException.hpp>
 
 namespace mathWorker
 {
 
 
-    explicit ParseException::ParseException(const char* message, const ExceptionType type)
+    ParseException::ParseException(const char* message, const ExceptionType type)
         : msg_(message), type_{ type }
     {}
-    explicit ParseException::ParseException(const std::string& message, const ExceptionType type)
+    ParseException::ParseException(const std::string& message, const ExceptionType type)
         : msg_(message), type_{ type }
     {}
     ParseException::~ParseException() noexcept

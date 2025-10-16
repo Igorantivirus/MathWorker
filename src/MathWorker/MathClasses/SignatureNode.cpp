@@ -1,11 +1,10 @@
-#include "SignatureNode.hpp"
+#include <MathWorker/MathClasses/SignatureNode.hpp>
 
 namespace mathWorker
 {
 
 #pragma region Initializing
 
-    SignatureNode::SignatureNode() = default;
     SignatureNode::SignatureNode(const std::string &name, const SignatureType type) : name_{name}, type_{type}
     {}
     SignatureNode::SignatureNode(const std::string &name, const MathVector &params, const SignatureType type) : name_{name}, type_{type}

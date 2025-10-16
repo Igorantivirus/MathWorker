@@ -1,8 +1,6 @@
-#include "ValueNode.hpp"
-
 #pragma once
 
-#include "MathNode.hpp"
+#include <MathWorker/MathClasses/ValueNode.hpp>
 
 namespace mathWorker
 {

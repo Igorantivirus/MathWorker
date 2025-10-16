@@ -1,6 +1,4 @@
-#include "Parser.hpp"
-
-#include <stack>
+#include <MathWorker/Parse/Parser.hpp>
 
 namespace mathWorker
 {

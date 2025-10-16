@@ -1,4 +1,4 @@
-#include "SymbolNode.hpp"
+#include <MathWorker/MathClasses/SymbolNode.hpp>
 
 namespace mathWorker
 {
