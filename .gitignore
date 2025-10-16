@@ -367,3 +367,7 @@ FodyWeavers.xsd
 .vscode/
 build/
 tests/
+
+.clang-format
+.clangd
+CMakePresets.json
