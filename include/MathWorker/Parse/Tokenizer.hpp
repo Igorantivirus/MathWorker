@@ -1,6 +1,8 @@
 #pragma once
 
 #include <span>
+#include <string_view>
+#include <vector>
 
 #include "../MathUtils/MathDefines.hpp"
 #include "ParseUtils.hpp"
@@ -17,22 +19,14 @@ namespace mathWorker
 	class Tokenizer
 	{
 	public:
-		Tokenizer(const Signature& signature) :
-			signature_(signature)
-		{}
+		explicit Tokenizer(const Signature& signature);
 		virtual ~Tokenizer() = default;
 
-		void setSettings(const Signature& signature)
-		{
-			signature_ = signature;
-		}
-		const Signature& getSettings() const
-		{
-			return signature_;
-		}
+		void setSettings(const Signature& signature);
+		const Signature& getSettings() const;
 
-		virtual TokenArray tokenize(const Token str) const = 0;
-		virtual TokenArray tokenizeByComma(const Token str) const = 0;
+		virtual TokenArray tokenize(Token str) const = 0;
+		virtual TokenArray tokenizeByComma(Token str) const = 0;
 
 	protected:
 
@@ -43,130 +37,23 @@ namespace mathWorker
 	class BaseTokenizer : public Tokenizer
 	{
 	public:
-		BaseTokenizer(const Signature& signature) : Tokenizer{signature}
-		{}
+		explicit BaseTokenizer(const Signature& signature);
 
-		TokenArray tokenize(const Token str) const override
-		{
-			return addDefaultOperator(parseToTokens(str));
-		}
-		TokenArray tokenizeByComma(const Token str) const override
-		{
-			TokenArray tkns;
-			size_t last = 0;
-			for (size_t i = 0; i < str.size(); ++i)
-			{
-				if (isOpenBracket(str[i]))
-					i = getEndOfBracket(str, i) - 1;
-				else if (isComma(str[i]))
-				{
-					tkns.push_back(str.substr(last, i - last));
-					last = i + 1;
-				}
-			}
-			if (last < str.size())
-				tkns.push_back(str.substr(last));
-			return tkns;
-		}
+		TokenArray tokenize(Token str) const override;
+		TokenArray tokenizeByComma(Token str) const override;
 
 	private:
 
-		using CheckMethod = bool(*)(const char);
+		using CheckMethod = bool(*)(char);
 
-		bool meansDefaultOperator(const Token a, const Token b) const
-		{
-			if (a.empty() || b.empty())
-				return false;
+		bool meansDefaultOperator(Token a, Token b) const;
 
-			bool bracket2 = isOpenBracket(b[0]);
-			bool isNumber2 = isNumber(b[0]);
-			bool isWord2 = isLetter(b[0]) &&
-				!signature_.get().isSignatureType(b, SignatureType::unareRight) &&
-				!signature_.get().isSignatureType(b, SignatureType::operation);
+		size_t getEndOf(Token str, size_t i, CheckMethod check) const;
+		size_t getEndOfBracket(Token str, size_t i) const;
 
-			if (isCloseBracket(a.back()) && (isNumber2 || isWord2 || bracket2))
-				return true;
-			if (isNumber(a[0]) && (isNumber2 || isWord2 || bracket2))
-				return true;
-			if (!signature_.get().isTerm(a) && isLetter(a[0]) && (isNumber2 || isWord2 || bracket2))
-				return true;
-			
-			return false;
-		}
+		TokenArray parseToTokens(Token str) const;
 
-		size_t getEndOf(const Token str, size_t i, CheckMethod check) const
-		{
-			while (i < str.size() && check(str[i]))
-				++i;
-			return i;
-		}
-		size_t getEndOfBracket(const Token str, const size_t i) const
-		{
-			int lavel = 1;
-			size_t j = i + 1;
-			for (; j < str.size() && lavel > 0; ++j)
-				if (str[j] == '(')
-					++lavel;
-				else if (str[j] == ')')
-					--lavel;
-			if (lavel != 0)
-				throw ParseException("Uncompensated brackets.", ExceptionType::brackets);
-			return j;
-		}
-
-		TokenArray parseToTokens(const Token& str) const
-		{
-			TokenArray tkns;
-			size_t j = 0;
-			Token pr;
-			for (size_t i = 0; i < str.size(); ++i)
-			{
-				if (std::isspace(str[i]))
-					continue;
-				if (isOpenBracket(str[i]))
-					pr = str.substr(i, (j = getEndOfBracket(str, i)) - i);
-				else if (isCloseBracket(str[i]))
-					throw ParseException("Not opened bracket in index: " + std::to_string(i) + '.', ExceptionType::brackets);
-				else if (isLetter(str[i]))
-					pr = str.substr(i, (j = getEndOf(str, i, isLetter)) - i);
-				else if (isNumber(str[i]))
-					pr = str.substr(i, (j = getEndOf(str, i, isNumber)) - i);
-				else
-					pr = str.substr(i, (j = getEndOf(str, i, isNone)) - i);
-				if (!pr.empty())
-					tkns.push_back(pr);
-				i = j - 1;
-			}
-			return tkns;
-		}
-
-		TokenArray addDefaultOperator(const TokenArray tkns) const
-		{
-			TokenArray res;
-			res.reserve(tkns.size() * 3 / 2);
-			size_t i = 0;
-			for (; i < tkns.size() - 1; ++i)
-			{
-				res.push_back(tkns[i]);
-
-
-				
-
-				auto realization = signature_.get().at(tkns[i]);
-
-				if (realization)
-				{
-					if(realization->type == SignatureType::specialFunction)
-						res.push_back(tkns[++i]);
-					//if (realization->type != SignatureType::unareOperation)
-					continue;
-				}
-				if (meansDefaultOperator(tkns[i], tkns[i + 1]))
-					res.push_back(signature_.get().getDefaultOperator());
-			}
-			res.push_back(tkns[i]);
-			return res;
-		}
+		TokenArray addDefaultOperator(TokenArray tkns) const;
 
 	};
 }

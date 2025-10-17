@@ -1,5 +1,8 @@
 #pragma once
 
+#include <string_view>
+#include <variant>
+
 #include "../MathUtils/MathDefines.hpp"
 
 namespace mathWorker
@@ -35,78 +38,29 @@ namespace mathWorker
 	class Signature
 	{
 	public:
-		Signature() = default;
-		
-		void addFunction(const std::string& name, std::variant<NativeRealization, MatherRealization>&& realization, const ArgEvalPolicy policy = ArgEvalPolicy::eagar)
-		{
-			functionalContext_[name] = SignatureRealization{ std::move(realization), 0, SignatureType::function, OperatorPriority::none, policy};
-		}
-		void addSpecialFunction(const std::string& name, std::variant<NativeRealization, MatherRealization>&& realization)
-		{
-			functionalContext_[name] = SignatureRealization{ std::move(realization), 0, SignatureType::specialFunction };
-		}
-		void addUnareRightOperator(const std::string& name, NativeRealization&& realization)
-		{
-			functionalContext_[name] = SignatureRealization{ realization, 1, SignatureType::unareRight };
-		}
-		void addUnareLeftOperator(const std::string& name, NativeRealization&& realization)
-		{
-			functionalContext_[name] = SignatureRealization{ realization, 2, SignatureType::unareLeft };
-		}
-		void addOperator(const std::string& name, NativeRealization&& realization, const unsigned char priority, const OperatorPriority direction = OperatorPriority::leftToRight, const ArgEvalPolicy policy = ArgEvalPolicy::eagar)
-		{ 
-			functionalContext_[name] = SignatureRealization{ realization, static_cast<unsigned char>(priority + 3), SignatureType::operation, direction, policy };
-		}
+		Signature();
 
-		void setDefaultOperator(const std::string& defautlOperator)
-		{
-			if (isTerm(defautlOperator))
-				defaultOperator_ = defautlOperator;
-		}
-		const std::string& getDefaultOperator() const
-		{
-			return defaultOperator_;
-		}
+		void addFunction(const std::string& name, std::variant<NativeRealization, MatherRealization>&& realization, ArgEvalPolicy policy = ArgEvalPolicy::eagar);
+		void addSpecialFunction(const std::string& name, std::variant<NativeRealization, MatherRealization>&& realization);
+		void addUnareRightOperator(const std::string& name, NativeRealization&& realization);
+		void addUnareLeftOperator(const std::string& name, NativeRealization&& realization);
+		void addOperator(const std::string& name, NativeRealization&& realization, unsigned char priority, OperatorPriority direction = OperatorPriority::leftToRight, ArgEvalPolicy policy = ArgEvalPolicy::eagar);
 
-		bool isTerm(const std::string_view str) const
-		{
-			return functionalContext_.find(str) != functionalContext_.end();
-		}
-		bool isSignatureType(const std::string_view str, const SignatureType type) const
-		{
-			const auto& found = functionalContext_.find(str);
-			return found == functionalContext_.end() ? false : (found->second.type == type);
-		}
+		void setDefaultOperator(const std::string& defautlOperator);
+		const std::string& getDefaultOperator() const;
 
-		const SignatureRealization* operator[](const std::string_view str) const
-		{
-			return at(str);
-		}
-		SignatureRealization* operator[](const std::string_view str)
-		{
-			return at(str);
-		}
+		bool isTerm(std::string_view str) const;
+		bool isSignatureType(std::string_view str, SignatureType type) const;
 
-		const SignatureRealization* at(const std::string_view str) const
-		{
-			auto found = functionalContext_.find(str);
-			return (found == functionalContext_.end()) ? (nullptr) : (&found->second);
-		}
-		SignatureRealization* at(const std::string_view str)
-		{
-			auto found = functionalContext_.find(str);
-			return (found == functionalContext_.end()) ? (nullptr) : (&found->second);
-		}
+		const SignatureRealization* operator[](std::string_view str) const;
+		SignatureRealization* operator[](std::string_view str);
 
-		void addConstant(const std::string& name, MathNodeP v)
-		{
-			constantContext_[name] = std::move(v);
-		}
+		const SignatureRealization* at(std::string_view str) const;
+		SignatureRealization* at(std::string_view str);
 
-		const VariableContext& getVariableContext() const
-		{
-			return constantContext_; 
-		}
+		void addConstant(const std::string& name, MathNodeP v);
+
+		const VariableContext& getVariableContext() const;
 
 	private:
 
