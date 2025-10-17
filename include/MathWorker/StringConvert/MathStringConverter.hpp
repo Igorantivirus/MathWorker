@@ -68,37 +68,4 @@ namespace mathWorker
 		}
 	};
 
-	/*class BaseStringConverter : public StringConverter
-	{
-	public:
-
-		std::string toString(const RealType value) const override
-		{
-			std::stringstream out;
-			out << std::setprecision(15) << round(value, 15);
-			std::string result = out.str();
-			if (result.find('.') == std::string::npos)
-				return result;
-			while (result.back() == '0')
-				result.pop_back();
-			if(result.back() == '.')
-				result.pop_back();
-			return result;
-		}
-		std::string toString(const ComplexType& value) const override
-		{
-			std::string real = toString(value.real());
-			std::string imag = toString(value.imag());
-			if (equal(imag, '0'))
-				return real;
-			if (equal(real, '0'))
-				return (equal(imag, '1') ? "" : imag) + 'i';
-			return real + (imag[0] == '-' ? "" : "+") + (equal(imag, '1') ? "" : imag) + 'i';
-		}
-
-	
-
-
-	};*/
-
 }
