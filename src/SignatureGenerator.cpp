@@ -122,8 +122,8 @@ namespace mathWorker
 					CheckSize(params, 2);
 					ComplexType res = std::pow(params[0]->getNumberForced(), params[1]->getNumberForced());
 					return std::make_unique<ValueNode>(res);
-				}, 3, OperatorPriority::rightToLeft);
-			signature.addOperator("mod", [](const std::vector<MathNodeP>& params) -> MathNodeP
+				}, 0, OperatorPriority::rightToLeft);
+			signature.addOperator("%", [](const std::vector<MathNodeP>& params) -> MathNodeP
 				{
 					CheckSize(params, 2);
 					return std::make_unique<ValueNode>(std::fmod(params[0]->getNumberForced().real(), params[1]->getNumberForced().real()));
