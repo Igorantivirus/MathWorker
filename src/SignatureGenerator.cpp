@@ -5,6 +5,7 @@
 
 #include "MathWorker/MathClasses/SignatureNode.hpp"
 #include "MathWorker/MathClasses/ValueNode.hpp"
+#include "MathWorker/MathUtils/MathDefines.hpp"
 #include "MathWorker/Parse/Parser.hpp"
 
 namespace mathWorker
@@ -211,6 +212,20 @@ namespace mathWorker
 						res = std::pow(a.real(), b.real());
 					else
 						res = std::pow(a, b);
+					return std::make_unique<ValueNode>(res);
+				});
+			signature.addFunction("exp", [](const std::vector<MathNodeP>& params) -> MathNodeP
+				{
+					CheckSize(params, 1);
+					ComplexType a = params[0]->getNumberForced();
+					ComplexType res = std::exp(a);
+					return std::make_unique<ValueNode>(res);
+				});
+			signature.addFunction("ln", [](const std::vector<MathNodeP>& params) -> MathNodeP
+				{
+					CheckSize(params, 1);
+					ComplexType a = params[0]->getNumberForced();
+					ComplexType res = std::log(a);
 					return std::make_unique<ValueNode>(res);
 				});
 			signature.addFunction("conj", [](const std::vector<MathNodeP>& params) -> MathNodeP
