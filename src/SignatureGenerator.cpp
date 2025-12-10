@@ -6,7 +6,6 @@
 #include "MathWorker/MathClasses/SignatureNode.hpp"
 #include "MathWorker/MathClasses/ValueNode.hpp"
 #include "MathWorker/MathUtils/MathDefines.hpp"
-#include "MathWorker/Parse/Parser.hpp"
 
 namespace mathWorker
 {
